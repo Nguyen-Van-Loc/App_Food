@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/Validate/validateProfile.dart';
 import 'package:lab5/Validate/validateLogin.dart';
 import 'package:lab5/account/Login/login.dart';
-import 'package:lab5/model/user.dart';
 import 'package:restart_app/restart_app.dart';
 
 class logup extends StatefulWidget {
@@ -22,7 +23,6 @@ class viewLogup extends State<logup> {
   TextEditingController _repassController = TextEditingController();
   bool checkkey = true;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
   void onAdd() async{
     setState(() {
       erruser = validateName(_usernameController.text);
@@ -47,7 +47,6 @@ class viewLogup extends State<logup> {
               await Future.delayed(Duration(seconds: 3));
               Restart.restartApp();
             }
-
           }
         }
       }
@@ -62,13 +61,20 @@ class viewLogup extends State<logup> {
         email: email,
         password: password,
       );
+
       await _firestore.collection("User").add({
         "username": _usernameController.text,
         "phone": "",
         "date": "",
+        "sex": "",
         "address": {},
         "email":email,
       });
+      User? user = FirebaseAuth.instance.currentUser;
+      String userId = user!.uid;
+      final assetImage = await rootBundle.load('assets/image/Group 107.png');
+      Reference storageRef = FirebaseStorage.instance.ref().child('images/$userId/logo.png');
+      await storageRef.putData(assetImage.buffer.asUint8List());
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -82,7 +88,6 @@ class viewLogup extends State<logup> {
     EasyLoading.dismiss();
     return false;
   }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -92,7 +97,6 @@ class viewLogup extends State<logup> {
     _repassController.clear();
     _passController.clear();
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

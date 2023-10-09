@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lab5/main.dart';
+import 'package:lab5/user/verifyAccount.dart';
 import 'package:provider/provider.dart';
 
-import 'Password.dart';
+import 'password.dart';
 import 'address.dart';
 import 'myprofile.dart';
 
@@ -57,7 +58,7 @@ class viewUser extends State<user> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(context, CupertinoPageRoute(builder: (context)=>myprofile(data: itemData["data"],keyId: itemData["key"].toString(),)));
+                  Navigator.push(context, CupertinoPageRoute(builder: (context)=>myprofile(data: itemData["data"],keyId: itemData["key"])));
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width - 10,
@@ -131,7 +132,7 @@ class viewUser extends State<user> {
               height: 20,
             ),
             InkWell(
-                onTap: () {Navigator.push(context, CupertinoPageRoute(builder: (context)=>mypass()));},
+                onTap: () {Navigator.push(context, CupertinoPageRoute(builder: (context)=>verifyAccount()));},
                 child: Container(
                   width: MediaQuery.of(context).size.width - 10,
                   height: 60,

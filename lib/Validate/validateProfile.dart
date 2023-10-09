@@ -20,3 +20,18 @@ String validateAddres (String text){
   }
   return "";
 }
+String validatePassOld (String text){
+  if(text.isEmpty){
+    return "Mật khẩu cũ không được để trống";
+  }
+  return "";
+}
+String validatePassNew (String text){
+  if(text.isEmpty){
+    return "Mật khẩu mới không được để trống";
+  }
+  if(text.toString().trim().length< 6){
+    return "Mật khẩu lớn hơn 6 kí tự";
+  }
+  return "";
+}

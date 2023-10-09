@@ -1,20 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/account/Login/login.dart';
 import 'package:lab5/account/Logup/logup.dart';
 import 'package:provider/provider.dart';
+import 'package:restart_app/restart_app.dart';
 import '../main.dart';
 
 class viewProfile extends State<profile> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
   @override
-  void initState() {
+  void initState(){
     super.initState();
     _checkAuthentication();
     EasyLoading.dismiss();
+    getImage();
   }
   Future<void> _checkAuthentication() async {
     User? user = _auth.currentUser;
@@ -22,11 +25,24 @@ class viewProfile extends State<profile> {
       _user = user;
     });
   }
-  void _logoutAndRestartApp() async {
+  String? linkImg;
+  void getImage()async{
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user!=null){
+      String userId = user.uid;
+      String imagePath = 'images/$userId/logo.png';
+      String downloadURL =
+      await FirebaseStorage.instance.ref().child(imagePath).getDownloadURL();
+      setState(() {
+        linkImg = downloadURL;
+      });
+    }
+  }
+  void _logOut() async {
     await _auth.signOut();
     EasyLoading.show(status: "loading...");
     await Future.delayed(Duration(seconds: 3));
-    // Restart.restartApp();
+    Restart.restartApp();
   }
   void dialogsupport(BuildContext context) {
     showDialog(
@@ -60,7 +76,7 @@ class viewProfile extends State<profile> {
   Widget build(BuildContext context) {
     final item =Provider.of<getProflieUser>(context);
     item.fetchData();
-    final username = item.data[0]["data"]["username"];
+    final username = item.data.isNotEmpty? item.data[0]["data"]["username"]:"";
     return Scaffold(
       body: SafeArea(
         child: _user == null ?
@@ -129,12 +145,12 @@ class viewProfile extends State<profile> {
               Center(
                 child: Container(
                   margin: const EdgeInsets.only(top: 30, bottom: 20),
-                  height: 120,
-                  width: 120,
+                  height: 100,
+                  width: 100,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(20),
                   ),
+                  child: linkImg!=null? Image.network(linkImg!): Container(padding:EdgeInsets.all(30) , child:CircularProgressIndicator() ,),
                 ),
               ),
                Center(
@@ -550,7 +566,7 @@ class viewProfile extends State<profile> {
                           margin: const EdgeInsets.only(
                               right: 40, top: 10, bottom: 10),
                           child: ElevatedButton.icon(
-                            onPressed: () { _logoutAndRestartApp();},
+                            onPressed: () { _logOut();},
                             label: const Text("Đăng xuất"),
                             style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.all(15),

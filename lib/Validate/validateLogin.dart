@@ -17,7 +17,7 @@ String validatePassword(String txt){
   if(txt.isEmpty){
     return "Mật khẩu không được để trống";
   }
-  if(txt.length<6){
+  if(txt.toString().trim().length<6){
     return "Mật khẩu không được nhỏ hơn 6 ký tự";
   }
   return "";

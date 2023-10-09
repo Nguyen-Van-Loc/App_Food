@@ -19,7 +19,7 @@ class viewLogin extends State<login> {
   TextEditingController _passwordController = TextEditingController();
   bool checkkey = true;
 
-  void onAdd() async {
+  void onLogin() async {
     setState(() {
       erremail = validateEmail(_emailController.text);
     });
@@ -28,15 +28,18 @@ class viewLogin extends State<login> {
         errpass = validatePassword(_passwordController.text);
       });
       if (errpass.isEmpty) {
-        _signIn();
         EasyLoading.show(status: "loading...");
         await Future.delayed(Duration(seconds: 3));
-        Restart.restartApp();
+        bool success = await _signIn();
+        if(success){
+          await Future.delayed(Duration(seconds: 3));
+          Restart.restartApp();
+        }
       }
     }
   }
 
-  void _signIn() async {
+  Future<bool> _signIn() async {
     // EasyLoading.show(status: "loading...");
     String email = _emailController.text;
     String password = _passwordController.text;
@@ -45,9 +48,11 @@ class viewLogin extends State<login> {
           .signInWithEmailAndPassword(
               email: email.toString().trim(),
               password: password.toString().trim());
+      return true;
     } catch (e) {
       EasyLoading.dismiss();
       EasyLoading.showError("Tài khoản hoặc mật khẩu không chính xác");
+      return false;
     }
   }
 
@@ -116,6 +121,7 @@ class viewLogin extends State<login> {
                     TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
+                          errorText: erremail.isNotEmpty ? erremail : null,
                           hintText: "Nhập Email",
                           prefixIcon: Container(
                               padding: EdgeInsets.all(10),
@@ -142,6 +148,7 @@ class viewLogin extends State<login> {
                       controller: _passwordController,
                       obscureText: checkkey,
                       decoration: InputDecoration(
+                          errorText: errpass.isNotEmpty ? errpass : null,
                           hintText: "Nhập mật khẩu",
                           prefixIcon: Container(
                               padding: EdgeInsets.all(10),
@@ -166,7 +173,12 @@ class viewLogin extends State<login> {
                     ),
                     Container(
                       child: TextButton(
-                          onPressed: () {Navigator.push(context, CupertinoPageRoute(builder: (context)=>forgotPassword()));},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => forgotPassword()));
+                          },
                           child: Text(
                             "Quên mật khẩu ?",
                             style: TextStyle(
@@ -182,7 +194,7 @@ class viewLogin extends State<login> {
                     Container(
                       alignment: Alignment.center,
                       child: ElevatedButton(
-                        onPressed: () => _signIn(),
+                        onPressed: () => onLogin(),
                         child: Text(
                           "Đăng nhập",
                           style: TextStyle(
