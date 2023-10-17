@@ -7,9 +7,12 @@ import 'package:lab5/account/Login/login.dart';
 import 'package:lab5/account/Logup/logup.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:shimmer/shimmer.dart';
+import '../changeNotifier/ProfileUser.dart';
 import '../main.dart';
 
-class viewProfile extends State<profile> {
+class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
   @override
@@ -74,6 +77,7 @@ class viewProfile extends State<profile> {
   }
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final item =Provider.of<getProflieUser>(context);
     item.fetchData();
     final username = item.data.isNotEmpty? item.data[0]["data"]["username"]:"";
@@ -150,7 +154,8 @@ class viewProfile extends State<profile> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: linkImg!=null? Image.network(linkImg!): Container(padding:EdgeInsets.all(30) , child:CircularProgressIndicator() ,),
+                  child:linkImg!=null? Image.network(linkImg!): Shimmer.fromColors(baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!, child: Container(height: 100,color: Colors.white,),),
                 ),
               ),
                Center(
@@ -592,4 +597,8 @@ class viewProfile extends State<profile> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

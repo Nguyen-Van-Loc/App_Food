@@ -67,7 +67,7 @@ class viewLogup extends State<logup> {
         "phone": "",
         "date": "",
         "sex": "",
-        "address": {},
+        "address": [],
         "email":email,
       });
       User? user = FirebaseAuth.instance.currentUser;

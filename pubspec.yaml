@@ -47,6 +47,8 @@ dependencies:
   firebase_storage: ^11.2.0
   shimmer: ^3.0.0
   path_provider: ^2.1.1
+  expandable_text: ^2.3.0
+  loadmore: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -109,6 +111,8 @@ flutter:
     - assets/image/Group-84.png
     - assets/image/add (2).png
     - assets/image/minus (2).png
+    - assets/image/minus (1).png
+    - assets/image/plus-sign.png
     - assets/image/user (3).png
     - assets/image/user.png
     - assets/image/next.png
@@ -123,6 +127,7 @@ flutter:
     - assets/image/more.png
     - assets/image/minus.png
     - assets/image/close.png
+    - assets/image/close (1).png
     - assets/image/grocery-bag.png
     - assets/image/dienthoai.png
     - assets/image/add.png

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lab5/main.dart';
 import 'package:lab5/user/verifyAccount.dart';
 import 'package:provider/provider.dart';
-
+import '../changeNotifier/ProfileUser.dart';
 import 'password.dart';
 import 'address.dart';
 import 'myprofile.dart';
@@ -11,9 +11,9 @@ import 'myprofile.dart';
 class viewUser extends State<user> {
   @override
   Widget build(BuildContext context) {
-    final item =Provider.of<getProflieUser>(context);
+    final item = Provider.of<getProflieUser>(context);
     item.fetchData();
-    final itemData = item.data[0];
+    final itemData = item.data.isNotEmpty? item.data[0]:null;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -58,7 +58,11 @@ class viewUser extends State<user> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(context, CupertinoPageRoute(builder: (context)=>myprofile(data: itemData["data"],keyId: itemData["key"])));
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => myprofile(
+                              data: itemData!["data"], keyId: itemData["key"])));
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width - 10,
@@ -95,7 +99,15 @@ class viewUser extends State<user> {
               height: 20,
             ),
             InkWell(
-              onTap: () { Navigator.push(context, CupertinoPageRoute(builder: (context)=>myaddress(data: itemData,)));},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => myaddress(
+                              data: itemData!["data"],
+                              keyId: itemData["key"],
+                            )));
+              },
               child: Container(
                 width: MediaQuery.of(context).size.width - 10,
                 height: 60,
@@ -132,7 +144,12 @@ class viewUser extends State<user> {
               height: 20,
             ),
             InkWell(
-                onTap: () {Navigator.push(context, CupertinoPageRoute(builder: (context)=>verifyAccount()));},
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => verifyAccount()));
+                },
                 child: Container(
                   width: MediaQuery.of(context).size.width - 10,
                   height: 60,
@@ -175,13 +192,16 @@ class myprofile extends StatefulWidget {
   viewMyProfile createState() => viewMyProfile();
   final Map<String, dynamic> data;
   final String keyId;
-  myprofile({ required this.data,required this.keyId});
+  myprofile({required this.data, required this.keyId});
 }
+
 class myaddress extends StatefulWidget {
   viewAddress createState() => viewAddress();
   final Map<String, dynamic> data;
-  myaddress({ required this.data});
+  final String keyId;
+  myaddress({required this.data, required this.keyId});
 }
+
 class mypass extends StatefulWidget {
   viewPass createState() => viewPass();
 }

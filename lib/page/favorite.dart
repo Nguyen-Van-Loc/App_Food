@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 
-class viewFavorite extends State<favorite> {
+class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
   bool check =true;
   void _check(){
     setState(() {
@@ -12,6 +12,7 @@ class viewFavorite extends State<favorite> {
   }
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -175,4 +176,8 @@ class viewFavorite extends State<favorite> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

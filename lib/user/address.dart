@@ -1,43 +1,52 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/User/user.dart';
 import 'package:lab5/Validate/validateProfile.dart';
-
 class Item {
-  String name, phone, note, address;
-  int id;
-
-  Item(this.name, this.phone, this.note, this.address, this.id);
+  String name, phone, note, address,key;
+  Item( this.name,  this.phone,  this.note,  this.address,this.key);
 }
-
-int id = 1;
-List<Item> list = [];
-
 class viewAddress extends State<myaddress> {
-  void showDialogAddress({Item? itemEdit}) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialogshow(
-            onAdd: (Item item) {
-              setState(() {
-                if (itemEdit == null) {
-                  item.id = id++;
-                  list.add(item);
-                } else {
-                  final index =
-                      list.indexWhere((element) => element.id == itemEdit.id);
-                  if (index != -1) {
-                    list[index] = item;
-                  }
-                }
-              });
-            },
-            checkEdit: itemEdit != null,
-            editItem: itemEdit,
-          );
-        });
+  final _firestore = FirebaseFirestore.instance;
+  List<MapEntry<String, dynamic>> listAddress = [];
+    void showDialogAddress({Item? itemEdit}) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialogshow(
+              onAdd:(Item item){
+                if(itemEdit ==null){
+                  addAddress(item);
+                }else(
+                    updateAddress(item,itemEdit.key)
+                );
+              },
+              itemToEdit: itemEdit,
+              isEditing: itemEdit !=null,
+            );
+          });
+    }
+  void updateAddress(Item item,String id) async {
+      final Map<String, dynamic> updatedAddress = {
+        "username": item.name,
+        "phone": item.phone,
+        "note": item.note,
+        "address": item.address,
+      };
+      final Map<String, dynamic> updateData = {
+        "address.$id": updatedAddress,
+      };
+      await _firestore.collection("User").doc(widget.keyId).update(updateData);
+      await _fetchAddresses();
   }
-  void _diadelete(BuildContext context, int id) async {
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchAddresses();
+  }
+  void _diadelete(BuildContext context,String index) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -49,7 +58,7 @@ class viewAddress extends State<myaddress> {
               ),
               content: const Text(
                 "Bạn có chắc chắn muốn xóa không ?",
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 17),
               ),
               actions: [
                 Row(
@@ -76,7 +85,8 @@ class viewAddress extends State<myaddress> {
                               borderRadius: BorderRadius.circular(20))),
                       onPressed: () {
                         setState(() {
-                          list.removeWhere((element) => element.id==id);
+                          delete(index);
+                          EasyLoading.showSuccess("Thành công");
                         });
                         Navigator.pop(context);
                       },
@@ -86,6 +96,41 @@ class viewAddress extends State<myaddress> {
                 ),
               ]);
         });
+  }
+  void addAddress(Item item) async {
+    final snapshot = await _firestore.collection("User").doc(widget.keyId).get();
+    final address = snapshot.data()?["address"] ?? {};
+    int keyid = address.isEmpty ? 0 : address.length+1;
+    Map<String, dynamic> newAddress = {
+      "username": item.name,
+      "phone": item.phone,
+      "note": item.note,
+      "address": item.address,
+      "isDefault": keyid == 0 ?true:false,
+    };
+    Map<String, dynamic> addAddress = {
+      "address.$keyid": newAddress,
+    };
+    await _firestore.collection("User").doc(widget.keyId).update(addAddress);
+    await _fetchAddresses();
+  }
+  Future<void> _fetchAddresses() async {
+    final snapshot = await _firestore.collection("User").doc(widget.keyId).get();
+    final data = snapshot.data();
+    if (data != null && data["address"] != null) {
+      final addressMap = data["address"] as Map<String, dynamic>;
+      final entries1 = addressMap.entries.toList();
+      setState(() {
+        listAddress = entries1;
+      });
+    }
+    print(listAddress);
+  }
+  void delete(String index) async{
+    await _firestore.collection("User").doc(widget.keyId).update({
+      "address.$index": FieldValue.delete(),
+    });
+    await _fetchAddresses();
   }
   @override
   Widget build(BuildContext context) {
@@ -127,7 +172,8 @@ class viewAddress extends State<myaddress> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -139,7 +185,9 @@ class viewAddress extends State<myaddress> {
                           color: Color(0xff686868)),
                     ),
                     InkWell(
-                      onTap: () => showDialogAddress(),
+                      onTap: () {
+                        showDialogAddress();
+                      },
                       child: Image.asset(
                         "assets/image/more.png",
                         height: 25,
@@ -158,88 +206,95 @@ class viewAddress extends State<myaddress> {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemBuilder: (context, index) => Stack(children: [
-                  InkWell(
-                    onTap:()=>showDialogAddress(itemEdit: list[index]),
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  list[index].name,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "LibreBodoni-Medium"),
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 10,
-                                  color: const Color(0xffD3D3D3),
-                                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                                ),
-                                Text(
-                                  list[index].phone,
-                                  style: const TextStyle(
-                                      fontFamily: "LibreBodoni-Medium",
-                                      color: Color(0xffAEAEAE)),
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Ghi chú: ",
-                                  style: TextStyle(
-                                      fontFamily: "LibreBodoni-Medium",
-                                      color: Color(0xffAEAEAE)),
-                                ),
-                                Text(
-                                  list[index].note,
-                                  style: const TextStyle(
-                                      fontFamily: "LibreBodoni-Medium",
-                                      color: Color(0xffAEAEAE)),
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Địa chỉ: ",
-                                  style: TextStyle(
-                                      fontFamily: "LibreBodoni-Medium",
-                                      color: Color(0xffAEAEAE)),
-                                ),
-                                Text(
-                                  list[index].address,
-                                  style: const TextStyle(
-                                      fontFamily: "LibreBodoni-Medium",
-                                      color: Color(0xffAEAEAE)),
-                                )
-                              ],
-                            ),
-                          ],
+                itemBuilder: (context, index) {
+                  final address = listAddress[index];
+                  final key =address.key;
+                  final value =address.value;
+                  return Stack(children: [
+                    InkWell(
+                        onTap: () => {showDialogAddress(itemEdit: Item(value["username"], value["phone"] , value["note"] , value["address"],key
+                      ))},
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(value["username"]??"",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: "LibreBodoni-Medium"),
+                                  ),
+                                  Container(
+                                    width: 1,
+                                    height: 10,
+                                    color: const Color(0xffD3D3D3),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                  ),
+                                  Text(
+                                    value["phone"]??"",
+                                    style: const TextStyle(
+                                        fontFamily: "LibreBodoni-Medium",
+                                        color: Color(0xffAEAEAE)),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Ghi chú: ",
+                                    style: TextStyle(
+                                        fontFamily: "LibreBodoni-Medium",
+                                        color: Color(0xffAEAEAE)),
+                                  ),
+                                  Text(
+                                    value["note"]??"",
+                                    style: const TextStyle(
+                                        fontFamily: "LibreBodoni-Medium",
+                                        color: Color(0xffAEAEAE)),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Địa chỉ: ",
+                                    style: TextStyle(
+                                        fontFamily: "LibreBodoni-Medium",
+                                        color: Color(0xffAEAEAE)),
+                                  ),
+                                  Text(
+                                    value["address"]??"",
+                                    style: const TextStyle(
+                                        fontFamily: "LibreBodoni-Medium",
+                                        color: Color(0xffAEAEAE)),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                      right: 10,
-                      child: InkWell(
-                        onTap: ()=>_diadelete(context,list[index].id),
-                        child: Image.asset(
-                          "assets/image/close.png",
-                          height: 30,
-                          width: 30,
-                        ),
-                      )),
-                ]),
-                itemCount: list.length,
+                    Positioned(
+                        right: 10,
+                        child: InkWell(
+                          onTap: () {_diadelete(context,key);},
+                          child: Image.asset(
+                            "assets/image/close.png",
+                            height: 30,
+                            width: 30,
+                          ),
+                        )),
+                  ]);
+                },
+                itemCount:listAddress.length ,
               )
             ],
           ),
@@ -248,28 +303,24 @@ class viewAddress extends State<myaddress> {
     );
   }
 }
-
 class Dialogshow extends StatefulWidget {
   final Function(Item) onAdd;
-  final Item? editItem;
-  final bool checkEdit;
-
-  const Dialogshow(
+  final Item? itemToEdit;
+  final bool isEditing;
+  Dialogshow(
       {super.key,
-      required this.onAdd,
-      required this.editItem,
-      required this.checkEdit});
-
+      required this.onAdd,required this.itemToEdit,required this.isEditing});
   @override
-  ShowDialogAddandUpdate createState() => ShowDialogAddandUpdate();
+  ShowDialogAdd createState() => ShowDialogAdd();
 }
-class ShowDialogAddandUpdate extends State<Dialogshow> {
+class ShowDialogAdd extends State<Dialogshow> {
   final TextEditingController _nameControler = TextEditingController();
   final TextEditingController _phoneControler = TextEditingController();
   final TextEditingController _noteControler = TextEditingController();
   final TextEditingController _addresControler = TextEditingController();
   String errname = "", errphone = "", erraddres = "";
-  void onAdd() {
+  int check=-1;
+  void onAdd() async{
     setState(() {
       errname = validateName(_nameControler.text);
     });
@@ -282,13 +333,12 @@ class ShowDialogAddandUpdate extends State<Dialogshow> {
           erraddres = validateAddres(_addresControler.text);
         });
         if (erraddres.isEmpty) {
-          Item item = Item(
-              _nameControler.text,
-              _phoneControler.text,
-              _noteControler.text,
-              _addresControler.text,
-              widget.checkEdit ? widget.editItem!.id : -1);
-          widget.onAdd(item);
+          Item user= Item(_nameControler.text, _phoneControler.text, _noteControler.text, _addresControler.text, widget.isEditing ? widget.itemToEdit!.key :check.toString());
+          EasyLoading.show(status: "loading...");
+          await Future.delayed(Duration(seconds: 2));
+          EasyLoading.dismiss();
+          EasyLoading.showSuccess("Thành công");
+          widget.onAdd(user);
           Navigator.pop(context);
         }
       }
@@ -297,139 +347,111 @@ class ShowDialogAddandUpdate extends State<Dialogshow> {
   @override
   void initState() {
     super.initState();
-    if (widget.editItem != null) {
-      _nameControler.text = widget.editItem!.name;
-      _phoneControler.text = widget.editItem!.phone;
-      _noteControler.text = widget.editItem!.note;
-      _addresControler.text = widget.editItem!.address;
+    if (widget.itemToEdit != null) {
+      _nameControler.text = widget.itemToEdit!.name;
+      _phoneControler.text = widget.itemToEdit!.phone;
+      _noteControler.text = widget.itemToEdit!.note;
+      _addresControler.text = widget.itemToEdit!.address;
     }
   }
   @override
   Widget build(BuildContext context) {
-    final text = widget.checkEdit ? "Cập nhật" : "Thêm";
+    final isEditing = widget.itemToEdit != null;
+    final buttonText = isEditing ? 'Cập Nhật' : 'Thêm';
+    final text = isEditing ? 'Cập nhật địa chỉ' : 'Thêm địa chỉ';
     return AlertDialog(
       title: Center(
-          child: Text(widget.checkEdit ? "Cập nhật Địa Chỉ" : "Thêm Địa Chỉ",
+          child: Text(text,
               style: const TextStyle(fontFamily: "LibreBodoni-Medium"))),
       content: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: const Text("Tên người dùng",
-                      style: TextStyle(fontFamily: "LibreBodoni-Medium"))),
-              TextField(
-                controller: _nameControler,
-                decoration: InputDecoration(
-                    errorText: errname.isNotEmpty ? errname : null,
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                    hintText: "Tên người dùng",
-                    suffixIcon: InkWell(
-                      child: const Icon(Icons.clear),
-                      onTap: () {
-                        _nameControler.clear();
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-              ),
-              Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: const Text("Số điện thoại",
-                      style: TextStyle(fontFamily: "LibreBodoni-Medium"))),
-              TextField(
-                keyboardType: TextInputType.number,
-                controller: _phoneControler,
-                decoration: InputDecoration(
-                    errorText: errphone.isNotEmpty ? errphone : null,
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                    hintText: "Số điện thoại",
-                    suffixIcon: InkWell(
-                      child: const Icon(Icons.clear),
-                      onTap: () {
-                        _phoneControler.clear();
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-              ),
-              Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: const Text("Ghi chú",
-                      style: TextStyle(fontFamily: "LibreBodoni-Medium"))),
-              TextField(
-                controller: _noteControler,
-                decoration: InputDecoration(
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                    hintText: "Ghi chú",
-                    suffixIcon: InkWell(
-                      child: const Icon(Icons.clear),
-                      onTap: () {
-                        _noteControler.clear();
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-              ),
-              Container(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
                 alignment: Alignment.centerLeft,
                 margin: const EdgeInsets.symmetric(vertical: 10),
-                child: const Text(
-                  "Địa chỉ",
-                  style: TextStyle(fontFamily: "LibreBodoni-Medium"),
-                ),
+                child: const Text("Tên người dùng",
+                    style: TextStyle(fontFamily: "LibreBodoni-Medium"))),
+            TextField(
+              controller: _nameControler,
+              decoration: InputDecoration(
+                  errorText: errname.isNotEmpty ? errname : null,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  hintText: "Tên người dùng",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+            ),
+            Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: const Text("Số điện thoại",
+                    style: TextStyle(fontFamily: "LibreBodoni-Medium"))),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: _phoneControler,
+              decoration: InputDecoration(
+                  errorText: errphone.isNotEmpty ? errphone : null,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  hintText: "Số điện thoại",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+            ),
+            Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: const Text("Ghi chú",
+                    style: TextStyle(fontFamily: "LibreBodoni-Medium"))),
+            TextField(
+              controller: _noteControler,
+              decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  hintText: "Ghi chú",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              child: const Text(
+                "Địa chỉ",
+                style: TextStyle(fontFamily: "LibreBodoni-Medium"),
               ),
-              TextField(
-                controller: _addresControler,
-                decoration: InputDecoration(
-                    errorText: erraddres.isNotEmpty ? erraddres : null,
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                    hintText: "Địa chỉ",
-                    suffixIcon: InkWell(
-                      child: const Icon(Icons.clear),
-                      onTap: () {
-                        _addresControler.clear();
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+            ),
+            TextField(
+              controller: _addresControler,
+              decoration: InputDecoration(
+                  errorText: erraddres.isNotEmpty ? erraddres : null,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  hintText: "Địa chỉ",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                onAdd();
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xffff6900),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30)),
+              child: Text(
+                buttonText,
+                style: const TextStyle(
+                    fontSize: 18, fontFamily: "LibreBodoni-Italic"),
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  onAdd();
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xffff6900),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 30)),
-                child: Text(
-                  text,
-                  style:
-                      const TextStyle(fontSize: 18, fontFamily: "LibreBodoni-Italic"),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
   }
-
   @override
   void dispose() {
     _nameControler.dispose();

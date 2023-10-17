@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../main.dart';
 
-class viewNotifications extends State<notifications> {
+class viewNotifications extends State<notifications> with AutomaticKeepAliveClientMixin {
   bool showAllText = false;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -100,4 +101,8 @@ class viewNotifications extends State<notifications> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

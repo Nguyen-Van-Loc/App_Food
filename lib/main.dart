@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lab5/barNavigation.dart';
 import 'package:lab5/cartItem/cart.dart';
 import 'package:lab5/page/home.dart';
 import 'package:lab5/page/favorite.dart';
@@ -12,10 +9,13 @@ import 'package:lab5/page/notifications.dart';
 import 'package:lab5/splash.dart';
 import 'package:provider/provider.dart';
 import 'User/user.dart';
+import 'barNavigation.dart';
 import 'cartItem/addressPay.dart';
 import 'cartItem/historyCart.dart';
 import 'cartItem/payProduct.dart';
-import 'cartItem/productdetails.dart';
+import 'cartItem/productDetails.dart';
+import 'changeNotifier/Categories.dart';
+import 'changeNotifier/ProfileUser.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -24,43 +24,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(ChangeNotifierProvider(
-    create: (context) => getProflieUser(),
-    child: MyApp(),
-  ));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_)=>getProflieUser()),
+    ChangeNotifierProvider(create: (_)=>getProducts()),
+    ChangeNotifierProvider(create: (_)=>getCategories()),
+    ChangeNotifierProvider(create: (_)=>getCartUser()),
+  ],child: MyApp(),));
   configLoading();
 }
-
-class getProflieUser extends ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Map<String, dynamic>> _data = [];
-
-  List<Map<String, dynamic>> get data => _data;
-
-  Future<void> fetchData() async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final email = user.email;
-        final querySnapshot = await _firestore
-            .collection('User')
-            .where('email', isEqualTo: email)
-            .get();
-
-        _data = querySnapshot.docs.map((doc) {
-          final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          final String key = doc.id;
-          return {"key": key, "data": data};
-        }).toList();
-
-        notifyListeners();
-      }
-    } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
-    }
-  }
-}
-
 void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2000)
@@ -74,7 +45,8 @@ void configLoading() {
     ..textColor = Colors.yellow
     ..maskColor = Colors.blue.withOpacity(0.5)
     ..userInteractions = true
-    ..dismissOnTap = false;
+    ..dismissOnTap = false
+    ..toastPosition =EasyLoadingToastPosition.bottom;
 }
 
 class MyApp extends StatelessWidget {
@@ -133,13 +105,17 @@ class user extends StatefulWidget {
 }
 
 class productDetails extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final String keyId;
+  productDetails({ required this.data,required this.keyId});
   viewproductDetails createState() => viewproductDetails();
 }
-
 class payProduct extends StatefulWidget {
+  final int totaPrice;
+  final List<Map<String,dynamic>> data;
+  payProduct({required this.totaPrice,required this.data});
   viewpayProduct createState() => viewpayProduct();
 }
-
 class addressPay extends StatefulWidget {
   viewaddressPay createState() => viewaddressPay();
 }

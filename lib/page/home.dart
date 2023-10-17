@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import '../changeNotifier/Categories.dart';
 import '../main.dart';
 
 class Image1 {
@@ -11,28 +13,6 @@ class Image1 {
 }
 
 final CarouselController _controller = CarouselController();
-final List<Image1> imgList1 = [
-  Image1("Laptop",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Laptop-129x129.png"),
-  Image1("Tablet",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Tablet-128x129.png"),
-  Image1("Ốp lưng",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Oplung-128x128.png"),
-  Image1("Chuột máy tính",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/chuot-128x129.png"),
-  Image1("Máy cũ giá rẻ",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/icon-may-cu-60x60.png"),
-  Image1("Bàn phím",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/ban-phim-128x129.png"),
-  Image1("Loa",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Loa-128x128.png"),
-  Image1("Tai nghe",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Tainghe-128x129.png"),
-  Image1("Sạc dự phòng",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Sacduphong-128x129.png"),
-  Image1("Phụ kiện gaming",
-      "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn//content/Phukiengaming-128x129.png"),
-];
 final List<String> imgList = [
   'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/09/banner/Banner-1---Desk-380x200.png',
   'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/09/banner/Banner-1---Desk--2--380x200.png',
@@ -41,7 +21,8 @@ final List<String> imgList = [
 ];
 final List<Widget> imageSliders = imgList
     .map(
-      (item) => Container(
+      (item) =>
+      Container(
         margin: const EdgeInsets.all(5.0),
         child: Container(
           padding: const EdgeInsets.all(2),
@@ -59,17 +40,46 @@ final List<Widget> imageSliders = imgList
           ),
         ),
       ),
-    )
+)
     .toList();
 
-class viewHome extends State<home> {
+class viewHome extends State<home> with AutomaticKeepAliveClientMixin {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<getProducts>(context, listen: false).fetchDataProducts();
+    Provider.of<getCategories>(context, listen: false).fetchDataCategories();
+    final item1 = Provider.of<getProducts>(context,listen: false);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        setState(() {
+          if (countStart < item1.data.length) {
+            loading=true;
+            Future.delayed(Duration(seconds: 3));
+            countStart += 10;
+          }
+        });
+      }
+    });
+  }
+  bool showShimmer = true ,loading=true;
+  ScrollController _scrollController = ScrollController();
+  int countStart=10;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    final item = Provider.of<getCategories>(context);
+    final item1 = Provider.of<getProducts>(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width,
+          controller: _scrollController,
+          child: Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               child: Column(
                 children: [
                   Row(
@@ -93,7 +103,10 @@ class viewHome extends State<home> {
                             size: 25,
                           ),
                           onTap: () {
-                            Navigator.push(context, CupertinoPageRoute(builder: (context)=>cart()));
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => cart()));
                           },
                         ),
                       )
@@ -109,7 +122,7 @@ class viewHome extends State<home> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           contentPadding:
-                              const EdgeInsets.symmetric(vertical: 10)),
+                          const EdgeInsets.symmetric(vertical: 10)),
                     ),
                   ),
                   Container(
@@ -153,28 +166,56 @@ class viewHome extends State<home> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    height: 140,
-                    child: ListView.builder(
-                        itemCount: imgList1.length - 5,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => InkWell(
-                              onTap: () {},
-                              child: Card(
-                                elevation: 3,
-                                child: Column(
-                                  children: [
-                                    Image.network(
-                                      imgList1[index].image,
-                                      height: 100,
-                                      width: 100,
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      height: 140,
+                      child: ListView.builder(
+                          itemCount: item.isLoading ? 6 : item.data.length - 5,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            if (item.isLoading) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: InkWell(
+                                  onTap: () {},
+                                  child: Card(
+                                    elevation: 3,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 100,
+                                          width: 100,
+                                          color: Colors.white,
+                                        ),
+                                        Container(
+                                          color: Colors.white,
+                                        ),
+                                      ],
                                     ),
-                                    Text(imgList1[index].text)
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            )),
-                  ),
+                              );
+                            } else {
+                              final getItem = item.data[index];
+                              final itemData = getItem["data"] ?? "";
+                              return InkWell(
+                                onTap: () {},
+                                child: Card(
+                                  elevation: 3,
+                                  child: Column(
+                                    children: [
+                                      Image.network(
+                                        itemData["image"] ?? "",
+                                        height: 100,
+                                        width: 100,
+                                      ),
+                                      Text(itemData['name'] ?? ""),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          })),
                   Card(
                     color: const Color(0xff6cd347),
                     margin: const EdgeInsets.symmetric(vertical: 10),
@@ -205,7 +246,7 @@ class viewHome extends State<home> {
                                 aspectRatio: 2.0,
                                 enlargeCenterPage: true,
                                 enlargeStrategy:
-                                    CenterPageEnlargeStrategy.height,
+                                CenterPageEnlargeStrategy.height,
                               ),
                               items: imageSliders,
                               carouselController: _controller,
@@ -214,7 +255,7 @@ class viewHome extends State<home> {
                               margin: const EdgeInsets.only(top: 50),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   InkWell(
                                     onTap: () => _controller.previousPage(),
@@ -224,7 +265,7 @@ class viewHome extends State<home> {
                                             topRight: Radius.circular(10),
                                             bottomRight: Radius.circular(10)),
                                         color:
-                                            Colors.transparent.withOpacity(.3),
+                                        Colors.transparent.withOpacity(.3),
                                       ),
                                       width: 40,
                                       height: 50,
@@ -242,7 +283,7 @@ class viewHome extends State<home> {
                                             topLeft: Radius.circular(10),
                                             bottomLeft: Radius.circular(10)),
                                         color:
-                                            Colors.transparent.withOpacity(.3),
+                                        Colors.transparent.withOpacity(.3),
                                       ),
                                       width: 40,
                                       height: 50,
@@ -290,12 +331,13 @@ class viewHome extends State<home> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: 3,
-                              itemBuilder: (context, index) => InkWell(
+                              itemBuilder: (context, index) =>
+                                  InkWell(
                                     onTap: () {},
                                     child: Card(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(15)),
+                                          BorderRadius.circular(15)),
                                       elevation: 10,
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 10),
@@ -313,49 +355,53 @@ class viewHome extends State<home> {
                                             bottom: 0,
                                             child: Container(
                                               height: 50,
-                                              width: MediaQuery.of(context)
+                                              width: MediaQuery
+                                                  .of(context)
                                                   .size
                                                   .width,
                                               decoration: const BoxDecoration(
                                                   borderRadius:
-                                                      BorderRadius.vertical(
-                                                          top: Radius.circular(
-                                                              10)),
+                                                  BorderRadius.vertical(
+                                                      top: Radius.circular(
+                                                          10)),
                                                   color: Color(0xfff1f1f1)),
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                       margin:
-                                                          const EdgeInsets.only(
-                                                              left: 10, top: 5),
+                                                      const EdgeInsets.only(
+                                                          left: 10, top: 5),
                                                       width: 200,
                                                       child: const Text(
                                                         "Acer Aspire 5 A514 54 5127 i5 1135G7 (NX.A28SV.007)",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
-                                                            TextAlign.left,
+                                                        TextAlign.left,
                                                         style: TextStyle(
                                                             fontSize: 18,
                                                             fontFamily:
-                                                                "LibreBaskerville-Regular"),
+                                                            "LibreBaskerville-Regular"),
                                                       )),
                                                   Container(
-                                                    width: MediaQuery.of(context).size.width,
+                                                    width:
+                                                    MediaQuery
+                                                        .of(context)
+                                                        .size
+                                                        .width,
                                                     child: Row(
                                                         mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                         children: [
                                                           Container(
-
                                                             margin:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    left: 10,
-                                                                    top: 5),
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 10,
+                                                                top: 5),
                                                             child: const Row(
                                                               children: [
                                                                 Text(
@@ -373,15 +419,17 @@ class viewHome extends State<home> {
                                                                 SizedBox(
                                                                   width: 10,
                                                                 ),
-                                                                Text("(" "30" ")")
+                                                                Text("("
+                                                                    "30"
+                                                                    ")")
                                                               ],
                                                             ),
                                                           ),
                                                           Container(
                                                             margin:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    right: 10),
+                                                            const EdgeInsets
+                                                                .only(
+                                                                right: 10),
                                                             child: const Text(
                                                               "15.490.000₫",
                                                               style: TextStyle(
@@ -389,8 +437,8 @@ class viewHome extends State<home> {
                                                                   color: Color(
                                                                       0xffd0021c),
                                                                   fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                                  FontWeight
+                                                                      .bold),
                                                             ),
                                                           ),
                                                         ]),
@@ -416,139 +464,241 @@ class viewHome extends State<home> {
                   ),
                   Card(
                     color: const Color(0xffeaeaea),
-                    margin: const EdgeInsets.only(top: 10, bottom: 0),
+                    margin: const EdgeInsets.only(top: 10),
                     elevation: 2,
                     child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: GridView.builder(
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 10,
+                            itemCount: item1.isLoading ? 6 : countStart,
                             shrinkWrap: true,
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, mainAxisExtent: 370),
-                            itemBuilder: (context, index) => InkWell(
-                                onTap: () {},
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, mainAxisExtent: 370),
+                            itemBuilder: (context, index) {
+                              if (item1.isLoading){
+                                return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
                                 child: Card(
                                   elevation: 3,
                                   margin: const EdgeInsets.all(10),
                                   child: Column(
-                                    mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
-                                      Center(
-                                        child: Image.network(
-                                          "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/42/213031/iphone-12-tim-1-600x600.jpg",
-                                          height: 200,
-                                        ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 200,
+                                        color: Colors.white,
                                       ),
                                       Container(
                                         alignment: Alignment.centerLeft,
                                         margin: const EdgeInsets.only(
                                             left: 10, top: 5),
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                  width: 1,
-                                                  color: Colors.white,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: const Color(0xffe91f63),
-                                              ),
-                                              width: 95,
-                                              height: 22,
-                                              padding: const EdgeInsets.only(
-                                                  right: 5, top: 2),
-                                              child: const Text(
-                                                "Giá Rẻ Quá",
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            Positioned(
-                                                top: 1,
-                                                child: Image.network(
-                                                  "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/04/content/icon-50x50-2.png",
-                                                  height: 20,
-                                                  width: 20,
-                                                ))
-                                          ],
+                                        child: Container(
+                                          width: 100,
+                                          height: 35,
+                                          color: Colors.white,
                                         ),
                                       ),
                                       const SizedBox(
                                         height: 10,
                                       ),
                                       Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: const Text(
-                                            "Laptop Acer Nitro 5 Gaming AN515 57 5669 i5 11400H/8GB/512GB",
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily:
-                                                    "LibreBaskerville-Regular"),
-                                          )),
+                                        width: double.infinity,
+                                        height: 20,
+                                        color: Colors
+                                            .white,
+                                      ),
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              "15.490.000",
-                                              style: TextStyle(
-                                                  fontFamily:
-                                                      "LibreBodoni-Medium",
-                                                  fontSize: 17,
-                                                  color: Color(0xffd0021c),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Container(
-                                              color: const Color(0xfffff0e9),
-                                              child: const Text(
-                                                "-17%",
-                                                style: TextStyle(
-                                                    color: Color(0xffeb5757)),
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: 80,
+                                            height: 20,
+                                            color: Colors.white,
+                                          ),
+                                          Container(
+                                            width: 40,
+                                            height: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ],
                                       ),
                                       Container(
                                         margin: const EdgeInsets.only(
                                             left: 10, top: 10),
-                                        child: const Row(
+                                        child: Row(
                                           children: [
-                                            Text(
-                                              "4.4",
-                                              style: TextStyle(
-                                                  color: Color(0xfffb6e2e)),
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: Color(0xfffb6e2e),
-                                              size: 18,
+                                            Container(
+                                              width: 30,
+                                              height: 20,
+                                              color: Colors.white,
                                             ),
                                             SizedBox(
                                               width: 10,
                                             ),
-                                            Text("(" "30" ")")
+                                            Container(
+                                              width: 40,
+                                              height: 20,
+                                              color: Colors.white,
+                                            ),
                                           ],
                                         ),
                                       )
                                     ],
                                   ),
-                                )))),
+                                ),
+                              );
+                              }else if(loading && index >= countStart){
+                                return CircularProgressIndicator();
+                              }
+                              else{
+                                final getItem = item1.data[index];
+                                final itemData = getItem["data"];
+                                final keyId = getItem["key"];
+                                return InkWell(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          CupertinoPageRoute(
+                                              builder: (context) =>productDetails(data: itemData, keyId: keyId)));
+                                    },
+                                    child: Card(
+                                      elevation: 3,
+                                      margin: const EdgeInsets.all(10),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          Center(
+                                            child: Image.network(
+                                              itemData["ImageURL "],
+                                              height: 200,
+                                            ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 5),
+                                            child: itemData["Listimages "] !=
+                                                null &&
+                                                itemData["Listimages "]
+                                                    .isNotEmpty
+                                                ? Image.network(
+                                                itemData["Listimages "],
+                                                height: 30)
+                                                : null,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              margin:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              child: Text(
+                                                itemData["ProductName  "],
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                    "LibreBaskerville-Regular"),
+                                              )),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      itemData["Price  "],
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                          "LibreBodoni-Medium",
+                                                          fontSize: 17,
+                                                          color:
+                                                          Color(0xffd0021c),
+                                                          fontWeight:
+                                                          FontWeight.bold),
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 10),
+                                                      child: Text("₫",
+                                                          style: TextStyle(
+                                                              color: Color(
+                                                                  0xffd0021c),
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .bold)),
+                                                    )
+                                                  ],
+                                                ),
+                                                Container(
+                                                  color:
+                                                  const Color(0xfffff0e9),
+                                                  child: itemData["discount"] !=
+                                                      null &&
+                                                      itemData["discount"]
+                                                          .isNotEmpty
+                                                      ? Text(
+                                                    "-" +
+                                                        itemData[
+                                                        "discount"] +
+                                                        "%",
+                                                    style: TextStyle(
+                                                        color: Color(
+                                                            0xffeb5757)),
+                                                  )
+                                                      : null,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 5),
+                                            child: const Row(
+                                              children: [
+                                                Text(
+                                                  "4.4",
+                                                  style: TextStyle(
+                                                      color: Color(0xfffb6e2e)),
+                                                ),
+                                                Icon(
+                                                  Icons.star,
+                                                  color: Color(0xfffb6e2e),
+                                                  size: 18,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text("(" "30" ")")
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ));
+                                if(loading){
+                                  CircularProgressIndicator();
+                                }
+                              }
+                              }
+                            )),
                   ),
                 ],
               )),
@@ -556,4 +706,8 @@ class viewHome extends State<home> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

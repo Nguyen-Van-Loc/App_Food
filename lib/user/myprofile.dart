@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lab5/User/user.dart';
 import 'package:lab5/Validate/validateProfile.dart';
+import 'package:shimmer/shimmer.dart';
 
 class viewMyProfile extends State<myprofile> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -219,7 +220,8 @@ class viewMyProfile extends State<myprofile> {
                             ? Image.file(imageFile!)
                             : linkImg != null
                             ? Image.network(linkImg!)
-                            : Container(padding:EdgeInsets.all(30),child: CircularProgressIndicator()),
+                            : Shimmer.fromColors(baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!, child: Container(height: 100,color: Colors.white,),)
                   ),
                       Positioned(
                         bottom: 0,

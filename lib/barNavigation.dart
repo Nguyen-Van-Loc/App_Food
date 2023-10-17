@@ -18,7 +18,6 @@ class viewBar extends State<barNavigation> {
   String selectedIconButton = '';
   final List<Widget> screen = [home(), favorite(), profile(), notifications()];
   Widget currentScreen = home();
-
   @override
   void initState() {
     super.initState();
