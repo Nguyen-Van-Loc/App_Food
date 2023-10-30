@@ -7,10 +7,14 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:lab5/User/user.dart';
 import 'package:lab5/Validate/validateProfile.dart';
 import 'package:shimmer/shimmer.dart';
-
+class myprofile extends StatefulWidget {
+  viewMyProfile createState() => viewMyProfile();
+  final Map<String, dynamic> data;
+  final String keyId;
+  myprofile({required this.data, required this.keyId});
+}
 class viewMyProfile extends State<myprofile> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int select = 0;
@@ -45,7 +49,6 @@ class viewMyProfile extends State<myprofile> {
       });
     }
   }
-
   Future<void> uploadImage(File imageFile) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {

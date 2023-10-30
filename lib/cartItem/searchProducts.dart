@@ -1,0 +1,412 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lab5/cartItem/productDetails.dart';
+import 'package:lab5/changeNotifier/Categories.dart';
+import 'package:lab5/main.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
+
+class searchProducts extends  StatefulWidget{
+  final String searchKeyword;
+  searchProducts({super.key,required this.searchKeyword});
+  viewSerchProducts createState()=>viewSerchProducts();
+}
+class viewSerchProducts extends State<searchProducts>{
+  final containerSearch = TextEditingController();
+  bool show = false;
+  String? price;
+  final allProducts = <Map<String, dynamic>>[];
+  void getProducts()async{
+      final itemCa = Provider.of<categoryProducts>(context,listen: false);
+      await Provider.of<categoryProducts>(context,listen: false).searchProducts(containerSearch.text);
+      for (final item in itemCa.data) {
+        allProducts.addAll(item["productsData"]);
+      }
+  }
+  @override
+  void initState() {
+    super.initState();
+    containerSearch.text = widget.searchKeyword ;
+    getProducts();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    containerSearch.clear();
+  }
+  void sortProductsAZ() {
+    allProducts.clear();
+    final itemCa = Provider.of<categoryProducts>(context,listen: false);
+    setState(() {
+      for (final item in itemCa.data) {
+        allProducts.addAll(item["productsData"]);
+      }
+      allProducts.sort((a, b) {
+        final productNameA = a["data"]["ProductName"];
+        final productNameB = b["data"]["ProductName"];
+        return productNameA.compareTo(productNameB);
+      });
+    });
+  }
+  void sortProductsZA() {
+    allProducts.clear();
+    final itemCa = Provider.of<categoryProducts>(context,listen: false);
+    setState(() {
+      for (final item in itemCa.data) {
+        allProducts.addAll(item["productsData"]);
+      }
+      allProducts.sort((a, b) {
+        final productNameA = a["data"]["ProductName"];
+        final productNameB = b["data"]["ProductName"];
+        return productNameB.compareTo(productNameA);
+      });
+    });
+  }
+  void sortProductsPriceAZ() {
+    allProducts.clear();
+    final itemCa = Provider.of<categoryProducts>(context,listen: false);
+    setState(() {
+      for (final item in itemCa.data) {
+        allProducts.addAll(item["productsData"]);
+      }
+      allProducts.sort((a, b) {
+        final productNameA = a["data"]["Price  "];
+        final productNameB = b["data"]["Price  "];
+        return productNameA.compareTo(productNameB);
+      });
+    });
+  }
+  void sortProductsPriceZA() {
+    allProducts.clear();
+    final itemCa = Provider.of<categoryProducts>(context,listen: false);
+    setState(() {
+      for (final item in itemCa.data) {
+        allProducts.addAll(item["productsData"]);
+      }
+      allProducts.sort((a, b) {
+        final productNameA = a["data"]["Price  "];
+        final productNameB = b["data"]["Price  "];
+        return productNameB.compareTo(productNameA);
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final itemCa = Provider.of<categoryProducts>(context);
+    return  Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 10,),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        allProducts.clear();
+                      });
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width - 100,
+                    child: TextField(
+                      onSubmitted: (value) async{
+                        if (value.isNotEmpty){
+                          allProducts.clear();
+                          await itemCa.searchProducts(value);
+                          searchProducts(searchKeyword: value);
+                          getProducts();
+                        }},
+                      controller: containerSearch,
+                      style: TextStyle(fontSize: 18),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 10,
+                        ),
+                        hintText: "Search...",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon:  InkWell(
+                          onTap: () {
+                            setState(() {
+                              containerSearch.clear();
+                            });
+                          },
+                          child: Icon(Icons.clear),
+                        ),
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          show = !show;
+                        });
+                      },
+                      icon: Image.asset("assets/image/edit.png")),
+                ],
+              ),
+              SizedBox(height: 10,),
+              show ? Card(
+                elevation: 3,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {sortProductsAZ();},
+                          child: Text("Theo tên từ A-Z",style: TextStyle(fontSize: 13),),
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xffd9d9d9),
+                              foregroundColor: Color(0xff3a3030),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              )
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {sortProductsZA();},
+                          child: Text("Theo tên từ Z-A",style: TextStyle(fontSize: 13)),
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xffd9d9d9),
+                              foregroundColor: Color(0xff3a3030),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              )
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text("Theo đánh giá",style: TextStyle(fontSize: 13)),
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xffd9d9d9),
+                              foregroundColor: Color(0xff3a3030),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              )
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          onPressed: () {sortProductsPriceAZ();},
+                          child: Text("Theo giá từ thấp đến cao",style: TextStyle(fontSize: 13)),
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xffd9d9d9),
+                              foregroundColor: Color(0xff3a3030),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              )
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {sortProductsPriceZA();},
+                          child: Text("Theo giá từ cao đến thấp",style: TextStyle(fontSize: 13)),
+                          style: TextButton.styleFrom(
+                              backgroundColor: Color(0xffd9d9d9),
+                              foregroundColor: Color(0xff3a3030),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)
+                              )
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ):Container(),
+              Container(width: double.infinity,height: 10,color: Colors.grey.withOpacity(.2),margin: EdgeInsets.symmetric(vertical: 10),),
+              itemCa.isLoading ? Container(
+                height: MediaQuery.of(context).size.height-96,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: LoadingAnimationWidget.waveDots(color: Colors.red, size: 40),
+                ),
+              ):
+              itemCa.data.isNotEmpty? ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 1,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  print(allProducts);
+                  return GridView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: allProducts.length,
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 370,
+                    ),
+                    itemBuilder: (context, productIndex) {
+                      final item = allProducts[productIndex];
+                      final itemData = item["data"];
+                      final itemKey = item["key"];
+                      final keyIdCa =item["categoryKey"];
+                      String fomatPrice = NumberFormat.decimalPattern("vi").format(itemData["Price  "]);
+                      price = fomatPrice.toString().replaceAll(",", ".");
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => productDetails(data: itemData, keyId: itemKey,keyIdCa: keyIdCa,),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 3,
+                          margin: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Image.network(itemData["ImageURL "], height: 200),
+                              ),
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(left: 10, top: 5),
+                                child: itemData["Listimages "] != null && itemData["Listimages "].isNotEmpty
+                                    ? Image.network(itemData["Listimages "], height: 30)
+                                    : null,
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  itemData["ProductName"],
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontFamily: "LibreBaskerville-Regular"),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          price!,
+                                          style: TextStyle(
+                                            fontFamily: "LibreBodoni-Medium",
+                                            fontSize: 17,
+                                            color: Color(0xffd0021c),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(bottom: 10),
+                                          child: Text("₫", style: TextStyle(color: Color(0xffd0021c), fontWeight: FontWeight.bold)),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      color: const Color(0xfffff0e9),
+                                      child: itemData["discount"] != null && itemData["discount"].isNotEmpty
+                                          ? Text(
+                                        "-" + itemData["discount"] + "%",
+                                        style: TextStyle(color: Color(0xffeb5757)),
+                                      )
+                                          : null,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 10, top: 5),
+                                child: const Row(
+                                  children: [
+                                    Text("4.4", style: TextStyle(color: Color(0xfffb6e2e)),
+                                    ),
+                                    Icon(
+                                      Icons.star,
+                                      color: Color(0xfffb6e2e),
+                                      size: 18,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text("(" "30" ")")
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ):
+                 Container(
+                   margin: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                   child:Column(
+                     children: [
+                       RichText(
+                         text: TextSpan(
+                           children: <TextSpan>[
+                           TextSpan(
+                             text: "Rất tiếc, Chúng tôi không tìm thấy kết quả nào phù hợp với từ khóa ",
+                             style: TextStyle(
+                               color: Colors.black,
+                                 fontSize: 16
+                             ),
+                           ),
+                             TextSpan(
+                               text:  "\"${widget.searchKeyword}\"" ,
+                               style: TextStyle(
+                                 color: Colors.black,
+                                 fontWeight: FontWeight.bold,
+                                 fontSize: 16
+                               ),
+                             ),
+                           ],
+                         ),
+                       ),
+                       SizedBox(height: 10,),
+                       RichText(
+                         text: TextSpan(
+                           children: <TextSpan>[
+                             TextSpan(
+                               text: "Để tìm được kết quả chính xác hơn, bạn vui lòng:",
+                               style: TextStyle(
+                                   color: Colors.black,
+                                   fontWeight: FontWeight.bold,
+                                   fontSize: 16
+                               ),
+                             ),
+                             TextSpan(
+                               text:  "\n -Kiểm tra lỗi chính tả của từ khóa đã nhập.\n -Thử lại bằng từ khóa khác.\n -Thử lại bằng những từ khóa tổng quát hơn.\n -Thử lại bằng những từ khóa ngắn gọn hơn." ,
+                               style: TextStyle(
+                                   color: Colors.black,
+
+                                   fontSize: 16
+                               ),
+                             ),
+                           ],
+                         ),
+                       ),],
+                   ),
+                 )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

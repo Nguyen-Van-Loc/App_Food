@@ -1,19 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lab5/cartItem/cart.dart';
-import 'package:lab5/page/home.dart';
-import 'package:lab5/page/favorite.dart';
-import 'package:lab5/page/menu.dart';
-import 'package:lab5/page/profile.dart';
 import 'package:lab5/page/notifications.dart';
-import 'package:lab5/splash.dart';
 import 'package:provider/provider.dart';
-import 'User/user.dart';
 import 'barNavigation.dart';
-import 'cartItem/addressPay.dart';
-import 'cartItem/historyCart.dart';
-import 'cartItem/payProduct.dart';
-import 'cartItem/productDetails.dart';
 import 'changeNotifier/Categories.dart';
 import 'changeNotifier/ProfileUser.dart';
 import 'firebase_options.dart';
@@ -29,8 +19,18 @@ void main() async {
     ChangeNotifierProvider(create: (_)=>getProducts()),
     ChangeNotifierProvider(create: (_)=>getCategories()),
     ChangeNotifierProvider(create: (_)=>getCartUser()),
+    ChangeNotifierProvider(create: (_)=>getOderUser()),
+    ChangeNotifierProvider(create: (_)=>categoryProducts()),
+    ChangeNotifierProvider(create: (_)=>getFavouriteUser()),
+    ChangeNotifierProvider(create: (_)=>getNotiUser())
   ],child: MyApp(),));
   configLoading();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessegerBackground);
+
+}
+Future<void> firebaseMessegerBackground(RemoteMessage message)async{
+  await Firebase.initializeApp();
+  print(message.notification!.body.toString());
 }
 void configLoading() {
   EasyLoading.instance
@@ -44,12 +44,27 @@ void configLoading() {
     ..indicatorColor = Colors.yellow
     ..textColor = Colors.yellow
     ..maskColor = Colors.blue.withOpacity(0.5)
-    ..userInteractions = true
+    ..userInteractions = false
     ..dismissOnTap = false
     ..toastPosition =EasyLoadingToastPosition.bottom;
 }
-
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+class _MyAppState extends State<MyApp> {
+  final NotificationServices _services = NotificationServices();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _services.requestNotificationServices();
+    _services.firebaseInit(context);
+    _services.getDeviceToken().then((value) {
+      print(value);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -64,58 +79,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class splacsh extends StatefulWidget {
-  viewSplash createState() => viewSplash();
-}
 
-class barNavigation extends StatefulWidget {
-  viewBar createState() => viewBar();
-}
 
-class home extends StatefulWidget {
-  viewHome createState() => viewHome();
-}
 
-class favorite extends StatefulWidget {
-  viewFavorite createState() => viewFavorite();
-}
 
-class profile extends StatefulWidget {
-  viewProfile createState() => viewProfile();
-}
 
-class notifications extends StatefulWidget {
-  viewNotifications createState() => viewNotifications();
-}
 
-class menu extends StatefulWidget {
-  viewMenu createState() => viewMenu();
-}
 
-class cart extends StatefulWidget {
-  viewCart createState() => viewCart();
-}
 
-class historycart extends StatefulWidget {
-  viewhistoryCart createState() => viewhistoryCart();
-}
 
-class user extends StatefulWidget {
-  viewUser createState() => viewUser();
-}
 
-class productDetails extends StatefulWidget {
-  final Map<String, dynamic> data;
-  final String keyId;
-  productDetails({ required this.data,required this.keyId});
-  viewproductDetails createState() => viewproductDetails();
-}
-class payProduct extends StatefulWidget {
-  final int totaPrice;
-  final List<Map<String,dynamic>> data;
-  payProduct({required this.totaPrice,required this.data});
-  viewpayProduct createState() => viewpayProduct();
-}
-class addressPay extends StatefulWidget {
-  viewaddressPay createState() => viewaddressPay();
-}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,20 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lab5/cartItem/productPortfolio.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../changeNotifier/Categories.dart';
 import '../main.dart';
 
+class menu extends StatefulWidget {
+  viewMenu createState() => viewMenu();
+}
 class viewMenu extends State<menu> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<categoryProducts>(context,listen: false).getCategoriesProducts();
+    isLoading();
+  }
+  bool checkLoading=true;
+  void isLoading() async{
+    await Future.delayed(Duration(seconds: 3));
+    setState(() {
+      checkLoading=false;
+    });
+  }
+  @override
   Widget build(BuildContext context) {
-    final item = Provider.of<getCategories>(context);
-    item.fetchDataCategories();
+    final itemProduct = Provider.of<categoryProducts>(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -61,18 +80,13 @@ class viewMenu extends State<menu> {
                 )
               ],
             ),
-            Container(
-              margin: const EdgeInsets.only(
-                  top: 30, bottom: 20, right: 10, left: 10),
-              child: TextField(
-                decoration: InputDecoration(
-                    hintText: "Search",
-                    prefixIcon: const Icon(CupertinoIcons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10)),
-              ),
-            ),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 5,
+                  color: Color(0xffe7e6e6),
+                ),
+            SizedBox(height: 30,),
             Stack(
               children: [
                 Container(
@@ -84,92 +98,119 @@ class viewMenu extends State<menu> {
                       color: Color(0xffee683f),
                     ),
                     width: 120,
-                    height: item.data.length*130),
+                    height: itemProduct.result.length*130),
+                checkLoading || itemProduct.isLoading ? Container(
+                  height: MediaQuery.of(context).size.height-96,
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: LoadingAnimationWidget.waveDots(color: Colors.red, size: 40),
+                  ),
+                ):
+                    itemProduct.result.isNotEmpty ?
                 Container(
                     margin: EdgeInsets.only(bottom: 20, top: 20),
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        final getItem = item.data[index];
-                        final itemData = getItem["data"] ?? "";
+                        final getIndex = itemProduct.result[index];
+                        final itemData = getIndex["categoryData"];
                         return Card(
                           shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none),
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide.none,
+                          ),
                           elevation: 3,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 13),
+                          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => productPortfolio(data: getIndex["productsData"],Name:itemData["name"],keyID:getIndex["categoryKey"], ),
+                                ),
+                              );
+                            },
                             child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(right: 20),
-                                    decoration: BoxDecoration(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(right: 20),
+                                      decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.withOpacity(0.5),
-                                          )
+                                          ),
                                         ],
-                                        color: Colors.white),
-                                    padding: EdgeInsets.all(10),
-                                    child: Image.network(
-                                      itemData["image"],
-                                      width: 80,
-                                      height: 80,
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                          itemData["name"],
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "LibreBodoni-Medium"),
-                                        ),
-                                        margin: EdgeInsets.only(top: 20),
+                                        color: Colors.white,
                                       ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            child: Text(
-                                              itemData["description"],
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontFamily:
-                                                      "LibreBodoni-Medium"),
+                                      padding: EdgeInsets.all(10),
+                                      child: Image.network(
+                                        itemData["image"],
+                                        width: 80,
+                                        height: 80,
+                                      ),
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                          itemData["name"],
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "LibreBodoni-Medium",
                                             ),
                                           ),
-                                          Container(
-                                            child: Text(
-                                              " Sản phẩm",
-                                              style: TextStyle(
+                                          margin: EdgeInsets.only(top: 20),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              child: Text(
+                                                "${itemProduct.result[index]["productsData"].length}",
+                                                style: TextStyle(
                                                   fontSize: 16,
-                                                  fontFamily:
-                                                      "LibreBodoni-Medium"),
+                                                  fontFamily: "LibreBodoni-Medium",
+                                                ),
+                                              ),
                                             ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                                Image.asset("assets/image/arrowhead.png",height: 30,width: 30,)
-                              ]
+                                            Container(
+                                              child: Text(
+                                                " Sản phẩm",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: "LibreBodoni-Medium",
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Image.asset(
+                                  "assets/image/arrowhead.png",
+                                  height: 30,
+                                  width: 30,
+                                ),
+                              ],
                             ),
                           ),
                         );
                       },
-                      itemCount: item.data.length,
-                    ))
+                      itemCount: itemProduct.result.length,
+                    )):Container(
+                      height: MediaQuery.of(context).size.height-96,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: LoadingAnimationWidget.waveDots(color: Colors.red, size: 40),
+                      ),)
               ],
             )
           ]),

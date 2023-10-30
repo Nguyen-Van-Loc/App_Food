@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lab5/main.dart';
+import 'package:lab5/barNavigation.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
+class splacsh extends StatefulWidget {
+  viewSplash createState() => viewSplash();
+}
 class viewSplash extends State<splacsh> {
   double _scale = 1.0;
   double _maxScale = 1.2;

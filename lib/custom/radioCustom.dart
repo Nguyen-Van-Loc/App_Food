@@ -37,3 +37,23 @@ class CusTomRadio<T> extends StatelessWidget {
     );
   }
 }
+class CustomSearchController extends SearchController {
+  final FocusNode focusNode = FocusNode();
+  @override
+  void openView() {
+    focusNode.requestFocus();
+  }
+  @override
+  void closeView([String? query]) {
+    focusNode.unfocus();
+  }
+  void searchString(String keyword) {
+    // Thực hiện hành động của bạn khi người dùng thực hiện tìm kiếm
+    print('Tìm kiếm với từ khóa: $keyword');
+  }
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+}

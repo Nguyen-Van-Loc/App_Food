@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/account/Login/forgotPassword.dart';
 import 'package:lab5/account/Logup/logup.dart';
-import 'package:lab5/main.dart';
 import 'package:restart_app/restart_app.dart';
 
 import '../../Validate/validateLogin.dart';

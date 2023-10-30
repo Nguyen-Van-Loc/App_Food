@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lab5/main.dart';
+import 'package:lab5/User/password.dart';
+import 'package:lab5/user/address.dart';
+import 'package:lab5/user/myprofile.dart';
 import 'package:lab5/user/verifyAccount.dart';
 import 'package:provider/provider.dart';
 import '../changeNotifier/ProfileUser.dart';
-import 'password.dart';
-import 'address.dart';
-import 'myprofile.dart';
-
+class user extends StatefulWidget {
+  viewUser createState() => viewUser();
+}
 class viewUser extends State<user> {
   @override
   Widget build(BuildContext context) {
@@ -186,20 +187,6 @@ class viewUser extends State<user> {
       ),
     );
   }
-}
-
-class myprofile extends StatefulWidget {
-  viewMyProfile createState() => viewMyProfile();
-  final Map<String, dynamic> data;
-  final String keyId;
-  myprofile({required this.data, required this.keyId});
-}
-
-class myaddress extends StatefulWidget {
-  viewAddress createState() => viewAddress();
-  final Map<String, dynamic> data;
-  final String keyId;
-  myaddress({required this.data, required this.keyId});
 }
 
 class mypass extends StatefulWidget {

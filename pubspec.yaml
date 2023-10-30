@@ -38,7 +38,7 @@ dependencies:
   flutter_holo_date_picker: ^1.1.2+1
   intl: ^0.18.1
   firebase_core: ^2.17.0
-  cloud_firestore: ^4.9.2
+  cloud_firestore: ^4.12.0
   firebase_auth: ^4.10.0
   restart_app: ^1.2.1
   flutter_easyloading: ^3.0.5
@@ -49,6 +49,11 @@ dependencies:
   path_provider: ^2.1.1
   expandable_text: ^2.3.0
   loadmore: ^2.1.0
+  app_settings: ^5.1.1
+  firebase_messaging: ^14.7.2
+  flutter_local_notifications: ^16.1.0
+  badges: ^3.1.2
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -141,6 +146,16 @@ flutter:
     - assets/image/Group 107.png
     - assets/image/mail.png
     - assets/image/key.png
+    - assets/image/edit.png
+    - assets/image/search.png
+    - assets/image/notification.png
+    - assets/image/transport.png
+    - assets/image/location.png
+    - assets/image/shopping-bag.png
+    - assets/image/to-do-list.png
+    - assets/image/delivery-service.png
+    - assets/image/booking.png
+    - assets/image/cancel.png
   fonts:
     - family: LibreBodoni-Bold
       fonts:

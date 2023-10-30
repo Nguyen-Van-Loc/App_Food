@@ -5,19 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/account/Login/login.dart';
 import 'package:lab5/account/Logup/logup.dart';
+import 'package:lab5/cartItem/cart.dart';
+import 'package:lab5/cartItem/historyCart.dart';
+import 'package:lab5/user/user.dart';
 import 'package:provider/provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:shimmer/shimmer.dart';
 import '../changeNotifier/ProfileUser.dart';
-import '../main.dart';
-
+import 'notifications.dart';
+class profile extends StatefulWidget {
+  viewProfile createState() => viewProfile();
+}
 class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
+  final NotificationServices _services = NotificationServices();
   @override
-  void initState(){
+  void initState() {
+    // TODO: implement initState
     super.initState();
+    _services.requestNotificationServices();
+    _services.firebaseInit(context);
+    _services.getDeviceToken().then((value) {
+      print(value);
+    });
     _checkAuthentication();
     EasyLoading.dismiss();
     getImage();
@@ -78,62 +90,16 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final itemCart=Provider.of<getCartUser>(context);
     final item =Provider.of<getProflieUser>(context);
     item.fetchData();
     final username = item.data.isNotEmpty? item.data[0]["data"]["username"]:"";
+    if(item.data.isNotEmpty){
+      itemCart.fetchDataCart(item.data[0]["key"]);
+    }
     return Scaffold(
       body: SafeArea(
-        child: _user == null ?
-        Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child:  Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-                  child: Text(
-                    "Người dùng chưa thể thực hiện chức năng này vui lòng Đăng nhập hoặc Đăng ký",style: TextStyle(fontSize: 18,fontFamily: "LibreBodoni-Medium"),),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context)=> login())),
-                      child: Text(
-                        "Đăng nhập",
-                        style: TextStyle(
-                            fontSize: 18, fontFamily: "LibreBodoni-Medium"),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          backgroundColor: Color(0xffFF3D00),
-                          padding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 35)),
-                    ),
-                    SizedBox(width: 10,),
-                    ElevatedButton(
-                      onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context)=> logup())),
-                      child: Text(
-                        "Đăng ký",
-                        style: TextStyle(
-                            fontSize: 18, fontFamily: "LibreBodoni-Medium"),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          backgroundColor: Color(0xffFF3D00),
-                          padding:
-                          EdgeInsets.symmetric(vertical: 13, horizontal: 35)),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )
-            : SingleChildScrollView(
-          child:Column(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -146,458 +112,476 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                       fontFamily: "LibreBodoni-BoldItalic"),
                 ),
               ),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(top: 30, bottom: 20),
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
+              Expanded(child: SingleChildScrollView(
+                child: Column(children: [
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30, bottom: 20),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child:linkImg!=null  ? Image.network(linkImg!,fit: BoxFit.contain,): Shimmer.fromColors(baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!, child: Container(height: 100,color: Colors.white,),),
+                    ),
                   ),
-                  child:linkImg!=null? Image.network(linkImg!): Shimmer.fromColors(baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!, child: Container(height: 100,color: Colors.white,),),
-                ),
-              ),
-               Center(
-                  child: Text(username,
-                    style: TextStyle(
-                        fontFamily: "LibreBodoni-BoldItalic", fontSize: 20),
-                  )),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height * 0.75,
-                ),
-                child: Container(
-                  margin: const EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(20),
-                        topLeft: Radius.circular(20)),
-                    border:
-                    Border.all(width: 1, color: const Color(0xffdedede)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const SizedBox(
-                        height: 20,
+                  Center(
+                      child: Text(username,
+                        style: TextStyle(
+                            fontFamily: "LibreBodoni-BoldItalic", fontSize: 20),
+                      )),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height * 0.75,
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            topLeft: Radius.circular(20)),
+                        border:
+                        Border.all(width: 1, color: const Color(0xffdedede)),
                       ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              CupertinoPageRoute(builder: (context) => user()));
-                        },
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 20,
-                              child: Container(
-                                padding:
-                                const EdgeInsets.only(left: 80, top: 25),
-                                margin: const EdgeInsets.only(top: 10),
-                                width: MediaQuery.of(context).size.width - 50,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 4),
-                                          blurRadius: 4,
-                                          color: Colors.grey.withOpacity(.4))
-                                    ]),
-                                child: const Text("Thiết lập tài khoản",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "LibreBodoni-Italic")),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  CupertinoPageRoute(builder: (context) => user()));
+                            },
+                            child: Stack(
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 30, bottom: 20, top: 15),
-                                  width: 60,
-                                  height: 60,
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xffc0c0c0),
-                                  ),
-                                  child:
-                                  Image.asset("assets/image/user (3).png"),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 15,bottom: 5),
-                                  padding: const EdgeInsets.all(8),
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xFFFBFBFB),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(1, 1),
-                                      ),
-                                    ],
-                                  ),
+                                Positioned(
+                                  left: 20,
                                   child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    child: Image.asset("assets/image/next.png"),
+                                    padding:
+                                    const EdgeInsets.only(left: 80, top: 25),
+                                    margin: const EdgeInsets.only(top: 10),
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 4),
+                                              blurRadius: 4,
+                                              color: Colors.grey.withOpacity(.4))
+                                        ]),
+                                    child: const Text("Thiết lập tài khoản",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "LibreBodoni-Italic")),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              CupertinoPageRoute(builder: (context) => cart()));
-                        },
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 20,
-                              top: 0,
-                              child: Container(
-                                padding:
-                                const EdgeInsets.only(top: 25, left: 80),
-                                margin: const EdgeInsets.only(top: 10),
-                                width: MediaQuery.of(context).size.width - 50,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 4),
-                                          blurRadius: 4,
-                                          color: Colors.grey.withOpacity(.4))
-                                    ]),
-                                child: const Text("Giỏ hàng",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "LibreBodoni-Italic")),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 30, bottom: 20, top: 15),
-                                  width: 60,
-                                  height: 60,
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xffc0c0c0),
-                                  ),
-                                  child: Image.asset("assets/image/cart.png"),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 15,bottom: 5),
-                                  padding: const EdgeInsets.all(8),
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xFFFBFBFB),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(1, 1),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 30, bottom: 20, top: 15),
+                                      width: 60,
+                                      height: 60,
+                                      padding: const EdgeInsets.all(7),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 4),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xffc0c0c0),
                                       ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    child: Image.asset("assets/image/next.png"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () { Navigator.push(context,
-                            CupertinoPageRoute(builder: (context) => historycart()));},
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 20,
-                              top: 0,
-                              child: Container(
-                                padding:
-                                const EdgeInsets.only(top: 25, left: 80),
-                                margin: const EdgeInsets.only(top: 10),
-                                width: MediaQuery.of(context).size.width - 50,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 4),
-                                          blurRadius: 4,
-                                          color: Colors.grey.withOpacity(.4))
-                                    ]),
-                                child: const Text("Lịch sử mua hàng",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "LibreBodoni-Italic")),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 30, bottom: 20, top: 15),
-                                  width: 60,
-                                  height: 60,
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xffc0c0c0),
-                                  ),
-                                  child: Image.asset("assets/image/file.png"),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 15,bottom: 5),
-                                  padding: const EdgeInsets.all(8),
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xFFFBFBFB),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(1, 1),
+                                      child:
+                                      Image.asset("assets/image/user (3).png"),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 15,bottom: 5),
+                                      padding: const EdgeInsets.all(8),
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xFFFBFBFB),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(1, 1),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    child: Image.asset("assets/image/next.png"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 20,
-                              top: 0,
-                              child: Container(
-                                padding:
-                                const EdgeInsets.only(top: 25, left: 80),
-                                margin: const EdgeInsets.only(top: 10),
-                                width: MediaQuery.of(context).size.width - 50,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 4),
-                                          blurRadius: 4,
-                                          color: Colors.grey.withOpacity(.4))
-                                    ]),
-                                child: const Text("Ví của tôi",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "LibreBodoni-Italic")),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 30, bottom: 20, top: 15),
-                                  width: 60,
-                                  height: 60,
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xffc0c0c0),
-                                  ),
-                                  child: Image.asset("assets/image/wallet.png"),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 15,bottom: 5),
-                                  padding: const EdgeInsets.all(8),
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xFFFBFBFB),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(1, 1),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 5),
+                                        child: Image.asset("assets/image/next.png"),
                                       ),
-                                    ],
-                                  ),
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    child: Image.asset("assets/image/next.png"),
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          dialogsupport(context);
-                        },
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              left: 20,
-                              top: 0,
-                              child: Container(
-                                padding:
-                                const EdgeInsets.only(top: 25, left: 80),
-                                margin: const EdgeInsets.only(top: 10),
-                                width: MediaQuery.of(context).size.width - 50,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 4),
-                                          blurRadius: 4,
-                                          color: Colors.grey.withOpacity(.4))
-                                    ]),
-                                child: const Text("Trung tâm hỗ trợ",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: "LibreBodoni-Italic")),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 30, bottom: 20, top: 15),
-                                  width: 60,
-                                  height: 60,
-                                  padding: const EdgeInsets.all(7),
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(.5),
-                                        spreadRadius: 0,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 4),
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.circular(30),
-                                    color: const Color(0xffc0c0c0),
-                                  ),
-                                  child: Image.asset(
-                                      "assets/image/programmer (1).png"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              right: 40, top: 10, bottom: 10),
-                          child: ElevatedButton.icon(
-                            onPressed: () { _logOut();},
-                            label: const Text("Đăng xuất"),
-                            style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(15),
-                                backgroundColor: Colors.red,
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                )),
-                            icon: Image.asset(
-                              "assets/image/exit.png",
-                              height: 20,
                             ),
                           ),
-                        ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  CupertinoPageRoute(builder: (context) => cart()));
+                            },
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 20,
+                                  top: 0,
+                                  child: Container(
+                                    padding:
+                                    const EdgeInsets.only(top: 25, left: 80),
+                                    margin: const EdgeInsets.only(top: 10),
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 4),
+                                              blurRadius: 4,
+                                              color: Colors.grey.withOpacity(.4))
+                                        ]),
+                                    child: const Text("Giỏ hàng",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "LibreBodoni-Italic")),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 30, bottom: 20, top: 15),
+                                      width: 60,
+                                      height: 60,
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 4),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xffc0c0c0),
+                                      ),
+                                      child: Image.asset("assets/image/cart.png"),
+                                    ),Row(
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          height: 30,
+                                          width: 30,
+                                          decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.circular(30)
+                                          ),
+                                          child: Text(itemCart.data.length.toString(),style: TextStyle(color: Colors.white),),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Container(
+                                          margin: const EdgeInsets.only(right: 15,bottom: 5),
+                                          padding: const EdgeInsets.all(8),
+                                          width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                            color: const Color(0xFFFBFBFB),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(.5),
+                                                spreadRadius: 0,
+                                                blurRadius: 4,
+                                                offset: const Offset(1, 1),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Container(
+                                            margin: const EdgeInsets.only(left: 5),
+                                            child: Image.asset("assets/image/next.png"),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () { Navigator.push(context,
+                                CupertinoPageRoute(builder: (context) => historycart()));},
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 20,
+                                  top: 0,
+                                  child: Container(
+                                    padding:
+                                    const EdgeInsets.only(top: 25, left: 80),
+                                    margin: const EdgeInsets.only(top: 10),
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 4),
+                                              blurRadius: 4,
+                                              color: Colors.grey.withOpacity(.4))
+                                        ]),
+                                    child: const Text("Lịch sử mua hàng",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "LibreBodoni-Italic")),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 30, bottom: 20, top: 15),
+                                      width: 60,
+                                      height: 60,
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 4),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xffc0c0c0),
+                                      ),
+                                      child: Image.asset("assets/image/file.png"),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 15,bottom: 5),
+                                      padding: const EdgeInsets.all(8),
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xFFFBFBFB),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 5),
+                                        child: Image.asset("assets/image/next.png"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 20,
+                                  top: 0,
+                                  child: Container(
+                                    padding:
+                                    const EdgeInsets.only(top: 25, left: 80),
+                                    margin: const EdgeInsets.only(top: 10),
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 4),
+                                              blurRadius: 4,
+                                              color: Colors.grey.withOpacity(.4))
+                                        ]),
+                                    child: const Text("Ví của tôi",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "LibreBodoni-Italic")),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 30, bottom: 20, top: 15),
+                                      width: 60,
+                                      height: 60,
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 4),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xffc0c0c0),
+                                      ),
+                                      child: Image.asset("assets/image/wallet.png"),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(right: 15,bottom: 5),
+                                      padding: const EdgeInsets.all(8),
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xFFFBFBFB),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(1, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 5),
+                                        child: Image.asset("assets/image/next.png"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              dialogsupport(context);
+                            },
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  left: 20,
+                                  top: 0,
+                                  child: Container(
+                                    padding:
+                                    const EdgeInsets.only(top: 25, left: 80),
+                                    margin: const EdgeInsets.only(top: 10),
+                                    width: MediaQuery.of(context).size.width - 50,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              spreadRadius: 2,
+                                              offset: const Offset(0, 4),
+                                              blurRadius: 4,
+                                              color: Colors.grey.withOpacity(.4))
+                                        ]),
+                                    child: const Text("Trung tâm hỗ trợ",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: "LibreBodoni-Italic")),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 30, bottom: 20, top: 15),
+                                      width: 60,
+                                      height: 60,
+                                      padding: const EdgeInsets.all(7),
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(.5),
+                                            spreadRadius: 0,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 4),
+                                          )
+                                        ],
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: const Color(0xffc0c0c0),
+                                      ),
+                                      child: Image.asset(
+                                          "assets/image/programmer (1).png"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {},
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  right: 40, top: 10, bottom: 10),
+                              child: ElevatedButton.icon(
+                                onPressed: () { _logOut();},
+                                label: const Text("Đăng xuất"),
+                                style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.all(15),
+                                    backgroundColor: Colors.red,
+                                    elevation: 2,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    )),
+                                icon: Image.asset(
+                                  "assets/image/exit.png",
+                                  height: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              )
+                    ),
+                  )
+                ],),
+              ))
+
             ],
           ),
         ),
-      ),
     );
   }
-
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;

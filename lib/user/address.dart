@@ -7,6 +7,12 @@ class Item {
   String name, phone, note, address,key;
   Item( this.name,  this.phone,  this.note,  this.address,this.key);
 }
+class myaddress extends StatefulWidget {
+  viewAddress createState() => viewAddress();
+  final Map<String, dynamic> data;
+  final String keyId;
+  myaddress({required this.data, required this.keyId});
+}
 class viewAddress extends State<myaddress> {
   final _firestore = FirebaseFirestore.instance;
   List<MapEntry<String, dynamic>> listAddress = [];

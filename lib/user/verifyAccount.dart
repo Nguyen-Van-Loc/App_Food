@@ -48,9 +48,7 @@ class viewVerifyAccount extends State<verifyAccount> {
     // TODO: implement initState
     super.initState();
     passOldController.addListener(() {
-      setState(() {
         checkbutton = passOldController.text.isNotEmpty;
-      });
     });
   }
   @override

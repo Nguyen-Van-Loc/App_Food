@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
 class getProflieUser extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> _data = [];
@@ -56,19 +55,14 @@ class getCartUser extends ChangeNotifier {
   bool _isLoading = false;
   List<Map<String, dynamic>> get data => _data;
   bool get isLoading => _isLoading;
-  Future<void> fetchDataCart() async {
+  Future<void> fetchDataCart(String id) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-          final categoriesQuerySnapshot = await _firestore.collection('User').get();
-          final List<String> categoryKeys = [];
           final List<Map<String, dynamic>> products = [];
-          for (final doc in categoriesQuerySnapshot.docs) {
-            final String categoryKey = doc.id;
-            categoryKeys.add(categoryKey);
             final productsQuery = await _firestore
                 .collection('User')
-                .doc(categoryKey)
+                .doc(id)
                 .collection('Cart')
                 .orderBy('createdAt', descending: true)
                 .get();
@@ -77,15 +71,126 @@ class getCartUser extends ChangeNotifier {
               final Map<String, dynamic> productData =
               productDoc.data();
               products.add({"key": productKey, "data": productData});
-          }
-          _data = products;
-        }
+
+        }_data = products;
         _isLoading = false;
         notifyListeners();
       }
     } catch (e) {
       print('Lỗi khi lấy dữ liệu từ Firestore: $e');
     }
+  }
+}
+class getNotiUser extends ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> _data = [];
+  bool _isLoading = false;
+  List<Map<String, dynamic>> get data => _data;
+  bool get isLoading => _isLoading;
+  Future<void> fetchDataNoti(String id) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final List<Map<String, dynamic>> products = [];
+        final productsQuery = await _firestore
+            .collection('User')
+            .doc(id)
+            .collection('Notification')
+            .orderBy('createAt', descending: true)
+            .get();
+        for (final productDoc in productsQuery.docs) {
+          final String productKey = productDoc.id;
+          final Map<String, dynamic> productData =
+          productDoc.data();
+          products.add({"key": productKey, "data": productData});
 
+        }_data = products;
+        _isLoading = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+    }
+  }
+}
+class getOderUser extends ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> _data = [];
+  bool _isLoading = false;
+  List<Map<String, dynamic>> get data => _data;
+  bool get isLoading => _isLoading;
+  Future<void> fetchDataOder(String id) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final List<Map<String, dynamic>> products = [];
+        final productsQuery = await _firestore
+            .collection('User')
+            .doc(id)
+            .collection('History')
+            .orderBy('createAt', descending: true)
+            .get();
+        for (final productDoc in productsQuery.docs) {
+          final String productKey = productDoc.id;
+          final Map<String, dynamic> productData =
+          productDoc.data();
+          products.add({"key": productKey, "data": productData});
+
+        }_data = products;
+        _isLoading = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+    }
+  }
+}
+class getFavouriteUser extends ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> _data = [];
+  bool _isLoading = false;
+  List<Map<String, dynamic>> get data => _data;
+  bool get isLoading => _isLoading;
+
+  Future<void> fetchDataFavourite(String id) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final List<Map<String, dynamic>> products = [];
+        final productsQuery = await _firestore
+            .collection('User')
+            .doc(id)
+            .collection('Favourite')
+            .orderBy('CreatedDate ', descending: true)
+            .get();
+        for (final productDoc in productsQuery.docs) {
+          final String productKey = productDoc.id;
+          final Map<String, dynamic> productData =
+          productDoc.data();
+          products.add({"key": productKey, "data": productData});
+        }_data = products;
+        _isLoading = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+    }
+  }
+  bool isProductInFavorites(String productId) {
+    for (var favorite in _data) {
+      if (favorite['data']['ProductId '] == productId && favorite['data']['Favorite '] == true) {
+        return true;
+      }
+    }
+    return false;
+  }
+  String isKeyFavorites(String productId) {
+    String? key;
+    for (var favorite in _data) {
+      if (favorite['data']['ProductId '] == productId && favorite['data']['Favorite '] == true) {
+        return key = favorite['key'];
+      }
+    }
+    return key!;
   }
 }

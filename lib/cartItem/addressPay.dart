@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lab5/changeNotifier/ProfileUser.dart';
 import 'package:lab5/custom/radioCustom.dart';
-import 'package:lab5/main.dart';
 import 'package:lab5/user/address.dart';
 import 'package:provider/provider.dart';
+class addressPay extends StatefulWidget {
+  viewaddressPay createState() => viewaddressPay();
+}
 class viewaddressPay extends State<addressPay> {
   int? val ;
   final _firestore = FirebaseFirestore.instance;
