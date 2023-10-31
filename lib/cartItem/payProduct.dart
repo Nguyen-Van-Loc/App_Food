@@ -15,7 +15,8 @@ import 'package:shimmer/shimmer.dart';
 class payProduct extends StatefulWidget {
   final int totaPrice;
   final List<Map<String,dynamic>> data;
-  payProduct({required this.totaPrice,required this.data});
+  const payProduct({super.key, required this.totaPrice,required this.data});
+  @override
   viewpayProduct createState() => viewpayProduct();
 }
 List<String> list = ["Thanh toán khi nhận hàng", " Thanh toán qua ví "];
@@ -40,7 +41,6 @@ class viewpayProduct extends State<payProduct> {
     for (int i = 0; i < widget.data.length; i++) {
       final getItem = widget.data[i];
       final getData = getItem["data"];
-      print(getData[""]);
       String formattedTotalPayment = NumberFormat.decimalPattern("vi").format(SumPrice);
       formattedTotalPayment.toString().replaceAll(",", ".");
       String formattransportFee = NumberFormat.decimalPattern("vi").format(prices[i]);
@@ -59,7 +59,8 @@ class viewpayProduct extends State<payProduct> {
         "transport":transport,
         "transportFee": formattransportFee,
         "orderStatus":"Chờ xác nhận",
-        "imageUrl":getData["imageUrl"]
+        "imageUrl":getData["imageUrl"],
+        "reviewed":false
       });
       final newDocument1 = firestore.collection("User").doc(itemUser.data[0]["key"]).collection("Notification").doc();
       newDocument1.set({
@@ -75,16 +76,17 @@ class viewpayProduct extends State<payProduct> {
         "transport":transport,
         "transportFee": formattransportFee,
         "orderStatus":"Đang vận chuyển",
-        "imageUrl":getData["imageUrl"]
+        "imageUrl":getData["imageUrl"],
+        "reviewed":false
       });
     }
 
     EasyLoading.show(status: "loading...");
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     EasyLoading.showSuccess("Đặt hàng thành công !");
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     EasyLoading.show(status: "loading...");
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => barNavigation(),));
     EasyLoading.dismiss();
     for(int i=0; i< widget.data.length;i++){
@@ -120,7 +122,7 @@ class viewpayProduct extends State<payProduct> {
   bool checkLoading = false;
   void loading() async{
     checkLoading = false;
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       checkLoading = true;
     });
@@ -203,9 +205,9 @@ class viewpayProduct extends State<payProduct> {
                 ),
                 Expanded(child: SingleChildScrollView(child:Column(children: [ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: widget.data.length,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     itemBuilder: (context, index) {
                       final getItem = widget.data[index];
                       final getData = getItem["data"];
@@ -224,17 +226,17 @@ class viewpayProduct extends State<payProduct> {
                                     height: 100,
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   width: MediaQuery.of(context).size.width - 150,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
                                         getData["productName"],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             fontFamily:
                                             "LibreBaskerville-Regular"),
@@ -244,17 +246,17 @@ class viewpayProduct extends State<payProduct> {
                                       Text(
                                         getData["price"]+
                                             "₫",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.red,
                                             fontSize: 17,
                                             fontFamily: "LibreBodoni-Medium"),
                                       ),
                                       Container(
                                         margin:
-                                        EdgeInsets.only(top: 10, right: 10),
+                                        const EdgeInsets.only(top: 10, right: 10),
                                         alignment: Alignment.bottomRight,
                                         child: Text("x"+getData["quantity"],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: "LibreBodoni-Medium",
                                                 color: Color(0xff6D6D6D))),
                                       )
@@ -271,13 +273,13 @@ class viewpayProduct extends State<payProduct> {
                             color: const Color(0xffe7e6e6),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
                                     color: Colors.grey.withOpacity(0.5),
                                     blurRadius: 4,
-                                    offset: Offset(2,2)
+                                    offset: const Offset(2,2)
                                 ),
                               ],
                               color: Colors.white,
@@ -285,8 +287,8 @@ class viewpayProduct extends State<payProduct> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Phí vân chuyển :" ,style: TextStyle(fontSize: 15,fontFamily: "LibreBodoni-Medium"),),
-                                int.parse(formatFee)>5000000? Text("0₫",style: TextStyle(fontSize: 17,fontFamily: "LibreBodoni-Medium"),):Text("15.000₫",style: TextStyle(fontSize: 18,fontFamily: "LibreBodoni-Medium"),)
+                                const Text("Phí vân chuyển :" ,style: TextStyle(fontSize: 15,fontFamily: "LibreBodoni-Medium"),),
+                                int.parse(formatFee)>5000000? const Text("0₫",style: TextStyle(fontSize: 17,fontFamily: "LibreBodoni-Medium"),):const Text("15.000₫",style: TextStyle(fontSize: 18,fontFamily: "LibreBodoni-Medium"),)
                               ],
                             ),
                           ),
@@ -307,20 +309,20 @@ class viewpayProduct extends State<payProduct> {
                     color: const Color(0xffe7e6e6),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               "Địa chỉ nhận hàng",
                               style: TextStyle(
                                   fontFamily: "LibreBodoni-Medium", fontSize: 18),
                             ),
                             InkWell(
                                 onTap: ()async{
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => addressPay()));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const addressPay()));
                                 },
                                 child: Image.asset(
                                   "assets/image/next.png",
@@ -333,7 +335,7 @@ class viewpayProduct extends State<payProduct> {
                         ),
                         ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: 1,
                           itemBuilder: (context, index) {
                             if(itemUser.addresses.isNotEmpty) {
@@ -343,7 +345,7 @@ class viewpayProduct extends State<payProduct> {
                                   elevation: 2,
                                   child: Container(
                                     padding:
-                                    EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                     child: Column(
                                       children: [
                                         Row(
@@ -369,7 +371,7 @@ class viewpayProduct extends State<payProduct> {
                                             )
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Row(
@@ -388,7 +390,7 @@ class viewpayProduct extends State<payProduct> {
                                             )
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 5,
                                         ),
                                         Row(
@@ -412,20 +414,20 @@ class viewpayProduct extends State<payProduct> {
                                   ));}
                             else{
                               return Container(
-                                margin: EdgeInsets.only(top: 10),
+                                margin: const EdgeInsets.only(top: 10),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white ,
                                     boxShadow: [
                                       BoxShadow(
-                                          offset: Offset(1,1),
+                                          offset: const Offset(1,1),
                                           blurRadius: 4,color: Colors.grey.withOpacity(.5)
                                       )
                                     ]
                                 ),
                                 width: MediaQuery.of(context).size.width-20,
                                 height: 100 ,
-                                child: Center(child: Text("Vui lòng thêm địa chỉ nhận hàng",style: TextStyle(fontSize: 18,fontFamily: "LibreBodoni-Medium"),)),
+                                child: const Center(child: Text("Vui lòng thêm địa chỉ nhận hàng",style: TextStyle(fontSize: 18,fontFamily: "LibreBodoni-Medium"),)),
                               );}
                           },)
                       ],
@@ -439,8 +441,8 @@ class viewpayProduct extends State<payProduct> {
                   ),
                   Container(
                       alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(left: 10, bottom: 10),
-                      child: Text("Phương thức thanh toán",
+                      margin: const EdgeInsets.only(left: 10, bottom: 10),
+                      child: const Text("Phương thức thanh toán",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium", fontSize: 18))),
                   DropdownMenu(
@@ -463,16 +465,16 @@ class viewpayProduct extends State<payProduct> {
                   ),
                   Container(
                       alignment: Alignment.centerLeft,
-                      margin: EdgeInsets.only(left: 10, bottom: 10,top: 10),
-                      child: Text("Chi tiết thanh toán",
+                      margin: const EdgeInsets.only(left: 10, bottom: 10,top: 10),
+                      child: const Text("Chi tiết thanh toán",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium", fontSize: 18))),
                   Container(
-                    margin: EdgeInsets.only(left: 10, bottom: 5, right: 10),
+                    margin: const EdgeInsets.only(left: 10, bottom: 5, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Tổng số tiền sản phẩm",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium",
@@ -480,18 +482,18 @@ class viewpayProduct extends State<payProduct> {
                         ),
                         Text(
                           "$formatResult₫",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontFamily: "LibreBodoni-Medium", fontSize: 16),
                         )
                       ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 10, bottom: 5, right: 10),
+                    margin: const EdgeInsets.only(left: 10, bottom: 5, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Phí vận chuyển",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium",
@@ -499,18 +501,18 @@ class viewpayProduct extends State<payProduct> {
                         ),
                         Text(
                           "$formatTransportFee₫",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontFamily: "LibreBodoni-Medium", fontSize: 16),
                         )
                       ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 10, bottom: 5, right: 10),
+                    margin: const EdgeInsets.only(left: 10, bottom: 5, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Giảm giá phí vận chuyển",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium",
@@ -518,18 +520,18 @@ class viewpayProduct extends State<payProduct> {
                         ),
                         Text(
                           "- $formatSumTransportFee₫",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontFamily: "LibreBodoni-Medium", fontSize: 16),
                         )
                       ],
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 10, bottom: 65, right: 10),
+                    margin: const EdgeInsets.only(left: 10, bottom: 65, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Tổng tiền thanh toán",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium",
@@ -537,7 +539,7 @@ class viewpayProduct extends State<payProduct> {
                         ),
                         Text(
                           "$formatSum₫",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontFamily: "LibreBodoni-Medium",
                               fontSize: 18,
                               color: Colors.red),
@@ -550,7 +552,7 @@ class viewpayProduct extends State<payProduct> {
             ),
           Positioned(
             bottom: 0,
-            child: Container(
+            child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 60,
                 child: ElevatedButton(
@@ -561,17 +563,19 @@ class viewpayProduct extends State<payProduct> {
                     }
                   }:null,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffFF6900),
-                      shape: RoundedRectangleBorder(side: BorderSide.none)),
-                  child: Text("Thanh toán"),
+                      backgroundColor: const Color(0xffFF6900),
+                      shape: const RoundedRectangleBorder(side: BorderSide.none)),
+                  child: const Text("Thanh toán"),
                 )),
           )
-        ]): isLoading(),
+        ]): const isLoading(),
       ),
     );
   }
 }
 class isLoading extends StatelessWidget{
+  const isLoading({super.key});
+
   @override
   Widget build(BuildContext context) {
    return SingleChildScrollView(
@@ -620,7 +624,7 @@ class isLoading extends StatelessWidget{
            child:Column(
              children: [
                Card(
-                 margin: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                 margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                  child: Row(
                    children: [
                      Container(
@@ -646,7 +650,7 @@ class isLoading extends StatelessWidget{
                  height: 120,
                  color: Colors.white,
                  width: MediaQuery.of(context).size.width-20,
-                 margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                ),
                Container(
                  margin: const EdgeInsets.only(top: 20),
@@ -657,13 +661,13 @@ class isLoading extends StatelessWidget{
                Container(
                  height: 20,
                  alignment: Alignment.centerLeft,
-                 margin: EdgeInsets.only(left: 10, bottom: 10),
+                 margin: const EdgeInsets.only(left: 10, bottom: 10),
                  color: Colors.white,
                ),
                Container(
                  height: 120,
                  alignment: Alignment.centerLeft,
-                 margin: EdgeInsets.only(left: 10, bottom: 10),
+                 margin: const EdgeInsets.only(left: 10, bottom: 10),
                  color: Colors.white,
                ),
                Container(

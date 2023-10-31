@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lab5/changeNotifier/ProfileUser.dart';
@@ -20,8 +20,8 @@ class productReviews extends StatefulWidget {
   final String Image;
   final String keyIdCa;
   final String keyId;
-  const productReviews({super.key,required this.Name,required this.Image ,required this.keyIdCa,required this.keyId});
-
+  final String keyIdHis;
+  const productReviews({super.key,required this.Name,required this.Image ,required this.keyIdCa,required this.keyId,required this.keyIdHis});
   @override
   State<productReviews> createState() => _productReviewsState();
 }
@@ -31,22 +31,15 @@ class _productReviewsState extends State<productReviews> {
   double _rating = 5.0;
   File? imageFile;
   String? linkImg;
-  TextEditingController _commentController = TextEditingController();
-  List<Rating> _ratings = [];
+  final TextEditingController _commentController = TextEditingController();
   void _updateRating(double rating) {
     setState(() {
       _rating = rating;
     });
   }
-  void _submitRating() {
-    setState(() {
-      _ratings.add(Rating(_rating, _commentController.text));
-      _rating = 0.0;
-      _commentController.clear();
-    });
-  }
   List<XFile?> imageFiles = [];
   List<String> imageUrls = [];
+
   Future<void> pickImage() async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
@@ -54,57 +47,83 @@ class _productReviewsState extends State<productReviews> {
       final user = FirebaseAuth.instance.currentUser;
       final Reference storageReference = FirebaseStorage.instance
           .ref()
-          .child('imagesComment/${user!.uid}/image.png');
+          .child('imagesComment/${user!.uid}/${DateTime.now().millisecondsSinceEpoch}.jpg');
       UploadTask uploadTask = storageReference.putFile(File(image.path));
       await uploadTask.whenComplete(() {});
       final imageUrl = await storageReference.getDownloadURL();
       setState(() {
-        imageUrls.add(imageUrl);
         imageFiles.add(image);
+        imageUrls.add(imageUrl);
       });
     }
-    print(imageUrls);
+  }
+  void getImage()async{
+
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user!=null){
+      String userId = user.uid;
+      String imagePath = 'images/$userId/logo.png';
+      String downloadURL =
+      await FirebaseStorage.instance.ref().child(imagePath).getDownloadURL();
+      setState(() {
+        linkImg = downloadURL;
+      });
+    }
   }
   void send(){
-  //   final now = DateTime.now();
-  //   final formattedDate = DateFormat('dd-MM-yyyy HH:mm').format(now);
-  //   final itemUser =Provider.of<getProflieUser>(context,listen: false);
-  //   itemUser.fetchData();
-  //   firestore.collection("Categories").doc(widget.keyIdCa).collection("products").doc(widget.keyId).collection("Review").add({
-  //     "productName": widget.Name,
-  //     "productsImage":widget.Image,
-  //     "numberofStars": _rating,
-  //     "comment":_commentController.text,
-  //     "username":itemUser.data[0]["data"]["username"],
-  //     "CreatedDate":formattedDate
-  //   });
+    final item = Provider.of<getOderUser>(context,listen: false);
+    final itemUser =Provider.of<getProflieUser>(context,listen: false);
+    itemUser.fetchData();
+    if (itemUser.data.isNotEmpty) {
+      item.fetchDataOder(itemUser.data[0]["key"]);
+    }
+    final now = DateTime.now();
+    final formattedDate = DateFormat('dd-MM-yyyy HH:mm').format(now);
+    itemUser.fetchData();
+    firestore.collection("Categories").doc(widget.keyIdCa).collection("products").doc(widget.keyId).collection("Review").add({
+      "productName": widget.Name,
+      "productsImage":widget.Image,
+      "numberofStars": _rating,
+      "comment":_commentController.text,
+      "username":itemUser.data[0]["data"]["username"],
+      "CreatedDate":formattedDate,
+      "imageUrls": imageUrls ,
+      "imageUser": linkImg!,
+    });
+    firestore.collection("User").doc(itemUser.data[0]["key"]).collection("History").doc(widget.keyIdHis).update({
+      "reviewed":true
+    });
+    EasyLoading.showSuccess("Đánh giá thành công!");
+    Future.delayed(const Duration(seconds: 2));
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getImage();
   }
   @override
   Widget build(BuildContext context) {
-
     List<Widget> imageWidgets = [];
     for (int i = 0; i < imageFiles.length; i++) {
       imageWidgets.add(
          Container(
             width: 90,
             height: 90,
-            margin: EdgeInsets.only(right: 7),
+            margin: const EdgeInsets.only(right: 7),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
                   blurRadius: 4,
-                  offset: Offset(1, 1),
+                  offset: const Offset(1, 1),
                   color: Colors.grey.withOpacity(0.5),
                 ),
               ],
             ),
-            child: InkWell(
-              onTap: () => pickImage(),
-              child:imageFiles[i] != null
+            child: imageFiles[i] != null
                 ? Image.file(File(imageFiles[i]!.path),fit: BoxFit.fill,)
-                : Icon(Icons.image),
-          ),
+                : const Icon(Icons.image),
         ),
       );
     }
@@ -118,14 +137,14 @@ class _productReviewsState extends State<productReviews> {
               boxShadow: [
                 BoxShadow(
                   blurRadius: 4,
-                  offset: Offset(1, 1),
+                  offset: const Offset(1, 1),
                   color: Colors.grey.withOpacity(0.5),
                 ),
               ],
             ),
             child: InkWell(
               onTap: () => pickImage(),
-              child:Icon(Icons.image),
+              child:const Icon(Icons.image),
           ),
         ),
       );
@@ -140,7 +159,7 @@ class _productReviewsState extends State<productReviews> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context,false);
                     },
                     child: Container(
                         padding: const EdgeInsets.all(5),
@@ -178,12 +197,12 @@ class _productReviewsState extends State<productReviews> {
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.network(widget.Image,height: 70,width: 70,),
-                        Container(width:300,child: Text(widget.Name,style: TextStyle(fontSize: 17),overflow: TextOverflow.ellipsis,))
+                        SizedBox(width:300,child: Text(widget.Name,style: const TextStyle(fontSize: 17),overflow: TextOverflow.ellipsis,))
                       ],
                     ),
                   ),
@@ -194,37 +213,37 @@ class _productReviewsState extends State<productReviews> {
                     color: const Color(0xffe7e6e6),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                     child:
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(width: 100,child: Text("Chất lượng sản phẩm ",style: TextStyle(fontSize: 16),)),
+                        const SizedBox(width: 100,child: Text("Chất lượng sản phẩm ",style: TextStyle(fontSize: 16),)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             IconButton(
-                              icon: Icon(Icons.star),
+                              icon: const Icon(Icons.star),
                               color: _rating >= 1.0 ? Colors.amber : Colors.grey,
                               onPressed: () => _updateRating(1.0),
                             ),
                             IconButton(
-                              icon: Icon(Icons.star),
+                              icon: const Icon(Icons.star),
                               color: _rating >= 2.0 ? Colors.amber : Colors.grey,
                               onPressed: () => _updateRating(2.0),
                             ),
                             IconButton(
-                              icon: Icon(Icons.star),
+                              icon: const Icon(Icons.star),
                               color: _rating >= 3.0 ? Colors.amber : Colors.grey,
                               onPressed: () => _updateRating(3.0),
                             ),
                             IconButton(
-                              icon: Icon(Icons.star),
+                              icon: const Icon(Icons.star),
                               color: _rating >= 4.0 ? Colors.amber : Colors.grey,
                               onPressed: () => _updateRating(4.0),
                             ),
                             IconButton(
-                              icon: Icon(Icons.star),
+                              icon: const Icon(Icons.star),
                               color: _rating >= 5.0 ? Colors.amber : Colors.grey,
                               onPressed: () => _updateRating(5.0),
                             ),
@@ -239,20 +258,20 @@ class _productReviewsState extends State<productReviews> {
                     color: const Color(0xffe7e6e6),
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
                     child:
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Đánh giá về sản phẩm " ,style: TextStyle(fontSize: 18),),
-                        SizedBox(height: 10,),
+                        const Text("Đánh giá về sản phẩm " ,style: TextStyle(fontSize: 18),),
+                        const SizedBox(height: 10,),
                         TextField(
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 17
                           ),
                           controller: _commentController,
                           maxLines: 9,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Hãy để lại nhận xét của bạn về sản phẩm nhé!",
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.all(10)
@@ -263,23 +282,25 @@ class _productReviewsState extends State<productReviews> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    margin: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Thêm ảnh",style: TextStyle(fontSize: 17),),
-                        SizedBox(height: 10,),
+                        const Text("Thêm ảnh",style: TextStyle(fontSize: 17),),
+                        const SizedBox(height: 10,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: imageWidgets
                         )
                     ]),
                   ),
-                  Container(
+                  SizedBox(
                     width: MediaQuery.of(context).size.width - 20,
                     child: ElevatedButton(
                       onPressed: () {
                         send();
+                        Navigator.pop(context, true
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xffff6900),

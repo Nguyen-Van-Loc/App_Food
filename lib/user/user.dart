@@ -7,6 +7,9 @@ import 'package:lab5/user/verifyAccount.dart';
 import 'package:provider/provider.dart';
 import '../changeNotifier/ProfileUser.dart';
 class user extends StatefulWidget {
+  const user({super.key});
+
+  @override
   viewUser createState() => viewUser();
 }
 class viewUser extends State<user> {
@@ -20,7 +23,7 @@ class viewUser extends State<user> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 15, top: 15),
+              margin: const EdgeInsets.only(left: 15, top: 15),
               child: Row(
                 children: [
                   InkWell(
@@ -28,20 +31,20 @@ class viewUser extends State<user> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFFB0AEAE)),
+                            color: const Color(0xFFB0AEAE)),
                         child: Image.asset(
                           "assets/image/left-chevron.png",
                           width: 20,
                           height: 20,
                         )),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
-                  Text(
+                  const Text(
                     "Thiết lập tài khoản",
                     style: TextStyle(
                         fontSize: 25,
@@ -52,10 +55,10 @@ class viewUser extends State<user> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 20),
+              margin: const EdgeInsets.symmetric(vertical: 20),
               width: MediaQuery.of(context).size.width,
               height: 5,
-              color: Color(0xffe7e6e6),
+              color: const Color(0xffe7e6e6),
             ),
             InkWell(
                 onTap: () {
@@ -73,16 +76,16 @@ class viewUser extends State<user> {
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                             blurRadius: 4,
                             color: Colors.grey.withOpacity(.5))
                       ]),
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Hồ sơ của tôi",
                           style: TextStyle(
                               fontSize: 18, fontFamily: "LibreBodoni-Medium"),
@@ -96,7 +99,7 @@ class viewUser extends State<user> {
                     ),
                   ),
                 )),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             InkWell(
@@ -117,16 +120,16 @@ class viewUser extends State<user> {
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                           blurRadius: 4,
                           color: Colors.grey.withOpacity(.5))
                     ]),
                 child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Địa chỉ",
                         style: TextStyle(
                             fontSize: 18, fontFamily: "LibreBodoni-Medium"),
@@ -141,7 +144,7 @@ class viewUser extends State<user> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             InkWell(
@@ -159,16 +162,16 @@ class viewUser extends State<user> {
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                            offset: Offset(0, 4),
+                            offset: const Offset(0, 4),
                             blurRadius: 4,
                             color: Colors.grey.withOpacity(.5))
                       ]),
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Đổi mật khẩu",
                           style: TextStyle(
                               fontSize: 18, fontFamily: "LibreBodoni-Medium"),
@@ -190,5 +193,8 @@ class viewUser extends State<user> {
 }
 
 class mypass extends StatefulWidget {
+  const mypass({super.key});
+
+  @override
   viewPass createState() => viewPass();
 }

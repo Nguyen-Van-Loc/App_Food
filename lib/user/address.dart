@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lab5/User/user.dart';
 import 'package:lab5/Validate/validateProfile.dart';
 class Item {
   String name, phone, note, address,key;
   Item( this.name,  this.phone,  this.note,  this.address,this.key);
 }
 class myaddress extends StatefulWidget {
+  @override
   viewAddress createState() => viewAddress();
   final Map<String, dynamic> data;
   final String keyId;
-  myaddress({required this.data, required this.keyId});
+  const myaddress({super.key, required this.data, required this.keyId});
 }
 class viewAddress extends State<myaddress> {
   final _firestore = FirebaseFirestore.instance;
@@ -24,9 +24,11 @@ class viewAddress extends State<myaddress> {
               onAdd:(Item item){
                 if(itemEdit ==null){
                   addAddress(item);
-                }else(
+                }else {
+                  (
                     updateAddress(item,itemEdit.key)
                 );
+                }
               },
               itemToEdit: itemEdit,
               isEditing: itemEdit !=null,
@@ -130,7 +132,6 @@ class viewAddress extends State<myaddress> {
         listAddress = entries1;
       });
     }
-    print(listAddress);
   }
   void delete(String index) async{
     await _firestore.collection("User").doc(widget.keyId).update({
@@ -232,7 +233,7 @@ class viewAddress extends State<myaddress> {
                               Row(
                                 children: [
                                   Text(value["username"]??"",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 18,
                                         fontFamily: "LibreBodoni-Medium"),
                                   ),
@@ -313,7 +314,7 @@ class Dialogshow extends StatefulWidget {
   final Function(Item) onAdd;
   final Item? itemToEdit;
   final bool isEditing;
-  Dialogshow(
+  const Dialogshow(
       {super.key,
       required this.onAdd,required this.itemToEdit,required this.isEditing});
   @override
@@ -341,7 +342,7 @@ class ShowDialogAdd extends State<Dialogshow> {
         if (erraddres.isEmpty) {
           Item user= Item(_nameControler.text, _phoneControler.text, _noteControler.text, _addresControler.text, widget.isEditing ? widget.itemToEdit!.key :check.toString());
           EasyLoading.show(status: "loading...");
-          await Future.delayed(Duration(seconds: 2));
+          await Future.delayed(const Duration(seconds: 2));
           EasyLoading.dismiss();
           EasyLoading.showSuccess("Thành công");
           widget.onAdd(user);

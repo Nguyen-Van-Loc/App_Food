@@ -8,7 +8,7 @@ import 'package:lab5/Validate/validateProfile.dart';
 import 'package:restart_app/restart_app.dart';
 
 class viewPass extends State<mypass> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool checkpass = true;
   final passNewController = TextEditingController();
   final repassNewController = TextEditingController();
@@ -27,11 +27,11 @@ class viewPass extends State<mypass> {
         User? user = FirebaseAuth.instance.currentUser;
         await user!.updatePassword(passNewController.text);
         EasyLoading.show(status: "loading...");
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 3));
         EasyLoading.dismiss();
         EasyLoading.showSuccess(
             "Đổi mật khẩu thành công !\n Vui lòng đăng nhập lại ứng dụng. ");
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 3));
         await _auth.signOut();
         Restart.restartApp();
       }
@@ -91,16 +91,16 @@ class viewPass extends State<mypass> {
               color: const Color(0xffe7e6e6),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Nhập mật khẩu mới",
                     style: TextStyle(
                         fontFamily: "LibreBodoni-Medium", fontSize: 18),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextField(
@@ -118,8 +118,8 @@ class viewPass extends State<mypass> {
                               });
                             },
                             child: checkpass
-                                ? Icon(CupertinoIcons.eye_slash)
-                                : Icon(CupertinoIcons.eye)),
+                                ? const Icon(CupertinoIcons.eye_slash)
+                                : const Icon(CupertinoIcons.eye)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(13),
                         )),
@@ -128,16 +128,16 @@ class viewPass extends State<mypass> {
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Nhập lại mật khẩu mới",
                     style: TextStyle(
                         fontFamily: "LibreBodoni-Medium", fontSize: 18),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextField(
@@ -156,8 +156,8 @@ class viewPass extends State<mypass> {
                               });
                             },
                             child: checkpass
-                                ? Icon(CupertinoIcons.eye_slash)
-                                : Icon(CupertinoIcons.eye)),
+                                ? const Icon(CupertinoIcons.eye_slash)
+                                : const Icon(CupertinoIcons.eye)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(13),
                         )),
@@ -165,7 +165,7 @@ class viewPass extends State<mypass> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             ElevatedButton(

@@ -11,16 +11,19 @@ import 'package:lab5/account/Login/login.dart';
 import 'package:restart_app/restart_app.dart';
 
 class logup extends StatefulWidget {
+  const logup({super.key});
+
+  @override
   viewLogup createState() => viewLogup();
 }
 
 class viewLogup extends State<logup> {
   final  _firestore = FirebaseFirestore.instance;
   String erruser = "", erremail = "", errpass = "", errrepass = "";
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passController = TextEditingController();
-  TextEditingController _repassController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
+  final TextEditingController _repassController = TextEditingController();
   bool checkkey = true;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   void onAdd() async{
@@ -44,7 +47,7 @@ class viewLogup extends State<logup> {
             EasyLoading.show(status:"loading...");
             bool success = await _addUser();
             if(success){
-              await Future.delayed(Duration(seconds: 3));
+              await Future.delayed(const Duration(seconds: 3));
               Restart.restartApp();
             }
           }
@@ -82,7 +85,6 @@ class viewLogup extends State<logup> {
         return false;
       }
     } catch (e) {
-      print(e);
       return false;
     }
     EasyLoading.dismiss();
@@ -104,7 +106,7 @@ class viewLogup extends State<logup> {
         child: Stack(
           children: [
             SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 child: Image.asset(
                   "assets/image/Group 97.png",
                   fit: BoxFit.cover,
@@ -126,7 +128,7 @@ class viewLogup extends State<logup> {
               right: 20,
               child: SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -135,75 +137,75 @@ class viewLogup extends State<logup> {
                         BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
                             blurRadius: 5,
-                            offset: Offset(0, 4))
+                            offset: const Offset(0, 4))
                       ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "Tên người dùng",
                         style: TextStyle(
                             fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
                         controller: _usernameController,
                         decoration: InputDecoration(
                             errorText: erruser.isNotEmpty?erruser:null,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               vertical: 17,
                             ),
                             hintText: "Tên người dùng",
                             prefixIcon: Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Image.asset(
                                   "assets/image/user.png",
                                   height: 20,
                                 )),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 1))),
+                                borderSide: const BorderSide(width: 1))),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "Email",
                         style: TextStyle(
                             fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
                         controller: _emailController,
                         decoration: InputDecoration(
                             errorText: erremail.isNotEmpty?erremail:null,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               vertical: 17,
                             ),
                             hintText: "Nhập Email",
                             prefixIcon: Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Image.asset(
                                   "assets/image/mail.png",
                                   height: 20,
                                 )),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 1))),
+                                borderSide: const BorderSide(width: 1))),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "Mật khẩu",
                         style: TextStyle(
                             fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
@@ -211,12 +213,12 @@ class viewLogup extends State<logup> {
                         obscureText: checkkey,
                         decoration: InputDecoration(
                             errorText: errpass.isNotEmpty?errpass:null,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               vertical: 17,
                             ),
                             hintText: "Nhập mật khẩu",
                             prefixIcon: Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Image.asset(
                                   "assets/image/key.png",
                                   height: 20,
@@ -226,22 +228,22 @@ class viewLogup extends State<logup> {
                                 checkkey = !checkkey;
                               }),
                               child: checkkey
-                                  ? Icon(CupertinoIcons.eye_slash)
-                                  : Icon(CupertinoIcons.eye),
+                                  ? const Icon(CupertinoIcons.eye_slash)
+                                  : const Icon(CupertinoIcons.eye),
                             ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 1))),
+                                borderSide: const BorderSide(width: 1))),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "Nhập lại Mật khẩu",
                         style: TextStyle(
                             fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
@@ -249,12 +251,12 @@ class viewLogup extends State<logup> {
                         obscureText: checkkey,
                         decoration: InputDecoration(
                             errorText: errrepass.isNotEmpty?errrepass:null,
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               vertical: 17,
                             ),
                             hintText: "Nhập lại mật khẩu",
                             prefixIcon: Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: Image.asset(
                                   "assets/image/key.png",
                                   height: 20,
@@ -264,14 +266,14 @@ class viewLogup extends State<logup> {
                                 checkkey = !checkkey;
                               }),
                               child: checkkey
-                                  ? Icon(CupertinoIcons.eye_slash)
-                                  : Icon(CupertinoIcons.eye),
+                                  ? const Icon(CupertinoIcons.eye_slash)
+                                  : const Icon(CupertinoIcons.eye),
                             ),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 1))),
+                                borderSide: const BorderSide(width: 1))),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 15,
                       ),
                       Container(
@@ -280,39 +282,38 @@ class viewLogup extends State<logup> {
                           onPressed: () {
                             onAdd();
                           },
-                          child: Text(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              backgroundColor: const Color(0xffFF3D00),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 13, horizontal: 35)),
+                          child: const Text(
                             "Đăng ký",
                             style: TextStyle(
                                 fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                           ),
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              backgroundColor: Color(0xffFF3D00),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 13, horizontal: 35)),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                              child: Text(
+                          const Text(
                             "Bạn đã có tài khoản ?",
                             style: TextStyle(
-                                color: Color(0xffA3A3A3),
-                                fontSize: 15,
-                                fontFamily: "LibreBodoni-Medium"),
-                          )),
+                            color: Color(0xffA3A3A3),
+                            fontSize: 15,
+                            fontFamily: "LibreBodoni-Medium"),
+                          ),
                           TextButton(
                               onPressed: () => Navigator.push(
                                   context,
                                   CupertinoPageRoute(
-                                      builder: (context) => login())),
-                              child: Text(
+                                      builder: (context) => const login())),
+                              child: const Text(
                                 "Đăng nhập",
                                 style: TextStyle(
                                     color: Color(0xffFF6C2E),

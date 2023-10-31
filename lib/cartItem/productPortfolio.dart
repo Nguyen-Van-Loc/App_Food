@@ -12,8 +12,9 @@ class productPortfolio extends StatefulWidget {
   List<Map<String, dynamic>> data;
   final String Name;
   final String keyID;
-  productPortfolio({required this.Name, required this.data, required this.keyID});
+  productPortfolio({super.key, required this.Name, required this.data, required this.keyID});
 
+  @override
   showproductPortfolio createState() => showproductPortfolio();
 }
 class showproductPortfolio extends State<productPortfolio> {
@@ -23,7 +24,7 @@ class showproductPortfolio extends State<productPortfolio> {
   String? price;
   void isLoading() async{
     checkLoading=true;
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     setState(() {
       checkLoading=false;
     });
@@ -36,7 +37,6 @@ class showproductPortfolio extends State<productPortfolio> {
     loadProductNames();
   }
   Future<void> arrangeNameA_Z() async {
-    try {
       final querySnapshot = await firestore
           .collection("Categories")
           .doc(widget.keyID)
@@ -53,12 +53,8 @@ class showproductPortfolio extends State<productPortfolio> {
       setState(() {
         widget.data = sortedProducts;
       });
-    } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
-    }
   }
   Future<void> arrangeNameZ_A() async {
-    try {
       final querySnapshot = await firestore
           .collection("Categories")
           .doc(widget.keyID)
@@ -75,12 +71,10 @@ class showproductPortfolio extends State<productPortfolio> {
       setState(() {
         widget.data = sortedProducts;
       });
-    } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
-    }
+
   }
   Future<void> arrangePriceA_Z() async {
-    try {
+
       final querySnapshot = await firestore
           .collection("Categories")
           .doc(widget.keyID)
@@ -97,12 +91,9 @@ class showproductPortfolio extends State<productPortfolio> {
       setState(() {
         widget.data = sortedProducts;
       });
-    } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
-    }
   }
   Future<void> arrangePriceZ_A() async {
-    try {
+
       final querySnapshot = await firestore
           .collection("Categories")
           .doc(widget.keyID)
@@ -119,9 +110,6 @@ class showproductPortfolio extends State<productPortfolio> {
       setState(() {
         widget.data = sortedProducts;
       });
-    } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
-    }
   }
   List<DocumentSnapshot> allProducts = [];
   void loadProductNames() async {
@@ -147,7 +135,7 @@ class showproductPortfolio extends State<productPortfolio> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    margin: EdgeInsets.only(left: 10, top: 15),
+                    margin: const EdgeInsets.only(left: 10, top: 15),
                     child: Row(
                       children: [
                         InkWell(
@@ -155,22 +143,22 @@ class showproductPortfolio extends State<productPortfolio> {
                             Navigator.pop(context);
                           },
                           child: Container(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Color(0xFFB0AEAE)),
+                                  color: const Color(0xFFB0AEAE)),
                               child: Image.asset(
                                 "assets/image/left-chevron.png",
                                 width: 20,
                                 height: 20,
                               )),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         Text(
                           widget.Name,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
                               fontFamily: "LibreBodoni-BoldItalic"),
@@ -185,17 +173,17 @@ class showproductPortfolio extends State<productPortfolio> {
                       size: 25,
                     ),
                     onTap: () {
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => cart(),));
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => const cart(),));
                     },
                   ),
                 ),
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               width: MediaQuery.of(context).size.width,
               height: 5,
-              color: Color(0xffe7e6e6),
+              color: const Color(0xffe7e6e6),
             ),
             Row(
               children: [
@@ -207,9 +195,9 @@ class showproductPortfolio extends State<productPortfolio> {
                       builder: (BuildContext context, SearchController controller) {
                         return SearchBar(
                           hintText: "Search...",
-                          hintStyle: MaterialStateProperty.all(TextStyle(color: Colors.grey)),
+                          hintStyle: MaterialStateProperty.all(const TextStyle(color: Colors.grey)),
                           controller: controller,
-                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 10)),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 10)),
                           onTap: () {
                             controller.openView();
                           },
@@ -245,7 +233,7 @@ class showproductPortfolio extends State<productPortfolio> {
                           ));
 
                           if (i < filteredProducts.length - 1) {
-                            suggestionList.add(Divider());
+                            suggestionList.add(const Divider());
                           }
                         }
                         return suggestionList;
@@ -262,7 +250,7 @@ class showproductPortfolio extends State<productPortfolio> {
             ),
             show ? Card(
               elevation: 3,
-              margin: EdgeInsets.symmetric(vertical: 10,horizontal: 5),
+              margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 5),
               child: Column(
                   children: [
                     Row(
@@ -270,36 +258,36 @@ class showproductPortfolio extends State<productPortfolio> {
                       children: [
                         TextButton(
                           onPressed: () {arrangeNameA_Z();},
-                          child: Text("Theo tên từ A-Z",style: TextStyle(fontSize: 13),),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                            foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                            foregroundColor: const Color(0xff3a3030),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)
                             )
                           ),
+                          child: const Text("Theo tên từ A-Z",style: TextStyle(fontSize: 13),),
                         ),
                         TextButton(
                           onPressed: () {arrangeNameZ_A();},
-                          child: Text("Theo tên từ Z-A",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo tên từ Z-A",style: TextStyle(fontSize: 13)),
                         ),
                         TextButton(
                           onPressed: () {},
-                          child: Text("Theo đánh giá",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo đánh giá",style: TextStyle(fontSize: 13)),
                         )
                       ],
                     ),
@@ -308,25 +296,25 @@ class showproductPortfolio extends State<productPortfolio> {
                       children: [
                         TextButton(
                           onPressed: () {arrangePriceA_Z();},
-                          child: Text("Theo giá từ thấp đến cao",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo giá từ thấp đến cao",style: TextStyle(fontSize: 13)),
                         ),
                         TextButton(
                           onPressed: () {arrangePriceZ_A();},
-                          child: Text("Theo giá từ cao đến thấp",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo giá từ cao đến thấp",style: TextStyle(fontSize: 13)),
                         )
                       ],
                     ),
@@ -344,7 +332,7 @@ class showproductPortfolio extends State<productPortfolio> {
                           itemCount: widget.data.length,
                           shrinkWrap: true,
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2, mainAxisExtent: 370),
                           itemBuilder: (context, index) {
                             if (checkLoading){
@@ -411,7 +399,7 @@ class showproductPortfolio extends State<productPortfolio> {
                                               height: 20,
                                               color: Colors.white,
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 10,
                                             ),
                                             Container(
@@ -430,14 +418,13 @@ class showproductPortfolio extends State<productPortfolio> {
                               final getItem = widget.data[index];
                               final itemData = getItem["data"];
                               final keyId = getItem["key"];
-                              final keyIdCa =getItem["categoryKey"];
                               String fomatPrice=NumberFormat.decimalPattern("vi").format(itemData["Price  "]);
                               price = fomatPrice.toString().replaceAll(",", ".");
                               return InkWell(
                                   onTap: () {
                                     Navigator.push(context,
                                         CupertinoPageRoute(
-                                            builder: (context) =>productDetails(data: itemData, keyId: keyId,keyIdCa: keyIdCa,)));
+                                            builder: (context) =>productDetails(data: itemData, keyId: keyId,keyIdCa: widget.keyID,)));
                                   },
                                   child: Card(
                                     elevation: 3,
@@ -477,7 +464,7 @@ class showproductPortfolio extends State<productPortfolio> {
                                               itemData["ProductName"],
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily:
                                                   "LibreBaskerville-Regular"),
                                             )),
@@ -485,7 +472,7 @@ class showproductPortfolio extends State<productPortfolio> {
                                           height: 10,
                                         ),
                                         Container(
-                                          margin: EdgeInsets.symmetric(
+                                          margin: const EdgeInsets.symmetric(
                                               horizontal: 10),
                                           child: Row(
                                             mainAxisAlignment:
@@ -496,7 +483,7 @@ class showproductPortfolio extends State<productPortfolio> {
                                                 children: [
                                                   Text(
                                                     "$price₫",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontFamily:
                                                         "LibreBodoni-Medium",
                                                         fontSize: 17,
@@ -515,11 +502,10 @@ class showproductPortfolio extends State<productPortfolio> {
                                                     itemData["discount"]
                                                         .isNotEmpty
                                                     ? Text(
-                                                  "-" +
+                                                  "${"-" +
                                                       itemData[
-                                                      "discount"] +
-                                                      "%",
-                                                  style: TextStyle(
+                                                      "discount"]}%",
+                                                  style: const TextStyle(
                                                       color: Color(
                                                           0xffeb5757)),
                                                 )

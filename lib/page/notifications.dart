@@ -14,6 +14,9 @@ import '../changeNotifier/ProfileUser.dart';
 
 
 class notifications extends StatefulWidget {
+  const notifications({super.key});
+
+  @override
   viewNotifications createState() => viewNotifications();
 }
 class viewNotifications extends State<notifications> {
@@ -48,11 +51,11 @@ class viewNotifications extends State<notifications> {
         child:  Column(
             children: [
               Container(
-                  margin: EdgeInsets.only(left: 15, top: 20),
+                  margin: const EdgeInsets.only(left: 15, top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Thông báo",
                         style: TextStyle(
                             fontSize: 25,
@@ -60,37 +63,37 @@ class viewNotifications extends State<notifications> {
                             fontFamily: "LibreBodoni-BoldItalic"),
                       ),
                       Container(
-                          margin: EdgeInsets.only(top: 10, right: 15),
+                          margin: const EdgeInsets.only(top: 10, right: 15),
                           child: badges.Badge(
                             badgeContent: Text(
                               itemCart.data.length.toString(),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             showBadge: true,
+                            ignorePointer: false,
                             child: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                        builder: (context) => cart(),
+                                        builder: (context) => const cart(),
                                       ));
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.shopping_cart,
                                   size: 30,
                                 )),
-                            ignorePointer: false,
                           ))
                     ],
                   )),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
+                margin: const EdgeInsets.symmetric(vertical: 20),
                 width: MediaQuery
                     .of(context)
                     .size
                     .width,
                 height: 5,
-                color: Color(0xffe7e6e6),
+                color: const Color(0xffe7e6e6),
               ),
               Expanded(child: SingleChildScrollView(child: Column(children: [ ListView.builder(
                   itemCount: itemNoti.data.length,
@@ -109,33 +112,33 @@ class viewNotifications extends State<notifications> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(bottom: 20, left: 10),
+                                margin: const EdgeInsets.only(bottom: 20, left: 10),
                                 width: 90,
                                 height: 100,
                                 child: Image.network(itemData['imageUrl']),
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: 10),
+                                margin: const EdgeInsets.only(left: 10),
                                 width: MediaQuery
                                     .of(context)
                                     .size
                                     .width - 140,
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 10,),
+                                    const SizedBox(height: 10,),
                                     RichText(
                                         overflow: showAllText
                                             ? TextOverflow.visible
                                             : TextOverflow.ellipsis,
                                         maxLines: showAllText ? null : 3,text: TextSpan(
                                         children: [
-                                          TextSpan(
+                                          const TextSpan(
                                               text: "Đơn hàng  " ,style: TextStyle(color: Colors.black,fontFamily: "LibreBodoni-Medium")
                                           ),
                                           TextSpan(
-                                              text: itemKey,style: TextStyle(color: Colors.lightBlue,decoration: TextDecoration.underline,fontFamily: "LibreBodoni-Bold",decorationColor: Colors.lightBlue,decorationStyle: TextDecorationStyle.double)
+                                              text: itemKey,style: const TextStyle(color: Colors.lightBlue,decoration: TextDecoration.underline,fontFamily: "LibreBodoni-Bold",decorationColor: Colors.lightBlue,decorationStyle: TextDecorationStyle.double)
                                           ),
-                                          TextSpan(
+                                          const TextSpan(
                                             text:
                                             " đã được xác chúng tôi xác nhận và đơn hàng đang được giao cho đơn vị vận chuyển .Quý khách hàng kiểm tra thông báo thường xuyên để cập nhật thông tin mới nhất .Xin cảm ơn !",
                                             style: TextStyle(
@@ -166,8 +169,8 @@ class viewNotifications extends State<notifications> {
                                           width: 15,
                                         ),
                                         label: showAllText
-                                            ? Text("Ẩn bớt")
-                                            : Text("Xem thêm"))
+                                            ? const Text("Ẩn bớt")
+                                            : const Text("Xem thêm"))
                                   ],
                                 ),
                               )
@@ -183,33 +186,33 @@ class viewNotifications extends State<notifications> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(bottom: 20, left: 10),
+                                margin: const EdgeInsets.only(bottom: 20, left: 10),
                                 width: 90,
                                 height: 100,
                                 child: Image.network(itemData['imageUrl']),
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: 10),
+                                margin: const EdgeInsets.only(left: 10),
                                 width: MediaQuery
                                     .of(context)
                                     .size
                                     .width - 140,
                                 child: Column(
                                   children: [
-                                    SizedBox(height: 10,),
+                                    const SizedBox(height: 10,),
                                     RichText(
                                         overflow: showAllText
                                             ? TextOverflow.visible
                                             : TextOverflow.ellipsis,
                                         maxLines: showAllText ? null : 3,text: TextSpan(
                                         children: [
-                                          TextSpan(
+                                          const TextSpan(
                                               text: "Đơn hàng  " ,style: TextStyle(color: Colors.black,fontFamily: "LibreBodoni-Medium")
                                           ),
                                           TextSpan(
-                                              text: itemKey,style: TextStyle(color: Colors.lightBlue,decoration: TextDecoration.underline,fontFamily: "LibreBodoni-Bold",decorationColor: Colors.lightBlue,decorationStyle: TextDecorationStyle.double)
+                                              text: itemKey,style: const TextStyle(color: Colors.lightBlue,decoration: TextDecoration.underline,fontFamily: "LibreBodoni-Bold",decorationColor: Colors.lightBlue,decorationStyle: TextDecorationStyle.double)
                                           ),
-                                          TextSpan(
+                                          const TextSpan(
                                             text:
                                             " đã được vận chuyển đến với khách hàng thành công . Cảm ơn quý khách hàng luôn tin tưởng và ủng hộ !",
                                             style: TextStyle(
@@ -240,8 +243,8 @@ class viewNotifications extends State<notifications> {
                                           width: 15,
                                         ),
                                         label: showAllText
-                                            ? Text("Ẩn bớt")
-                                            : Text("Xem thêm"))
+                                            ? const Text("Ẩn bớt")
+                                            : const Text("Xem thêm"))
                                   ],
                                 ),
                               )
@@ -267,10 +270,10 @@ class viewNotifications extends State<notifications> {
                           height: 150,
                           width: 150,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
-                        Text(
+                        const Text(
                           "Chưa có thông báo mới nào ?",
                           style: TextStyle(
                               fontFamily: "LibreBodoni-Medium",
@@ -288,7 +291,7 @@ class viewNotifications extends State<notifications> {
 }
 
 class NotificationServices {
-  FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   void firebaseInit(BuildContext context) {
@@ -308,7 +311,7 @@ class NotificationServices {
   }
 
   void initLocalNotification(BuildContext context, RemoteMessage message) async {
-    var androidInit = AndroidInitializationSettings("@drawable/logo");
+    var androidInit = const AndroidInitializationSettings("@drawable/logo");
     var settings = InitializationSettings(android: androidInit);
     await _notificationsPlugin.initialize(
       settings,
@@ -355,7 +358,6 @@ class NotificationServices {
   void isTokenRefresh() {
     messaging.onTokenRefresh.listen((event) {
       event.toString();
-      print("refresh");
     });
   }
 
@@ -371,11 +373,8 @@ class NotificationServices {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("authorized");
     } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print("provisional");
     } else {
-      print("denied");
     }
   }
 

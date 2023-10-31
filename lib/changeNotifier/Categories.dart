@@ -13,7 +13,7 @@ class getCategories extends ChangeNotifier {
         final querySnapshot =
             await _firestore.collection('Categories').orderBy("name").get();
         _data = querySnapshot.docs.map((doc) {
-          final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          final Map<String, dynamic> data = doc.data();
           final String key = doc.id;
           return {"key": key, "data": data};
         }).toList();
@@ -27,7 +27,7 @@ class getCategories extends ChangeNotifier {
 class getProducts extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> _data = [];
-  List<Map<String, dynamic>> _dataProduct = [];
+  final List<Map<String, dynamic>> _dataProduct = [];
   bool _isLoading = false;
   bool _isDataShuffled = false;
 
@@ -39,7 +39,7 @@ class getProducts extends ChangeNotifier {
 
   Future<void> fetchDataProducts() async {
     _isLoading = true;
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     try {
         if (!_isDataShuffled) {
           final categoriesQuerySnapshot =
@@ -76,7 +76,7 @@ class getProducts extends ChangeNotifier {
   List<Map<String, dynamic>> get dataFa => _dataFa;
   Future<void> fetchDataFavorite() async {
     _isLoading = true;
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     try {
       if (!_isDataShuffled) {
         final List<Map<String, dynamic>> products = [];
@@ -125,9 +125,30 @@ class categoryProducts extends ChangeNotifier {
   void filterSuggestions(String query) {
     notifyListeners();
   }
+  Future<void> productReview(String idCa,String idPro) async {
+    try {
+      final querySnapshot =
+      await _firestore.collection('Categories')
+      .doc(idCa)
+      .collection("products")
+      .doc(idPro)
+      .collection("Review")
+          .get();
+      _data = querySnapshot.docs.map((doc) {
+        final Map<String, dynamic> data = doc.data();
+        final String key = doc.id;
+        return {"key": key, "data": data};
+      }).toList();
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+    }
+  }
+
   Future<void> getCategoriesProducts() async {
     _isLoading = true;
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     try {
       if(!_isDataShuffled) {
         final querySnapshot =
@@ -162,8 +183,7 @@ class categoryProducts extends ChangeNotifier {
       print('Lỗi khi lấy dữ liệu từ Firestore: $e');
     }
   }
-
-  final List<Map<String, dynamic>> _data = [];
+  List<Map<String, dynamic>> _data = [];
   List<Map<String, dynamic>> get data => _data;
   Future<void> searchProducts(String query) async {
     _isLoading = true;
@@ -187,7 +207,7 @@ class categoryProducts extends ChangeNotifier {
         for (final productDoc in productsQuery.docs) {
           final String productKey = productDoc.id;
           final Map<String, dynamic> productData =
-          productDoc.data() as Map<String, dynamic>;
+          productDoc.data();
           categorySearchResults.add({
             "key": productKey,
             "data": productData,
@@ -210,7 +230,7 @@ class categoryProducts extends ChangeNotifier {
         for (final productDoc in productsQuery.docs) {
           final String productKey = productDoc.id;
           final Map<String, dynamic> productData =
-          productDoc.data() as Map<String, dynamic>;
+          productDoc.data();
           final productName =
           removeAccents(productData['ProductName'] as String).toLowerCase();
           if (productName.contains(userInput) ||

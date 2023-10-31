@@ -12,9 +12,9 @@ class getProflieUser extends ChangeNotifier {
     for (var item in _data) {
       if (item['data'] != null && item['data']['address'] != null) {
         final Map<String, dynamic> addressMap = item['data']['address'] as Map<String, dynamic>;
-        addressMap.entries.forEach((entry) {
+        for (var entry in addressMap.entries) {
           addressList.add(entry);
-              });
+              }
             }
         }
             addressList.sort((a, b) {

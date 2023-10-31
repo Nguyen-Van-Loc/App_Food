@@ -12,12 +12,12 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../changeNotifier/Categories.dart';
 import 'package:badges/badges.dart' as badges;
-
-import 'package:characters/characters.dart';
-
 import '../changeNotifier/ProfileUser.dart';
 
 class home extends StatefulWidget  {
+  const home({super.key});
+
+  @override
   viewHome createState() => viewHome();
 }
 
@@ -70,7 +70,6 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
     _services.requestNotificationServices();
     _services.firebaseInit(context);
     _services.getDeviceToken().then((value) {
-      print(value);
     });
     Provider.of<getProducts>(context, listen: false).fetchDataProducts();
     Provider.of<categoryProducts>(context, listen: false).getCategoriesProducts();
@@ -90,7 +89,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Column(
                 children: [
@@ -108,26 +107,26 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                         ),
                       ),
                       Container(
-                          margin: EdgeInsets.only(top: 10, right: 15),
+                          margin: const EdgeInsets.only(top: 10, right: 15),
                           child: badges.Badge(
                             badgeContent: Text(
                               itemCart.data.length.toString(),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             showBadge: true,
+                            ignorePointer: false,
                             child: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                        builder: (context) => cart(),
+                                        builder: (context) => const cart(),
                                       ));
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.shopping_cart,
                                   size: 30,
                                 )),
-                            ignorePointer: false,
                           ))
                     ],
                   ),
@@ -146,7 +145,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => search(),
+                                        builder: (context) => const search(),
                                       ));
                                 },
                                 child: AbsorbPointer(
@@ -155,7 +154,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                     keyboardType: TextInputType.none,
                                     decoration: InputDecoration(
                                         hintText: 'Search...',
-                                        prefixIcon: Icon(Icons.search),
+                                        prefixIcon: const Icon(Icons.search),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(10),
                                         )),
@@ -164,45 +163,43 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                               ),
                             ),
                           ),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    "Danh mục",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "LibreBodoni-Medium"),
-                                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                child: const Text(
+                                  "Danh mục",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "LibreBodoni-Medium"),
                                 ),
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (context) => menu()));
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Xem thêm",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: "LibreBodoni-Medium"),
-                                        ),
-                                        Image.asset(
-                                          "assets/image/right-arrow.png",
-                                          width: 15,
-                                          height: 15,
-                                        )
-                                      ],
-                                    )),
-                              ],
-                            ),
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => menu()));
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        "Xem thêm",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: "LibreBodoni-Medium"),
+                                      ),
+                                      Image.asset(
+                                        "assets/image/right-arrow.png",
+                                        width: 15,
+                                        height: 15,
+                                      )
+                                    ],
+                                  )),
+                            ],
                           ),
                           Container(
                               margin: const EdgeInsets.symmetric(vertical: 10),
@@ -213,7 +210,8 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                       : itemProduct.result.length - 5,
                                   scrollDirection: Axis.horizontal,
                                   itemBuilder: (context, index) {
-                                   if( itemProduct.result.isEmpty &&itemProduct.isLoading ) return Shimmer.fromColors(
+                                   if( itemProduct.result.isEmpty &&itemProduct.isLoading ) {
+                                     return Shimmer.fromColors(
                                       baseColor: Colors.grey[300]!,
                                       highlightColor: Colors.grey[100]!,
                                       child:Card(
@@ -232,6 +230,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                         ),
                                       ),
                                     );
+                                   }
                                    if (index >= 0 && index < itemProduct.result.length) {
                                      final getIndex = itemProduct.result[index];
                                      final itemData = getIndex["categoryData"];
@@ -360,13 +359,13 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                     colors: [Color(0xfff67d77), Color(0xfffc2b55)])),
                             child: Column(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Container(
                                   alignment: Alignment.centerLeft,
                                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: Text(
+                                  child: const Text(
                                     "Yêu thích nhiều nhất",
                                     style: TextStyle(
                                         fontSize: 18,
@@ -378,16 +377,14 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                 Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 5),
                                   child: item.isLoading && item.dataFa.isEmpty ?
-                                  Container(
-                                    child: Shimmer.fromColors(
-                                        baseColor: Colors.grey[300]!,
-                                        highlightColor: Colors.grey[100]!,
-                                        child:
-                                        Container(
-                                          height: 300,
-                                          color: Colors.white,
-                                        )
-                                    ),
+                                  Shimmer.fromColors(
+                                      baseColor: Colors.grey[300]!,
+                                      highlightColor: Colors.grey[100]!,
+                                      child:
+                                      Container(
+                                        height: 300,
+                                        color: Colors.white,
+                                      )
                                   )
                                       : ListView.builder(
                                       shrinkWrap: true,
@@ -453,12 +450,12 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                                   .ellipsis,
                                                               textAlign:
                                                               TextAlign.left,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontSize: 18,
                                                                   fontFamily:
                                                                   "LibreBaskerville-Regular"),
                                                             )),
-                                                        Container(
+                                                        SizedBox(
                                                           width:
                                                           MediaQuery.of(context)
                                                               .size
@@ -504,7 +501,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                                       right: 10),
                                                                   child:  Text(
                                                                     "$price₫",
-                                                                    style: TextStyle(
+                                                                    style: const TextStyle(
                                                                         fontSize: 18,
                                                                         color: Color(
                                                                             0xffd0021c),
@@ -544,7 +541,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                     itemCount: item.isLoading ? 6 : item.data.length,
                                     shrinkWrap: true,
                                     gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 2, mainAxisExtent: 370),
                                     itemBuilder: (context, index) {
                                       if (item.data.isEmpty) {
@@ -610,7 +607,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                         height: 20,
                                                         color: Colors.white,
                                                       ),
-                                                      SizedBox(
+                                                      const SizedBox(
                                                         width: 10,
                                                       ),
                                                       Container(
@@ -683,7 +680,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                         itemData["ProductName"],
                                                         maxLines: 2,
                                                         overflow: TextOverflow.ellipsis,
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontFamily:
                                                             "LibreBaskerville-Regular"),
                                                       )),
@@ -691,7 +688,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                     height: 10,
                                                   ),
                                                   Container(
-                                                    margin: EdgeInsets.symmetric(
+                                                    margin: const EdgeInsets.symmetric(
                                                         horizontal: 10),
                                                     child: Row(
                                                       mainAxisAlignment:
@@ -702,7 +699,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                           children: [
                                                             Text(
                                                               price!,
-                                                              style: TextStyle(
+                                                              style: const TextStyle(
                                                                   fontFamily:
                                                                   "LibreBodoni-Medium",
                                                                   fontSize: 17,
@@ -712,9 +709,9 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                                   FontWeight.bold),
                                                             ),
                                                             Container(
-                                                              margin: EdgeInsets.only(
+                                                              margin: const EdgeInsets.only(
                                                                   bottom: 10),
-                                                              child: Text("₫",
+                                                              child: const Text("₫",
                                                                   style: TextStyle(
                                                                       color: Color(
                                                                           0xffd0021c),
@@ -732,11 +729,10 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                               itemData["discount"]
                                                                   .isNotEmpty
                                                               ? Text(
-                                                            "-" +
+                                                            "${"-" +
                                                                 itemData[
-                                                                "discount"] +
-                                                                "%",
-                                                            style: TextStyle(
+                                                                "discount"]}%",
+                                                            style: const TextStyle(
                                                                 color: Color(
                                                                     0xffeb5757)),
                                                           )
@@ -786,6 +782,8 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
 }
 
 class search extends StatefulWidget {
+  const search({super.key});
+
   @override
   TextSearchState createState() => TextSearchState();
 }
@@ -818,7 +816,7 @@ class TextSearchState extends State<search> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
@@ -828,7 +826,7 @@ class TextSearchState extends State<search> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 60,
@@ -854,9 +852,9 @@ class TextSearchState extends State<search> {
                       },
                       autofocus: true,
                       controller: containerSearch,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 15,
                           horizontal: 10,
                         ),
@@ -872,10 +870,10 @@ class TextSearchState extends State<search> {
                                     showClearButton = false;
                                   });
                                 },
-                                child: Icon(Icons.clear),
+                                child: const Icon(Icons.clear),
                               )
                             : null,
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                       ),
                     ),
                   ),
@@ -884,7 +882,7 @@ class TextSearchState extends State<search> {
               if (containerSearch.text.isNotEmpty)
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: ScrollPhysics(),
+                  physics: const ScrollPhysics(),
                   itemCount: categoryData.result.length,
                   itemBuilder: (context, index) {
                     final category = categoryData.result[index];
@@ -911,7 +909,7 @@ class TextSearchState extends State<search> {
                         ],
                       );
                     } else {
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     }
                   },
                 ),

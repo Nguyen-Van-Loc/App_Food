@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
 
 class favorite extends StatefulWidget {
+  const favorite({super.key});
+
+  @override
   viewFavorite createState() => viewFavorite();
 }
 class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
@@ -24,7 +27,6 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
     _services.requestNotificationServices();
     _services.firebaseInit(context);
     _services.getDeviceToken().then((value) {
-      print(value);
     });
     checkData();
   }
@@ -64,11 +66,11 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
         child: Column(
             children: [
               Container(
-                  margin: EdgeInsets.only(left: 15, top: 20),
+                  margin: const EdgeInsets.only(left: 15, top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Yêu thích",
                         style: TextStyle(
                             fontSize: 25,
@@ -76,34 +78,34 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                             fontFamily: "LibreBodoni-BoldItalic"),
                       ),
                       Container(
-                          margin: EdgeInsets.only( right: 15),
+                          margin: const EdgeInsets.only( right: 15),
                           child: badges.Badge(
                             badgeContent: Text(
                               itemCart.data.length.toString(),
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                             showBadge: true,
+                            ignorePointer: false,
                             child: InkWell(
                                 onTap: () {
                                   Navigator.push(
                                       context,
                                       CupertinoPageRoute(
-                                        builder: (context) => cart(),
+                                        builder: (context) => const cart(),
                                       ));
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.shopping_cart,
                                   size: 30,
                                 )),
-                            ignorePointer: false,
                           ))
                     ],
                   )),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
+                margin: const EdgeInsets.symmetric(vertical: 20),
                 width: MediaQuery.of(context).size.width,
                 height: 5,
-                color: Color(0xffe7e6e6),
+                color: const Color(0xffe7e6e6),
               ),
               Expanded(child: SingleChildScrollView(child: Column(children: [ Container(
                   margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -175,10 +177,10 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                                                     .ellipsis,
                                                 textAlign:
                                                 TextAlign.left,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontSize: 18,fontFamily: "LibreBaskerville-Regular"),
                                               )),
-                                          Container(
+                                          SizedBox(
                                             width: MediaQuery.of(context).size.width,
                                             child: Row(
                                                 mainAxisAlignment:
@@ -218,7 +220,7 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                                                         right: 10),
                                                     child:  Text(
                                                       "$price₫",
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontFamily: "LibreBodoni-Medium",
                                                           fontSize: 18,
                                                           color: Color(
@@ -257,10 +259,10 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                   Center(
                       child: Column(
                         children: [
-                          SizedBox(height: 50,),
+                          const SizedBox(height: 50,),
                           Image.asset("assets/image/search.png",height: 100,),
-                          SizedBox(height: 20,),
-                          Text("Bạn chưa có sản phẩm nào yêu thích ?",style: TextStyle(fontSize: 15),),
+                          const SizedBox(height: 20,),
+                          const Text("Bạn chưa có sản phẩm nào yêu thích ?",style: TextStyle(fontSize: 15),),
                         ],
                       )
                   )],),))

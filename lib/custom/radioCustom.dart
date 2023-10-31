@@ -23,13 +23,13 @@ class CusTomRadio<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: InkWell(
         onTap: ()=>onChanged(value),
         child: Row(
           children: [
             _buildRadio(),
-            SizedBox(height: 10,),
+            const SizedBox(height: 10,),
             _buildTitle()
           ],
         ),
@@ -46,10 +46,6 @@ class CustomSearchController extends SearchController {
   @override
   void closeView([String? query]) {
     focusNode.unfocus();
-  }
-  void searchString(String keyword) {
-    // Thực hiện hành động của bạn khi người dùng thực hiện tìm kiếm
-    print('Tìm kiếm với từ khóa: $keyword');
   }
   @override
   void dispose() {

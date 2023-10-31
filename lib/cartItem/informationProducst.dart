@@ -286,25 +286,25 @@ class _informationProducst extends State<informationProducst> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(widget.data["address"]["username"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 17,
                                             fontFamily: "LibreBodoni-Bold",
                                           )),
                                       Text(
                                         widget.data["address"]["phone"],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 15,
                                             fontFamily: "LibreBodoni-Bold",
                                             color: Color(0xff818181)),
                                       ),
                                       Text(widget.data["address"]["note"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 16,
                                               fontFamily: "LibreBodoni-Bold",
                                               color: Color(0xff818181))),
                                       Text(
                                         widget.data["address"]["address"],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 16,
                                             fontFamily: "LibreBodoni-Bold",
                                             color: Color(0xff818181)),
@@ -361,25 +361,25 @@ class _informationProducst extends State<informationProducst> {
                                               children: [
                                                 Text(
                                                   widget.data["productName"],
-                                                  style: TextStyle(fontSize: 20),
+                                                  style: const TextStyle(fontSize: 20),
                                                   overflow: TextOverflow.ellipsis,
                                                   maxLines: 1,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 10,
                                                 ),
                                                 Text("x"+widget.data["quantity"],
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 18,
                                                         fontFamily:
                                                             "LibreBaskerville-Regular"),
                                                     overflow: TextOverflow.ellipsis,
                                                     maxLines: 1),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 10,
                                                 ),
                                                 Text(widget.data["price"]+"₫",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 18,
                                                         color: Color(0xffD6563B),
                                                         fontFamily:
@@ -403,7 +403,7 @@ class _informationProducst extends State<informationProducst> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Tổng tiền hàng ",
                                             style: TextStyle(
                                                 fontFamily:
@@ -413,7 +413,7 @@ class _informationProducst extends State<informationProducst> {
                                           ),
                                           Text(
                                             widget.data["price"]+"₫",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily:
                                                     "LibreBaskerville-Regular",
                                                 fontSize: 15,
@@ -428,7 +428,7 @@ class _informationProducst extends State<informationProducst> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Phí vận chuyển",
                                             style: TextStyle(
                                                 fontFamily:
@@ -437,7 +437,7 @@ class _informationProducst extends State<informationProducst> {
                                                 color: Color(0xff757575)),
                                           ),
                                           Text("$transport₫",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily:
                                                       "LibreBaskerville-Regular",
                                                   fontSize: 15,
@@ -451,7 +451,7 @@ class _informationProducst extends State<informationProducst> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Giảm giá phí vận chuyển",
                                             style: TextStyle(
                                                 fontFamily:
@@ -459,8 +459,8 @@ class _informationProducst extends State<informationProducst> {
                                                 fontSize: 15,
                                                 color: Color(0xff757575)),
                                           ),
-                                          Text("- "+widget.data["transportFee"]+"₫",
-                                              style: TextStyle(
+                                          Text("${"- "+widget.data["transportFee"]}₫",
+                                              style: const TextStyle(
                                                   fontFamily:
                                                       "LibreBaskerville-Regular",
                                                   fontSize: 15,
@@ -474,7 +474,7 @@ class _informationProducst extends State<informationProducst> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
+                                          const Text(
                                             "Thành tiền: ",
                                             style: TextStyle(
                                                 fontFamily:
@@ -483,7 +483,7 @@ class _informationProducst extends State<informationProducst> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(widget.data["totalPrice"]+"₫",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily:
                                                       "LibreBaskerville-Regular",
                                                   fontSize: 17,
@@ -495,14 +495,14 @@ class _informationProducst extends State<informationProducst> {
                                       ),
                                       RichText(
                                           text: TextSpan(children: [
-                                        TextSpan(
+                                        const TextSpan(
                                             text: "Vui lòng thanh toán ",
                                             style: TextStyle(
                                                 color: Color(0xff757575))),
                                         TextSpan(
                                             text: widget.data["totalPrice"]+"₫",
-                                            style: TextStyle(color: Colors.red)),
-                                        TextSpan(
+                                            style: const TextStyle(color: Colors.red)),
+                                        const TextSpan(
                                             text: " khi nhận hàng ",
                                             style: TextStyle(
                                                 color: Color(0xff757575))),
@@ -554,7 +554,7 @@ class _informationProducst extends State<informationProducst> {
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Mã đơn hàng ",
                                       style: TextStyle(
                                           fontFamily:
@@ -563,21 +563,21 @@ class _informationProducst extends State<informationProducst> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(widget.data["productKey"],
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontFamily:
                                             "LibreBaskerville-Regular",
                                             fontSize: 13,
                                             fontWeight: FontWeight.bold))
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Thời gian đặt hàng ",
                                       style: TextStyle(
                                           fontFamily:
@@ -587,7 +587,7 @@ class _informationProducst extends State<informationProducst> {
                                     ),
                                     Text(
                                       widget.data["createAt"],
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontFamily:
                                           "LibreBaskerville-Regular",
                                           fontSize: 13,
@@ -602,6 +602,7 @@ class _informationProducst extends State<informationProducst> {
                         ]),
                 ),
               ),
+              if(widget.data['orderStatus']!="Đã nhận")
               Container(
                 margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.all(10),

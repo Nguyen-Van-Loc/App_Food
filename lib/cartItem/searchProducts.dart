@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lab5/cartItem/productDetails.dart';
 import 'package:lab5/changeNotifier/Categories.dart';
-import 'package:lab5/main.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 class searchProducts extends  StatefulWidget{
   final String searchKeyword;
-  searchProducts({super.key,required this.searchKeyword});
+  const searchProducts({super.key,required this.searchKeyword});
+  @override
   viewSerchProducts createState()=>viewSerchProducts();
 }
 class viewSerchProducts extends State<searchProducts>{
@@ -100,7 +100,7 @@ class viewSerchProducts extends State<searchProducts>{
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -111,7 +111,7 @@ class viewSerchProducts extends State<searchProducts>{
                       });
                       Navigator.pop(context);
                     },
-                    icon: Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 100,
@@ -124,9 +124,9 @@ class viewSerchProducts extends State<searchProducts>{
                           getProducts();
                         }},
                       controller: containerSearch,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                       decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 15,
                           horizontal: 10,
                         ),
@@ -140,9 +140,9 @@ class viewSerchProducts extends State<searchProducts>{
                               containerSearch.clear();
                             });
                           },
-                          child: Icon(Icons.clear),
+                          child: const Icon(Icons.clear),
                         ),
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                       ),
                     ),
                   ),
@@ -155,7 +155,7 @@ class viewSerchProducts extends State<searchProducts>{
                       icon: Image.asset("assets/image/edit.png")),
                 ],
               ),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
               show ? Card(
                 elevation: 3,
                 child: Column(
@@ -165,36 +165,36 @@ class viewSerchProducts extends State<searchProducts>{
                       children: [
                         TextButton(
                           onPressed: () {sortProductsAZ();},
-                          child: Text("Theo tên từ A-Z",style: TextStyle(fontSize: 13),),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo tên từ A-Z",style: TextStyle(fontSize: 13),),
                         ),
                         TextButton(
                           onPressed: () {sortProductsZA();},
-                          child: Text("Theo tên từ Z-A",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo tên từ Z-A",style: TextStyle(fontSize: 13)),
                         ),
                         TextButton(
                           onPressed: () {},
-                          child: Text("Theo đánh giá",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo đánh giá",style: TextStyle(fontSize: 13)),
                         )
                       ],
                     ),
@@ -203,33 +203,33 @@ class viewSerchProducts extends State<searchProducts>{
                       children: [
                         TextButton(
                           onPressed: () {sortProductsPriceAZ();},
-                          child: Text("Theo giá từ thấp đến cao",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo giá từ thấp đến cao",style: TextStyle(fontSize: 13)),
                         ),
                         TextButton(
                           onPressed: () {sortProductsPriceZA();},
-                          child: Text("Theo giá từ cao đến thấp",style: TextStyle(fontSize: 13)),
                           style: TextButton.styleFrom(
-                              backgroundColor: Color(0xffd9d9d9),
-                              foregroundColor: Color(0xff3a3030),
+                              backgroundColor: const Color(0xffd9d9d9),
+                              foregroundColor: const Color(0xff3a3030),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10)
                               )
                           ),
+                          child: const Text("Theo giá từ cao đến thấp",style: TextStyle(fontSize: 13)),
                         )
                       ],
                     ),
                   ],
                 ),
               ):Container(),
-              Container(width: double.infinity,height: 10,color: Colors.grey.withOpacity(.2),margin: EdgeInsets.symmetric(vertical: 10),),
-              itemCa.isLoading ? Container(
+              Container(width: double.infinity,height: 10,color: Colors.grey.withOpacity(.2),margin: const EdgeInsets.symmetric(vertical: 10),),
+              itemCa.isLoading ? SizedBox(
                 height: MediaQuery.of(context).size.height-96,
                 width: MediaQuery.of(context).size.width,
                 child: Center(
@@ -241,12 +241,11 @@ class viewSerchProducts extends State<searchProducts>{
                 itemCount: 1,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  print(allProducts);
                   return GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: allProducts.length,
                     shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       mainAxisExtent: 370,
                     ),
@@ -290,12 +289,12 @@ class viewSerchProducts extends State<searchProducts>{
                                   itemData["ProductName"],
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontFamily: "LibreBaskerville-Regular"),
+                                  style: const TextStyle(fontFamily: "LibreBaskerville-Regular"),
                                 ),
                               ),
                               const SizedBox(height: 10),
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                margin: const EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -303,7 +302,7 @@ class viewSerchProducts extends State<searchProducts>{
                                       children: [
                                         Text(
                                           price!,
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: "LibreBodoni-Medium",
                                             fontSize: 17,
                                             color: Color(0xffd0021c),
@@ -311,8 +310,8 @@ class viewSerchProducts extends State<searchProducts>{
                                           ),
                                         ),
                                         Container(
-                                          margin: EdgeInsets.only(bottom: 10),
-                                          child: Text("₫", style: TextStyle(color: Color(0xffd0021c), fontWeight: FontWeight.bold)),
+                                          margin: const EdgeInsets.only(bottom: 10),
+                                          child: const Text("₫", style: TextStyle(color: Color(0xffd0021c), fontWeight: FontWeight.bold)),
                                         ),
                                       ],
                                     ),
@@ -320,8 +319,8 @@ class viewSerchProducts extends State<searchProducts>{
                                       color: const Color(0xfffff0e9),
                                       child: itemData["discount"] != null && itemData["discount"].isNotEmpty
                                           ? Text(
-                                        "-" + itemData["discount"] + "%",
-                                        style: TextStyle(color: Color(0xffeb5757)),
+                                        "${"-" + itemData["discount"]}%",
+                                        style: const TextStyle(color: Color(0xffeb5757)),
                                       )
                                           : null,
                                     ),
@@ -353,13 +352,13 @@ class viewSerchProducts extends State<searchProducts>{
                 },
               ):
                  Container(
-                   margin: EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                   margin: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                    child:Column(
                      children: [
                        RichText(
                          text: TextSpan(
                            children: <TextSpan>[
-                           TextSpan(
+                           const TextSpan(
                              text: "Rất tiếc, Chúng tôi không tìm thấy kết quả nào phù hợp với từ khóa ",
                              style: TextStyle(
                                color: Colors.black,
@@ -368,7 +367,7 @@ class viewSerchProducts extends State<searchProducts>{
                            ),
                              TextSpan(
                                text:  "\"${widget.searchKeyword}\"" ,
-                               style: TextStyle(
+                               style: const TextStyle(
                                  color: Colors.black,
                                  fontWeight: FontWeight.bold,
                                  fontSize: 16
@@ -377,9 +376,9 @@ class viewSerchProducts extends State<searchProducts>{
                            ],
                          ),
                        ),
-                       SizedBox(height: 10,),
+                       const SizedBox(height: 10,),
                        RichText(
-                         text: TextSpan(
+                         text: const TextSpan(
                            children: <TextSpan>[
                              TextSpan(
                                text: "Để tìm được kết quả chính xác hơn, bạn vui lòng:",

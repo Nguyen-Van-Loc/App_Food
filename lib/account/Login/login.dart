@@ -9,13 +9,16 @@ import 'package:restart_app/restart_app.dart';
 import '../../Validate/validateLogin.dart';
 
 class login extends StatefulWidget {
+  const login({super.key});
+
+  @override
   viewLogin createState() => viewLogin();
 }
 
 class viewLogin extends State<login> {
   String erremail = "", errpass = "";
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool checkkey = true;
 
   void onLogin() async {
@@ -28,10 +31,10 @@ class viewLogin extends State<login> {
       });
       if (errpass.isEmpty) {
         EasyLoading.show(status: "loading...");
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 3));
         bool success = await _signIn();
         if(success){
-          await Future.delayed(Duration(seconds: 3));
+          await Future.delayed(const Duration(seconds: 3));
           Restart.restartApp();
         }
       }
@@ -70,7 +73,7 @@ class viewLogin extends State<login> {
         child: Stack(
           children: [
             SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 child: Image.asset(
                   "assets/image/Group 96.png",
                   fit: BoxFit.cover,
@@ -91,7 +94,7 @@ class viewLogin extends State<login> {
               left: 20,
               right: 20,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 width: MediaQuery.of(context).size.width,
                 height: 450,
                 decoration: BoxDecoration(
@@ -101,20 +104,20 @@ class viewLogin extends State<login> {
                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           blurRadius: 5,
-                          offset: Offset(0, 4))
+                          offset: const Offset(0, 4))
                     ]),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
-                    Text(
+                    const Text(
                       "Email",
                       style: TextStyle(
                           fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextField(
@@ -123,24 +126,24 @@ class viewLogin extends State<login> {
                           errorText: erremail.isNotEmpty ? erremail : null,
                           hintText: "Nhập Email",
                           prefixIcon: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Image.asset(
                                 "assets/image/mail.png",
                                 height: 20,
                               )),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(width: 1))),
+                              borderSide: const BorderSide(width: 1))),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "Mật khẩu",
                       style: TextStyle(
                           fontSize: 16, fontFamily: "LibreBodoni-Medium"),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     TextField(
@@ -150,7 +153,7 @@ class viewLogin extends State<login> {
                           errorText: errpass.isNotEmpty ? errpass : null,
                           hintText: "Nhập mật khẩu",
                           prefixIcon: Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Image.asset(
                                 "assets/image/key.png",
                                 height: 20,
@@ -160,73 +163,72 @@ class viewLogin extends State<login> {
                               checkkey = !checkkey;
                             }),
                             child: checkkey
-                                ? Icon(CupertinoIcons.eye_slash)
-                                : Icon(CupertinoIcons.eye),
+                                ? const Icon(CupertinoIcons.eye_slash)
+                                : const Icon(CupertinoIcons.eye),
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(width: 1))),
+                              borderSide: const BorderSide(width: 1))),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
+                      alignment: Alignment.centerRight,
                       child: TextButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                    builder: (context) => forgotPassword()));
+                                    builder: (context) => const forgotPassword()));
                           },
-                          child: Text(
+                          child: const Text(
                             "Quên mật khẩu ?",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color(0xff9A9A9A),
                                 fontFamily: "LibreBodoni-Bold"),
                           )),
-                      alignment: Alignment.centerRight,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
                       alignment: Alignment.center,
                       child: ElevatedButton(
                         onPressed: () => onLogin(),
-                        child: Text(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            backgroundColor: const Color(0xffFF3D00),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 13, horizontal: 35)),
+                        child: const Text(
                           "Đăng nhập",
                           style: TextStyle(
                               fontSize: 18, fontFamily: "LibreBodoni-Medium"),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            backgroundColor: Color(0xffFF3D00),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 13, horizontal: 35)),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                            child: Text(
+                        const Text(
                           "Bạn chưa có tài khoản ?",
                           style: TextStyle(
-                              color: Color(0xffA3A3A3),
-                              fontSize: 15,
-                              fontFamily: "LibreBodoni-Medium"),
-                        )),
+                          color: Color(0xffA3A3A3),
+                          fontSize: 15,
+                          fontFamily: "LibreBodoni-Medium"),
+                        ),
                         TextButton(
                             onPressed: () => Navigator.push(
                                 context,
                                 CupertinoPageRoute(
                                     builder: (context) => logup())),
-                            child: Text(
+                            child: const Text(
                               "Đăng ký",
                               style: TextStyle(
                                   color: Color(0xffFF6C2E),

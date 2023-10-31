@@ -10,21 +10,24 @@ import 'package:lab5/page/profile.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
 class barNavigation extends StatefulWidget {
+  const barNavigation({super.key});
+
+  @override
   viewBar createState() => viewBar();
 }
 class viewBar extends State<barNavigation> {
   final _auth = FirebaseAuth.instance.currentUser;
   User? _user;
 
-  Widget currentScreen = home();
+  Widget currentScreen = const home();
   String selectedIconButton = 'trangchu';
   void changeTabToNotifications() {
     setState(() {
-      currentScreen = notifications();
+      currentScreen = const notifications();
       selectedIconButton = 'notifications';
     });
   }
-  final List<Widget> screens = [home(), favorite(), profile(), notifications()];
+  final List<Widget> screens = [const home(), const favorite(), const profile(), const notifications()];
   @override
   void initState() {
     super.initState();
@@ -59,25 +62,25 @@ class viewBar extends State<barNavigation> {
                   Icons.home,
                   'Trang chủ',
                   'trangchu',
-                  home(),
+                  const home(),
                 ),
                 _buildNavigationBarItem(
                   Icons.favorite,
                   'Yêu thích',
                   'favorite',
-                  favorite(),
+                  const favorite(),
                 ),
                 _buildNavigationBarItem(
                   Icons.notifications_active,
                   'Thông báo',
                   'notifications',
-                  notifications(),
+                  const notifications(),
                 ),
                 _buildNavigationBarItem(
                   Icons.person_sharp,
                   'Người dùng',
                   'profile',
-                  profile(),
+                  const profile(),
                 ),
               ],
             ),
@@ -101,7 +104,7 @@ class viewBar extends State<barNavigation> {
       iconWidget = badges.Badge(
         badgeContent: Text(
           itemNoti.data.length.toString(),
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         showBadge: true,
         child: Icon(
@@ -121,7 +124,7 @@ class viewBar extends State<barNavigation> {
         setState(() {
           if (_user == null && itemKey != 'trangchu') {
             Navigator.push(
-                context, CupertinoPageRoute(builder: (context) => login()));
+                context, CupertinoPageRoute(builder: (context) => const login()));
           } else {
             currentScreen = screen;
             selectedIconButton = itemKey;

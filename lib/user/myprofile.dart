@@ -10,10 +10,11 @@ import 'package:intl/intl.dart';
 import 'package:lab5/Validate/validateProfile.dart';
 import 'package:shimmer/shimmer.dart';
 class myprofile extends StatefulWidget {
+  @override
   viewMyProfile createState() => viewMyProfile();
   final Map<String, dynamic> data;
   final String keyId;
-  myprofile({required this.data, required this.keyId});
+  const myprofile({super.key, required this.data, required this.keyId});
 }
 class viewMyProfile extends State<myprofile> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -56,13 +57,8 @@ class viewMyProfile extends State<myprofile> {
       String imagePath = 'images/$userId/logo.png';
       Reference storageRef = FirebaseStorage.instance.ref().child(imagePath);
       UploadTask uploadTask = storageRef.putFile(imageFile);
-      try {
         await uploadTask.whenComplete(() {
-          print('Uploaded image');
         });
-      } catch (error) {
-        print('Upload error: $error');
-      }
     }
   }
 
@@ -76,7 +72,7 @@ class viewMyProfile extends State<myprofile> {
       });
       if (errphone.isEmpty) {
         EasyLoading.show(status: "loading...");
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 3));
         EasyLoading.dismiss();
         EasyLoading.showSuccess("Cập nhật thành công");
         Update();
@@ -216,7 +212,7 @@ class viewMyProfile extends State<myprofile> {
                           color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
                           boxShadow: [
-                            BoxShadow(blurRadius: 4,offset: Offset(1,1),color: Colors.grey.withOpacity(0.5))
+                            BoxShadow(blurRadius: 4,offset: const Offset(1,1),color: Colors.grey.withOpacity(0.5))
                           ]
                         ),
                         child: imageFile != null

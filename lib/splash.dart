@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:lab5/barNavigation.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 class splacsh extends StatefulWidget {
+  @override
   viewSplash createState() => viewSplash();
 }
 class viewSplash extends State<splacsh> {
   double _scale = 1.0;
-  double _maxScale = 1.2;
-  int _duration = 100;
+  final double _maxScale = 1.2;
+  final int _duration = 100;
   bool _zoomIn = true;
   double opacity = 0.0;
   @override
   void initState() {
     super.initState();
     autoZoomIn();
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         opacity = 1.0;
       });
@@ -41,7 +42,7 @@ class viewSplash extends State<splacsh> {
                               begin: const Offset(1,0), end: Offset.zero);
                           return SlideTransition(
                             position: animation.drive(tween),
-                            child: barNavigation(),
+                            child: const barNavigation(),
                           );
                         },
                         transitionDuration: const Duration(milliseconds: 300),
@@ -59,7 +60,7 @@ class viewSplash extends State<splacsh> {
         Positioned(
           right: 0,left: 0,bottom: 250,top: 0,
           child: AnimatedContainer(
-            duration: Duration(seconds: 3), // Điều chỉnh thời gian animation
+            duration: const Duration(seconds: 3), // Điều chỉnh thời gian animation
             width: 200 * _scale, // Kích thước ban đầu của hình ảnh
             height: 200 * _scale, // Kích thước ban đầu của hình ảnh
             child: Image.asset(
@@ -67,16 +68,16 @@ class viewSplash extends State<splacsh> {
           ),
         ),
         AnimatedOpacity(
-          duration: Duration(seconds: 3), // Thời gian xuất hiện dần dần
+          duration: const Duration(seconds: 3), // Thời gian xuất hiện dần dần
           opacity: opacity, // Độ trong suốt ban đầu là 0.0 (ẩn)
           child: Container(
             margin: const EdgeInsets.only(bottom: 100),
             alignment: Alignment.bottomCenter,
             child: LoadingAnimationWidget.discreteCircle(
-                color: Color(0xffff2b00),
+                color: const Color(0xffff2b00),
                 size: 40,
-                thirdRingColor: Color(0xff50e826),
-                secondRingColor: Color(0xff0059ff)),
+                thirdRingColor: const Color(0xff50e826),
+                secondRingColor: const Color(0xff0059ff)),
           ),
         ),
       ],

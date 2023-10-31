@@ -5,9 +5,11 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../changeNotifier/Categories.dart';
-import '../main.dart';
 
 class menu extends StatefulWidget {
+  const menu({super.key});
+
+  @override
   viewMenu createState() => viewMenu();
 }
 class viewMenu extends State<menu> {
@@ -20,7 +22,7 @@ class viewMenu extends State<menu> {
   }
   bool checkLoading=true;
   void isLoading() async{
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     setState(() {
       checkLoading=false;
     });
@@ -38,7 +40,7 @@ class viewMenu extends State<menu> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                    margin: EdgeInsets.only(left: 10, top: 15),
+                    margin: const EdgeInsets.only(left: 10, top: 15),
                     child: Row(
                       children: [
                         InkWell(
@@ -46,20 +48,20 @@ class viewMenu extends State<menu> {
                             Navigator.pop(context);
                           },
                           child: Container(
-                              padding: EdgeInsets.all(5),
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
-                                  color: Color(0xFFB0AEAE)),
+                                  color: const Color(0xFFB0AEAE)),
                               child: Image.asset(
                                 "assets/image/left-chevron.png",
                                 width: 20,
                                 height: 20,
                               )),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
-                        Text(
+                        const Text(
                           "Danh mục ",
                           style: TextStyle(
                               fontSize: 25,
@@ -81,17 +83,17 @@ class viewMenu extends State<menu> {
               ],
             ),
                 Container(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width,
                   height: 5,
-                  color: Color(0xffe7e6e6),
+                  color: const Color(0xffe7e6e6),
                 ),
-            SizedBox(height: 30,),
+            const SizedBox(height: 30,),
             Stack(
               children: [
                 Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(30),
                           bottomRight: Radius.circular(30)),
@@ -99,7 +101,7 @@ class viewMenu extends State<menu> {
                     ),
                     width: 120,
                     height: itemProduct.result.length*130),
-                checkLoading || itemProduct.isLoading ? Container(
+                checkLoading || itemProduct.isLoading ? SizedBox(
                   height: MediaQuery.of(context).size.height-96,
                   width: MediaQuery.of(context).size.width,
                   child: Center(
@@ -108,7 +110,7 @@ class viewMenu extends State<menu> {
                 ):
                     itemProduct.result.isNotEmpty ?
                 Container(
-                    margin: EdgeInsets.only(bottom: 20, top: 20),
+                    margin: const EdgeInsets.only(bottom: 20, top: 20),
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -121,7 +123,7 @@ class viewMenu extends State<menu> {
                             borderSide: BorderSide.none,
                           ),
                           elevation: 3,
-                          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+                          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
                           child: InkWell(
                             onTap: () {
                               Navigator.push(
@@ -138,7 +140,7 @@ class viewMenu extends State<menu> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      margin: EdgeInsets.only(right: 20),
+                                      margin: const EdgeInsets.only(right: 20),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: [
@@ -148,7 +150,7 @@ class viewMenu extends State<menu> {
                                         ],
                                         color: Colors.white,
                                       ),
-                                      padding: EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(10),
                                       child: Image.network(
                                         itemData["image"],
                                         width: 80,
@@ -159,33 +161,29 @@ class viewMenu extends State<menu> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Container(
+                                          margin: const EdgeInsets.only(top: 20),
                                           child: Text(
                                           itemData["name"],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 20,
                                               fontFamily: "LibreBodoni-Medium",
                                             ),
                                           ),
-                                          margin: EdgeInsets.only(top: 20),
                                         ),
                                         Row(
                                           children: [
-                                            Container(
-                                              child: Text(
-                                                "${itemProduct.result[index]["productsData"].length}",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontFamily: "LibreBodoni-Medium",
-                                                ),
+                                            Text(
+                                              "${itemProduct.result[index]["productsData"].length}",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: "LibreBodoni-Medium",
                                               ),
                                             ),
-                                            Container(
-                                              child: Text(
-                                                " Sản phẩm",
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontFamily: "LibreBodoni-Medium",
-                                                ),
+                                            const Text(
+                                              " Sản phẩm",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: "LibreBodoni-Medium",
                                               ),
                                             ),
                                           ],
@@ -205,7 +203,7 @@ class viewMenu extends State<menu> {
                         );
                       },
                       itemCount: itemProduct.result.length,
-                    )):Container(
+                    )):SizedBox(
                       height: MediaQuery.of(context).size.height-96,
                       width: MediaQuery.of(context).size.width,
                       child: Center(

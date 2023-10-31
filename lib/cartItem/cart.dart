@@ -11,6 +11,9 @@ import 'package:lab5/changeNotifier/ProfileUser.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 class cart extends StatefulWidget {
+  const cart({super.key});
+
+  @override
   viewCart createState() => viewCart();
 }
 class viewCart extends State<cart> {
@@ -18,13 +21,13 @@ class viewCart extends State<cart> {
   int totalPayment=0;
   String result="0";
   bool loading =false;
-  Set<int> selectedItems = Set<int>();
+  Set<int> selectedItems = <int>{};
   bool selectAll = false;
   List<Map<String,dynamic>> selectedItemsList =[];
   List<TextEditingController> quantityControllers = [];
   bool checkLoading=true;
   void isLoading() async{
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     checkLoading=false;
   }
   void add(String key,dynamic quantity)async{
@@ -62,7 +65,6 @@ class viewCart extends State<cart> {
       'quantity': text,
     }, SetOptions(merge: true));
     int itemIndex = selectedItemsList.indexWhere((element) => element["key"] == keyid);
-    print(itemIndex);
     if (itemIndex != -1) {
       selectedItemsList[itemIndex]["data"]["quantity"] = text;
     }
@@ -89,7 +91,7 @@ class viewCart extends State<cart> {
   }
   void loadingTotalPrice() async{
     loading=true;
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     loading=false;
     String formattedTotalPayment = NumberFormat.decimalPattern("vi").format(totalPayment);
     result = formattedTotalPayment.toString().replaceAll(",", ".");
@@ -194,7 +196,7 @@ class viewCart extends State<cart> {
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 15, top: 15),
+              margin: const EdgeInsets.only(left: 15, top: 15),
               child: Row(
                 children: [
                   InkWell(
@@ -202,20 +204,20 @@ class viewCart extends State<cart> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: Color(0xFFB0AEAE)),
+                            color: const Color(0xFFB0AEAE)),
                         child: Image.asset(
                           "assets/image/left-chevron.png",
                           width: 20,
                           height: 20,
                         )),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
-                  Text(
+                  const Text(
                     "Giỏ hàng",
                     style: TextStyle(
                         fontSize: 25,
@@ -226,19 +228,19 @@ class viewCart extends State<cart> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 20),
+              margin: const EdgeInsets.only(top: 20),
               width: MediaQuery.of(context).size.width,
               height: 5,
-              color: Color(0xffe7e6e6),
+              color: const Color(0xffe7e6e6),
             ),
-            Expanded(child:SingleChildScrollView(child: Column(children: [checkLoading ? Container(
+            Expanded(child:SingleChildScrollView(child: Column(children: [checkLoading ? SizedBox(
               height: MediaQuery.of(context).size.height-96,
               width: MediaQuery.of(context).size.width,
               child: Center(
                 child: LoadingAnimationWidget.waveDots(color: Colors.red, size: 40),
               ),
             ):
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height-96,
               width: MediaQuery.of(context).size.width,
               child: Stack(
@@ -256,14 +258,14 @@ class viewCart extends State<cart> {
                           height: 150,
                           width: 150,
                         ),
-                        SizedBox(height: 10,),
-                        Text("Chưa có đơn hàng",style: TextStyle(fontFamily: "LibreBodoni-Medium",fontSize: 18,color: Color(
+                        const SizedBox(height: 10,),
+                        const Text("Chưa có đơn hàng",style: TextStyle(fontFamily: "LibreBodoni-Medium",fontSize: 18,color: Color(
                             0xff7d7d7d)),)
                       ],
                     ),
                   ) : item.isLoading ==true ?
                   Container():ListView.builder(
-                      padding: EdgeInsets.only(bottom: 70),
+                      padding: const EdgeInsets.only(bottom: 70),
                       itemCount: item.data.length,
                       itemBuilder: (context, index) {
                         final getLength=item.data[index];
@@ -277,7 +279,7 @@ class viewCart extends State<cart> {
                           children: [
                             Card(
                               elevation: 3,
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   horizontal: 15, vertical: 15),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -299,7 +301,7 @@ class viewCart extends State<cart> {
                                     },
                                   ),
                                   Container(
-                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
                                     child: Image.network(
                                       itemData["imageUrl"],
                                       width: 100,
@@ -311,22 +313,22 @@ class viewCart extends State<cart> {
                                     CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                          margin: EdgeInsets.only(top: 10),
+                                          margin: const EdgeInsets.only(top: 10),
                                           width: MediaQuery.of(context)
                                               .size.width - 230,
                                           child: Text(
                                             itemData["productName"],
                                             overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 17,
                                                 fontFamily:
                                                 "LibreBaskerville-Regular"),
                                           )),
                                       Container(
-                                          margin: EdgeInsets.symmetric(
+                                          margin: const EdgeInsets.symmetric(
                                               vertical: 7),
                                           child: Text(itemData["price"]+"₫",
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontSize: 17,
                                                   fontFamily: "LibreBodoni-Medium",color: Color(
                                                   0xffff0000)))),
@@ -335,14 +337,6 @@ class viewCart extends State<cart> {
                                           Material(
                                             color: Colors.white.withOpacity(0.0),
                                             child: InkWell(
-                                              child: Container(width: 30, height: 30,
-                                                padding: EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(width: .5,color: Colors.grey),
-                                                ),
-                                                child: Image.asset("assets/image/minus (1).png",
-                                                  color: Colors.grey,),
-                                              ),
                                               onTap: quantityController.text!="1" ? (){
                                                 setState(() {
                                                   int currentQuantity = int.parse(quantityController.text);
@@ -351,11 +345,19 @@ class viewCart extends State<cart> {
                                                     minus(getId, currentQuantity);
                                                   }
                                                 });}:null,
+                                              child: Container(width: 30, height: 30,
+                                                padding: const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(width: .5,color: Colors.grey),
+                                                ),
+                                                child: Image.asset("assets/image/minus (1).png",
+                                                  color: Colors.grey,),
+                                              ),
                                             ),
                                           ),
                                           Container(
                                             width: 70,height: 30,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               border: Border(
                                                 top: BorderSide(width: .5, color: Colors.grey),
                                                 bottom: BorderSide(width: .5, color: Colors.grey),
@@ -379,9 +381,9 @@ class viewCart extends State<cart> {
 
                                               },
                                               keyboardType: TextInputType.number,
-                                              style: TextStyle(color: Colors.red),
+                                              style: const TextStyle(color: Colors.red),
                                               textAlign: TextAlign.center,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                   border: UnderlineInputBorder(
                                                       borderSide: BorderSide.none
                                                   )
@@ -392,7 +394,7 @@ class viewCart extends State<cart> {
                                             color: Colors.white.withOpacity(0.0),
                                             child: InkWell(
                                               child: Container(width: 30, height: 30,
-                                                padding: EdgeInsets.all(8),
+                                                padding: const EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
                                                   border: Border.all(width: .5,color: Colors.grey),
                                                 ),
@@ -429,12 +431,12 @@ class viewCart extends State<cart> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              margin: EdgeInsets.only(bottom: 10),
+                              margin: const EdgeInsets.only(bottom: 10),
                               height: 2,
-                              color: Color(0xffe7e6e6),
+                              color: const Color(0xffe7e6e6),
                             ),
                             Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   horizontal: 5, vertical: 5),
                               child: Row(
                                 mainAxisAlignment:
@@ -463,7 +465,7 @@ class viewCart extends State<cart> {
                                           });
                                         },
                                       ),
-                                      Container(
+                                      const SizedBox(
                                           width: 90,
                                           child: Text(
                                             "Tổng thanh toán",
@@ -476,26 +478,26 @@ class viewCart extends State<cart> {
                                   ),
                                   Row(
                                     children: [
-                                      loading?CircularProgressIndicator(strokeAlign: -5,):
+                                      loading?const CircularProgressIndicator(strokeAlign: -5,):
                                       Text("$result₫",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontFamily: "LibreBodoni-Medium",
                                               color: Colors.red,
                                               fontSize: 16)),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor:
-                                              Color(0xffff6900),
-                                              padding: EdgeInsets.symmetric(
+                                              const Color(0xffff6900),
+                                              padding: const EdgeInsets.symmetric(
                                                   vertical: 13,
                                                   horizontal: 13)),
                                           onPressed: selectedItemsList.isNotEmpty? () {
                                             Navigator.push(context, CupertinoPageRoute(builder: (context)=>payProduct(totaPrice: totalPayment,data: selectedItemsList,)));
                                           }:null,
-                                          child: Text("Thanh toán",
+                                          child: const Text("Thanh toán",
                                               style: TextStyle(
                                                   fontFamily:
                                                   "LibreBodoni-Medium",
@@ -506,10 +508,10 @@ class viewCart extends State<cart> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(bottom: 0),
+                              margin: const EdgeInsets.only(bottom: 0),
                               width: MediaQuery.of(context).size.width,
                               height: 2,
-                              color: Color(0xffe7e6e6),
+                              color: const Color(0xffe7e6e6),
                             ),
                           ],
                         ),

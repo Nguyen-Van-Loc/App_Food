@@ -23,14 +23,13 @@ void main() async {
     ChangeNotifierProvider(create: (_)=>categoryProducts()),
     ChangeNotifierProvider(create: (_)=>getFavouriteUser()),
     ChangeNotifierProvider(create: (_)=>getNotiUser())
-  ],child: MyApp(),));
+  ],child: const MyApp(),));
   configLoading();
   FirebaseMessaging.onBackgroundMessage(firebaseMessegerBackground);
 
 }
 Future<void> firebaseMessegerBackground(RemoteMessage message)async{
   await Firebase.initializeApp();
-  print(message.notification!.body.toString());
 }
 void configLoading() {
   EasyLoading.instance
@@ -62,13 +61,12 @@ class _MyAppState extends State<MyApp> {
     _services.requestNotificationServices();
     _services.firebaseInit(context);
     _services.getDeviceToken().then((value) {
-      print(value);
     });
   }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SafeArea(
+      home: const SafeArea(
         child: Scaffold(
           body: barNavigation(),
         ),

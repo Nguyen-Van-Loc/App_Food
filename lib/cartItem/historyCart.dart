@@ -13,12 +13,16 @@ import 'package:lab5/page/notifications.dart';
 import 'package:provider/provider.dart';
 
 class historycart extends StatefulWidget {
+  const historycart({super.key});
+
+  @override
   viewhistoryCart createState() => viewhistoryCart();
 }
 
 class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
   late final TabController _tabController;
   final NotificationServices _services = NotificationServices();
+  List<String> reviewedProducts = [];
 
   @override
   void initState() {
@@ -98,7 +102,8 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
         .doc(itemUser.data[0]["key"])
         .collection("History")
         .doc(id)
-        .set({"orderStatus": "Đã hủy","cancellationPeriod":formattedDate}, SetOptions(merge: true));
+        .set({"orderStatus": "Đã hủy", "cancellationPeriod": formattedDate},
+            SetOptions(merge: true));
     _services.getDeviceToken().then((value) async {
       var data = {
         'to': value.toString(),
@@ -147,6 +152,8 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
           });
     });
   }
+
+  bool shouldShowButton = true;
 
   @override
   Widget build(BuildContext context) {
@@ -228,12 +235,12 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                 ),
               ],
               isScrollable: true,
-              labelPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              labelPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               unselectedLabelColor: Colors.grey,
               labelColor: Colors.black,
             ),
             Expanded(
-                child: Container(
+                child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: TabBarView(controller: _tabController, children: [
@@ -246,17 +253,22 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                         final getKey = getIndex["key"];
                         if (getData["orderStatus"] == "Chờ xác nhận") {
                           return InkWell(
-                            onTap: (){
-                              Navigator.push(context, CupertinoPageRoute(builder: (context) => informationProducst(data: getData),));
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        informationProducst(data: getData),
+                                  ));
                             },
                             child: Card(
                               shape: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Colors.white)),
+                                  borderSide: const BorderSide(color: Colors.white)),
                               elevation: 5,
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
-                              child: Container(
+                              child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 height: 170,
                                 child: Column(
@@ -269,7 +281,7 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                         Container(
                                           width: 100,
                                           height: 100,
-                                          margin: EdgeInsets.all(10),
+                                          margin: const EdgeInsets.all(10),
                                           child: Image.network(
                                             getData["imageUrl"],
                                           ),
@@ -288,7 +300,7 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Container(
+                                                  SizedBox(
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
@@ -296,20 +308,21 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                                               160,
                                                       child: Text(
                                                         getData["productName"],
-                                                        overflow:
-                                                            TextOverflow.ellipsis,
-                                                        textAlign: TextAlign.left,
-                                                        style: TextStyle(
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: const TextStyle(
                                                             fontSize: 18,
                                                             fontFamily:
                                                                 "LibreBaskerville-Regular"),
                                                       )),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 10,
                                                   ),
                                                   Text(
                                                     getData["price"] + "₫",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         fontSize: 17,
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -317,7 +330,7 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
+                                              SizedBox(
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width -
@@ -329,21 +342,24 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                                     children: [
                                                       Text(
                                                         getData["orderStatus"],
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 16,
-                                                            color:
-                                                                Color(0xff4158ff),
+                                                            color: Color(
+                                                                0xff4158ff),
                                                             fontWeight:
-                                                                FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                       Text(
-                                                        "x" + getData["quantity"],
-                                                        style: TextStyle(
+                                                        "x" +
+                                                            getData["quantity"],
+                                                        style: const TextStyle(
                                                             fontSize: 16,
-                                                            color:
-                                                                Color(0xff6D6D6D),
+                                                            color: Color(
+                                                                0xff6D6D6D),
                                                             fontWeight:
-                                                                FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                     ]),
                                               )
@@ -357,7 +373,7 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                       color: Colors.grey,
                                     ),
                                     Container(
-                                      margin: EdgeInsets.only(right: 10),
+                                      margin: const EdgeInsets.only(right: 10),
                                       child: ElevatedButton(
                                         onPressed: () {
                                           dialog(context, getKey);
@@ -370,7 +386,7 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(10))),
-                                        child: Text(
+                                        child: const Text(
                                           "Hủy",
                                           style: TextStyle(
                                               color: Colors.white,
@@ -403,10 +419,10 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                             height: 150,
                             width: 150,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Chưa có đơn hàng",
                             style: TextStyle(
                                 fontFamily: "LibreBodoni-Medium",
@@ -424,117 +440,131 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                         final getIndex = item.data[index];
                         final getData = getIndex["data"];
                         if (getData["orderStatus"] == "Đang vận chuyển") {
-                          return  InkWell(
-                              onTap: (){
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => informationProducst(data: getData),));
+                          return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          informationProducst(data: getData),
+                                    ));
                               },
-                              child:Card(
-                            shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white)),
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 120,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                              child: Card(
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
+                                elevation: 5,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 120,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Container(
-                                        width: 100,
-                                        height: 100,
-                                        margin: EdgeInsets.all(10),
-                                        child: Image.network(
-                                          getData["imageUrl"],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 100,
-                                        margin: const EdgeInsets.only(
-                                            left: 10, top: 10, bottom: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 100,
+                                            height: 100,
+                                            margin: const EdgeInsets.all(10),
+                                            child: Image.network(
+                                              getData["imageUrl"],
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 100,
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 10, bottom: 10),
+                                            child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                    width:
-                                                        MediaQuery.of(context)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
                                                                 .size
                                                                 .width -
                                                             160,
-                                                    child: Text(
-                                                      getData["productName"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontFamily:
-                                                              "LibreBaskerville-Regular"),
-                                                    )),
+                                                        child: Text(
+                                                          getData[
+                                                              "productName"],
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontFamily:
+                                                                  "LibreBaskerville-Regular"),
+                                                        )),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      getData["price"] + "₫",
+                                                      style: const TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red),
+                                                    ),
+                                                  ],
+                                                ),
                                                 SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  getData["price"] + "₫",
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red),
-                                                ),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      160,
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          getData[
+                                                              "orderStatus"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff00bdde),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          "x" +
+                                                              getData[
+                                                                  "quantity"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff6D6D6D),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ]),
+                                                )
                                               ],
                                             ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  160,
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      getData["orderStatus"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff00bdde),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(
-                                                      "x" + getData["quantity"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff6D6D6D),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ]),
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ));
+                                ),
+                              ));
                         }
                         return Container();
                       }),
@@ -553,10 +583,10 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                             height: 150,
                             width: 150,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Chưa có đơn hàng",
                             style: TextStyle(
                                 fontFamily: "LibreBodoni-Medium",
@@ -575,152 +605,169 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                         final getData = getIndex["data"];
                         final getKey = getIndex["key"];
                         if (getData["orderStatus"] == "Đang giao hàng") {
-                          return  InkWell(
-                              onTap: (){
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => informationProducst(data: getData),));
-                              },
-                              child:Card(
-                            shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white)),
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 170,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        informationProducst(data: getData),
+                                  ));
+                            },
+                            child: Card(
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
+                                elevation: 5,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 170,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Container(
-                                        width: 100,
-                                        height: 100,
-                                        margin: EdgeInsets.all(10),
-                                        child: Image.network(
-                                          getData["imageUrl"],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 100,
-                                        margin: const EdgeInsets.only(
-                                            left: 10, top: 10, bottom: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 100,
+                                            height: 100,
+                                            margin: const EdgeInsets.all(10),
+                                            child: Image.network(
+                                              getData["imageUrl"],
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 100,
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 10, bottom: 10),
+                                            child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                    width:
-                                                        MediaQuery.of(context)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
                                                                 .size
                                                                 .width -
                                                             160,
-                                                    child: Text(
-                                                      getData["productName"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontFamily:
-                                                              "LibreBaskerville-Regular"),
-                                                    )),
+                                                        child: Text(
+                                                          getData[
+                                                              "productName"],
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontFamily:
+                                                                  "LibreBaskerville-Regular"),
+                                                        )),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      getData["price"] + "₫",
+                                                      style: const TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red),
+                                                    ),
+                                                  ],
+                                                ),
                                                 SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  getData["price"] + "₫",
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red),
-                                                ),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      160,
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          getData[
+                                                              "orderStatus"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff01af72),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          "x" +
+                                                              getData[
+                                                                  "quantity"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff6D6D6D),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ]),
+                                                )
                                               ],
                                             ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  160,
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      getData["orderStatus"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff01af72),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(
-                                                      "x" + getData["quantity"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff6D6D6D),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ]),
-                                            )
-                                          ],
+                                          )
+                                        ],
+                                      ),
+                                      Container(
+                                        height: 1,
+                                        color: Colors.grey,
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(right: 10),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            updateReceive(getKey);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color(0xffFF6900),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                      horizontal: 30),
+                                              elevation: 2,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10))),
+                                          child: const Text(
+                                            "Đã nhận",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily:
+                                                    "LibreBodoni-MediumItalic",
+                                                fontSize: 15),
+                                          ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
-                                  Container(
-                                    height: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        updateReceive(getKey);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xffFF6900),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 30),
-                                          elevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(10))),
-                                      child: Text(
-                                        "Đã nhận",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily:
-                                            "LibreBodoni-MediumItalic",
-                                            fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
+                                )),
                           );
                         }
                         return Container();
                       }),
                   if (item.data.isEmpty ||
                       !item.data.any((getIndex) =>
-                          getIndex["data"]["orderStatus"] ==
-                          "Đang giao hàng"))
+                          getIndex["data"]["orderStatus"] == "Đang giao hàng"))
                     Positioned(
                       right: 0,
                       left: 0,
@@ -733,10 +780,10 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                             height: 150,
                             width: 150,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Chưa có đơn hàng",
                             style: TextStyle(
                                 fontFamily: "LibreBodoni-Medium",
@@ -750,150 +797,186 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                 Stack(children: [
                   ListView.builder(
                       itemCount: item.data.length,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (
+                        context,
+                        index,
+                      ) {
                         final getIndex = item.data[index];
                         final getData = getIndex["data"];
+                        final getKeyHis = getIndex["key"];
                         final getKey = getData["productKey"];
                         if (getData["orderStatus"] == "Đã nhận") {
                           return InkWell(
-                              onTap: (){
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => informationProducst(data: getData),));
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) =>
+                                          informationProducst(data: getData),
+                                    ));
                               },
-                              child:Card(
-                            shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white)),
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 170,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                              child: Card(
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
+                                elevation: 5,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 170,
+                                  child: Column(
                                     children: [
-                                      Container(
-                                        width: 100,
-                                        height: 100,
-                                        margin: EdgeInsets.all(10),
-                                        child: Image.network(
-                                          getData["imageUrl"],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 100,
-                                        margin: const EdgeInsets.only(
-                                            left: 10, top: 10, bottom: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 100,
+                                            height: 100,
+                                            margin: const EdgeInsets.all(10),
+                                            child: Image.network(
+                                              getData["imageUrl"],
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 100,
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 10, bottom: 10),
+                                            child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                    width:
-                                                        MediaQuery.of(context)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
                                                                 .size
                                                                 .width -
                                                             160,
-                                                    child: Text(
-                                                      getData["productName"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontFamily:
-                                                              "LibreBaskerville-Regular"),
-                                                    )),
+                                                        child: Text(
+                                                          getData[
+                                                              "productName"],
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontFamily:
+                                                                  "LibreBaskerville-Regular"),
+                                                        )),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      getData["price"] + "₫",
+                                                      style: const TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red),
+                                                    ),
+                                                  ],
+                                                ),
                                                 SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  getData["price"] + "₫",
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red),
-                                                ),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      160,
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          getData[
+                                                              "orderStatus"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff11dc00),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          "x" +
+                                                              getData[
+                                                                  "quantity"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff6D6D6D),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ]),
+                                                )
                                               ],
                                             ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  160,
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      getData["orderStatus"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff11dc00),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(
-                                                      "x" + getData["quantity"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff6D6D6D),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ]),
-                                            )
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                            height: 1,
+                                            color: Colors.grey,
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: getData["reviewed"]==true ? null:() async {
+                                              Navigator.push(
+                                                  context,
+                                                  CupertinoPageRoute(
+                                                      builder: (context) =>
+                                                          productReviews(
+                                                            Name: getData[
+                                                                "productName"],
+                                                            Image: getData[
+                                                                "imageUrl"],
+                                                            keyIdCa: getData[
+                                                                "CategoriesId"],
+                                                            keyId: getKey,
+                                                            keyIdHis: getKeyHis,
+                                                          )));
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color(0xffFF6900),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 10,
+                                                        horizontal: 30),
+                                                elevation: 2,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10))),
+                                            child: const Text(
+                                              "Đánh giá",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily:
+                                                      "LibreBodoni-MediumItalic",
+                                                  fontSize: 15),
+                                            ),
+                                          )
+                                        ],
+                                      )
                                     ],
                                   ),
-                                  Container(
-                                    height: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(context, CupertinoPageRoute(builder: (context) => productReviews(Name: getData["productName"], Image: getData["imageUrl"],keyIdCa:getData["CategoriesId"],keyId:getKey,)),);
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xffFF6900),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 30),
-                                          elevation: 2,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(10))),
-                                      child: Text(
-                                        "Đánh giá",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily:
-                                            "LibreBodoni-MediumItalic",
-                                            fontSize: 15),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
                               ));
                         }
                         return Container();
@@ -913,10 +996,10 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                             height: 150,
                             width: 150,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Chưa có đơn hàng",
                             style: TextStyle(
                                 fontFamily: "LibreBodoni-Medium",
@@ -935,114 +1018,128 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                         final getData = getIndex["data"];
                         if (getData["orderStatus"] == "Đã hủy") {
                           return InkWell(
-                              onTap: (){
-                                Navigator.push(context, CupertinoPageRoute(builder: (context) => informationProducst(data: getData),));
-                              },
-                              child:Card(
-                            shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.white)),
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 120,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        informationProducst(data: getData),
+                                  ));
+                            },
+                            child: Card(
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
+                                elevation: 5,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 120,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Container(
-                                        width: 100,
-                                        height: 100,
-                                        margin: EdgeInsets.all(10),
-                                        child: Image.network(
-                                          getData["imageUrl"],
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 100,
-                                        margin: const EdgeInsets.only(
-                                            left: 10, top: 10, bottom: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 100,
+                                            height: 100,
+                                            margin: const EdgeInsets.all(10),
+                                            child: Image.network(
+                                              getData["imageUrl"],
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 100,
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 10, bottom: 10),
+                                            child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Container(
-                                                    width:
-                                                        MediaQuery.of(context)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
                                                                 .size
                                                                 .width -
                                                             160,
-                                                    child: Text(
-                                                      getData["productName"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      textAlign: TextAlign.left,
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontFamily:
-                                                              "LibreBaskerville-Regular"),
-                                                    )),
+                                                        child: Text(
+                                                          getData[
+                                                              "productName"],
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: const TextStyle(
+                                                              fontSize: 18,
+                                                              fontFamily:
+                                                                  "LibreBaskerville-Regular"),
+                                                        )),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Text(
+                                                      getData["price"] + "₫",
+                                                      style: const TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.red),
+                                                    ),
+                                                  ],
+                                                ),
                                                 SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  getData["price"] + "₫",
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.red),
-                                                ),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width -
+                                                      160,
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          getData[
+                                                              "orderStatus"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Colors.red,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        Text(
+                                                          "x" +
+                                                              getData[
+                                                                  "quantity"],
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              color: Color(
+                                                                  0xff6D6D6D),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ]),
+                                                )
                                               ],
                                             ),
-                                            Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  160,
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      getData["orderStatus"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.red,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                    Text(
-                                                      "x" + getData["quantity"],
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Color(0xff6D6D6D),
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ]),
-                                            )
-                                          ],
-                                        ),
-                                      )
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            )),
+                                )),
                           );
                         }
                         return Container();
@@ -1062,10 +1159,10 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                             height: 150,
                             width: 150,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
+                          const Text(
                             "Chưa có đơn hàng",
                             style: TextStyle(
                                 fontFamily: "LibreBodoni-Medium",

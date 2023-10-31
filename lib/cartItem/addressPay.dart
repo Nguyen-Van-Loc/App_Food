@@ -6,6 +6,9 @@ import 'package:lab5/custom/radioCustom.dart';
 import 'package:lab5/user/address.dart';
 import 'package:provider/provider.dart';
 class addressPay extends StatefulWidget {
+  const addressPay({super.key});
+
+  @override
   viewaddressPay createState() => viewaddressPay();
 }
 class viewaddressPay extends State<addressPay> {
@@ -20,9 +23,11 @@ class viewaddressPay extends State<addressPay> {
             onAdd:(Item item){
               if(itemEdit ==null){
                 addAddress(item);
-              }else(
+              }else {
+                (
                   updateAddress(item,itemEdit.key)
               );
+              }
             },
             itemToEdit: itemEdit,
             isEditing: itemEdit !=null,
@@ -87,7 +92,6 @@ class viewaddressPay extends State<addressPay> {
         listAddress = entries1;
       });
     }
-    print(listAddress);
   }
   void updateDefaultAddressInFirestore(int addressIndex) {
     final item = Provider.of<getProflieUser>(context,listen: false);
@@ -158,7 +162,7 @@ class viewaddressPay extends State<addressPay> {
                     ),
                     ListView.builder(
                           shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: itemUser.addresses.length,
                           itemBuilder: (context, index) {
                             final getLength =itemUser.addresses[index];
@@ -178,7 +182,7 @@ class viewaddressPay extends State<addressPay> {
                                     child: Container(
                                       width: MediaQuery.of(context).size.width-30,
                                       padding:
-                                      EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                      const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                       child: Column(
                                         children: [
                                           Row(
@@ -204,7 +208,7 @@ class viewaddressPay extends State<addressPay> {
                                               )
                                             ],
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 5,
                                           ),
                                           Row(
@@ -223,7 +227,7 @@ class viewaddressPay extends State<addressPay> {
                                               )
                                             ],
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 5,
                                           ),
                                           Row(
@@ -247,14 +251,14 @@ class viewaddressPay extends State<addressPay> {
                                     )),
                                 ) ,
                                 Positioned(right: 20,top:20, child: InkWell( onTap: (){showDialogAddress(itemEdit: Item(getItem["username"], getItem["phone"] , getItem["note"] , getItem["address"],getKey));},
-                                    child: Text("Sửa",style: TextStyle(color: Colors.red,fontFamily: "LibreBodoni-Medium",fontSize: 16),))),
+                                    child: const Text("Sửa",style: TextStyle(color: Colors.red,fontFamily: "LibreBodoni-Medium",fontSize: 16),))),
                               ],
                             );
                           },),
                     TextButton.icon(onPressed: (){
                       showDialogAddress();
-                    }, icon: Icon(CupertinoIcons.add_circled,color: Colors.red,),
-                    label: Text("Thêm địa chỉ",style: TextStyle(color: Colors.red,fontFamily: "LibreBodoni-Medium",fontSize: 18),))
+                    }, icon: const Icon(CupertinoIcons.add_circled,color: Colors.red,),
+                    label: const Text("Thêm địa chỉ",style: TextStyle(color: Colors.red,fontFamily: "LibreBodoni-Medium",fontSize: 18),))
                   ],
                 ),
               ),

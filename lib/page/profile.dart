@@ -3,8 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lab5/account/Login/login.dart';
-import 'package:lab5/account/Logup/logup.dart';
 import 'package:lab5/cartItem/cart.dart';
 import 'package:lab5/cartItem/historyCart.dart';
 import 'package:lab5/user/user.dart';
@@ -14,12 +12,14 @@ import 'package:shimmer/shimmer.dart';
 import '../changeNotifier/ProfileUser.dart';
 import 'notifications.dart';
 class profile extends StatefulWidget {
+  const profile({super.key});
+
+  @override
   viewProfile createState() => viewProfile();
 }
 class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  User? _user;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final NotificationServices _services = NotificationServices();
   @override
   void initState() {
@@ -28,16 +28,13 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
     _services.requestNotificationServices();
     _services.firebaseInit(context);
     _services.getDeviceToken().then((value) {
-      print(value);
     });
     _checkAuthentication();
     EasyLoading.dismiss();
     getImage();
   }
   Future<void> _checkAuthentication() async {
-    User? user = _auth.currentUser;
     setState(() {
-      _user = user;
     });
   }
   String? linkImg;
@@ -56,19 +53,19 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
   void _logOut() async {
     await _auth.signOut();
     EasyLoading.show(status: "loading...");
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     Restart.restartApp();
   }
   void dialogsupport(BuildContext context) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Center(
+          title: const Center(
             child: Text("Trung tâm hỗ trợ",
-                style: const TextStyle(fontFamily: "LibreBodoni-Medium")),
+                style: TextStyle(fontFamily: "LibreBodoni-Medium")),
           ),
           content:
-          Text("Mọi thắc mắc vui lòng liên hệ \nHotline: 19001006 ."),
+          const Text("Mọi thắc mắc vui lòng liên hệ \nHotline: 19001006 ."),
           actions: [
             Center(
               child: ElevatedButton(
@@ -128,7 +125,7 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                   ),
                   Center(
                       child: Text(username,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontFamily: "LibreBodoni-BoldItalic", fontSize: 20),
                       )),
                   ConstrainedBox(
@@ -235,7 +232,7 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                           InkWell(
                             onTap: () {
                               Navigator.push(context,
-                                  CupertinoPageRoute(builder: (context) => cart()));
+                                  CupertinoPageRoute(builder: (context) => const cart()));
                             },
                             child: Stack(
                               children: [
@@ -296,9 +293,9 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                                               color: Colors.red,
                                               borderRadius: BorderRadius.circular(30)
                                           ),
-                                          child: Text(itemCart.data.length.toString(),style: TextStyle(color: Colors.white),),
+                                          child: Text(itemCart.data.length.toString(),style: const TextStyle(color: Colors.white),),
                                         ),
-                                        SizedBox(width: 10,),
+                                        const SizedBox(width: 10,),
                                         Container(
                                           margin: const EdgeInsets.only(right: 15,bottom: 5),
                                           padding: const EdgeInsets.all(8),
@@ -331,7 +328,7 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                           ),
                           InkWell(
                             onTap: () { Navigator.push(context,
-                                CupertinoPageRoute(builder: (context) => historycart()));},
+                                CupertinoPageRoute(builder: (context) => const historycart()));},
                             child: Stack(
                               children: [
                                 Positioned(
