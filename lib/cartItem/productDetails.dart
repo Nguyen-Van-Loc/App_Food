@@ -406,7 +406,7 @@ class viewproductDetails extends State<productDetails> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    if(itemRe.data.isNotEmpty){
+                                    if (index < itemRe.data.length) {
                                     final itemIndex = itemRe.data[index];
                                     final itemData = itemIndex["data"];
                                     List<dynamic> imageUrls = itemData["imageUrls"];
@@ -491,6 +491,7 @@ class viewproductDetails extends State<productDetails> {
                                         ),
                                         Text(
                                             itemData["comment"]),
+                                        imageUrls.isEmpty ?Container():
                                         Row(
                                           children: [
                                             if (imageUrls.isNotEmpty)
@@ -511,8 +512,8 @@ class viewproductDetails extends State<productDetails> {
                                                   ),
                                                   if (imageUrls.length > 2)
                                                     Positioned(
-                                                      bottom: 0,
-                                                      right: 0,
+                                                      bottom: 0.0,
+                                                      right: 0.0,
                                                       child: Container(
                                                         padding: const EdgeInsets.all(5),
                                                         color: Colors.black54,
@@ -594,9 +595,7 @@ class viewproductDetails extends State<productDetails> {
                 ),
               ),
             ),
-            Positioned(
-                bottom: 0,
-                child: Row(
+              Row(
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width / 2,
@@ -648,7 +647,7 @@ class viewproductDetails extends State<productDetails> {
                       ),
                     ),
                   ],
-                )),
+                ),
           ],
         ),
       ),
