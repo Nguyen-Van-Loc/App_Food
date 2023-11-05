@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_renaming_method_parameters
+
 import 'package:flutter/material.dart';
 
 class CusTomRadio<T> extends StatelessWidget {
@@ -11,7 +13,7 @@ class CusTomRadio<T> extends StatelessWidget {
 
   Widget _buildRadio(){
     final bool isSelect = value == groupValue;
-    return Container(
+    return SizedBox(
       width: 20,height: 20,
       child: isSelect? Image.asset("assets/image/radio.png",height: 20,width: 20,):Image.asset("assets/image/radio-button.png",height: 20,width: 20,)
     );

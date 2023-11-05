@@ -1,6 +1,8 @@
+// ignore_for_file: camel_case_types, file_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 class getProflieUser extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> _data = [];
@@ -45,7 +47,9 @@ class getProflieUser extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 }
@@ -77,7 +81,9 @@ class getCartUser extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 }
@@ -109,7 +115,9 @@ class getNotiUser extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 }
@@ -141,7 +149,9 @@ class getOderUser extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 }
@@ -173,7 +183,9 @@ class getFavouriteUser extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
   bool isProductInFavorites(String productId) {

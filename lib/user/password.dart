@@ -7,6 +7,7 @@ import 'package:lab5/Validate/validateLogin.dart';
 import 'package:lab5/Validate/validateProfile.dart';
 import 'package:restart_app/restart_app.dart';
 
+// ignore: camel_case_types
 class viewPass extends State<mypass> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool checkpass = true;

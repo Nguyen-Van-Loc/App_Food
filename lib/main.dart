@@ -2,8 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/page/notifications.dart';
+import 'package:lab5/splash.dart';
 import 'package:provider/provider.dart';
-import 'barNavigation.dart';
 import 'changeNotifier/Categories.dart';
 import 'changeNotifier/ProfileUser.dart';
 import 'firebase_options.dart';
@@ -66,9 +66,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const SafeArea(
+      home: SafeArea(
         child: Scaffold(
-          body: barNavigation(),
+          body: Splacsh(),
         ),
       ),
       debugShowCheckedModeBanner: false,

@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +13,7 @@ import 'package:restart_app/restart_app.dart';
 import 'package:shimmer/shimmer.dart';
 import '../changeNotifier/ProfileUser.dart';
 import 'notifications.dart';
+
 class profile extends StatefulWidget {
   const profile({super.key});
 
@@ -150,7 +153,7 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                           InkWell(
                             onTap: () {
                               Navigator.push(context,
-                                  CupertinoPageRoute(builder: (context) => user()));
+                                  CupertinoPageRoute(builder: (context) => const user()));
                             },
                             child: Stack(
                               children: [

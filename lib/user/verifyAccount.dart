@@ -1,5 +1,8 @@
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:lab5/User/user.dart';
@@ -33,8 +36,9 @@ class viewVerifyAccount extends State<verifyAccount> {
         EasyLoading.show(status: "Đang xác minh tài khoản");
         await Future.delayed(const Duration(seconds: 3));
         EasyLoading.dismiss();
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
-            context, CupertinoPageRoute(builder: (context) => mypass()));
+            context, CupertinoPageRoute(builder: (context) => const mypass()));
       } catch (e) {
         setState(() {
           errPassOld = "Mật khẩu cũ không đúng";
@@ -42,7 +46,9 @@ class viewVerifyAccount extends State<verifyAccount> {
         return;
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

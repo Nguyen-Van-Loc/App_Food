@@ -1,6 +1,9 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names, prefer_interpolation_to_compose_strings, use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -27,8 +30,7 @@ class productDetails extends StatefulWidget {
 class viewproductDetails extends State<productDetails> {
   final firestore = FirebaseFirestore.instance;
 
-  Future<void> AddBuy({String? checkBuy}) {
-    return showModalBottomSheet(
+  Future<void> AddBuy({String? checkBuy}) async => showModalBottomSheet(
         context: context,
         builder: (context) => bottomSheet(
               data: widget.data,
@@ -36,7 +38,6 @@ class viewproductDetails extends State<productDetails> {
               keyID: widget.keyId,
               keyIdCa: widget.keyIdCa,
             ));
-  }
 
   void addFavorite() async {
     final itemUser = Provider.of<getProflieUser>(context, listen: false);
@@ -130,6 +131,34 @@ class viewproductDetails extends State<productDetails> {
       sum += rating;
     }
     return sum / _ratings.length;
+  }
+  void dialogsupport(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Center(
+            child: Text("Trung tâm hỗ trợ",
+                style: TextStyle(fontFamily: "LibreBodoni-Medium")),
+          ),
+          content:
+          const Text("Tính năng đang phát triển !."),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 13, horizontal: 30),
+                    backgroundColor: const Color(0xffff6900),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Xác nhận"),
+              ),
+            )
+          ],
+        ));
   }
   @override
   Widget build(BuildContext context) {
@@ -605,7 +634,7 @@ class viewproductDetails extends State<productDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           InkWell(
-                              onTap: () {},
+                              onTap: () {dialogsupport(context);},
                               child: Image.asset(
                                 "assets/image/bubble-chat.png",
                                 height: 30,
@@ -702,9 +731,13 @@ class showButtomSheet extends State<bottomSheet> {
       "imageUrl": widget.data["ImageURL "],
       "createdAt": formattedDate
     }).then((value) {
-        print("Ok");
+        if (kDebugMode) {
+          print("Ok");
+        }
     }).catchError((e) {
-      print("lỗi");
+      if (kDebugMode) {
+        print("lỗi");
+      }
     });
     EasyLoading.showSuccess("Thêm vào giỏ hàng thành công");
     Navigator.pop(context);

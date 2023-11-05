@@ -1,3 +1,6 @@
+// ignore: duplicate_ignore
+// ignore_for_file: camel_case_types, duplicate_ignore
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ import '../changeNotifier/Categories.dart';
 import 'package:badges/badges.dart' as badges;
 import '../changeNotifier/ProfileUser.dart';
 
+// ignore: camel_case_types
 class home extends StatefulWidget  {
   const home({super.key});
 
@@ -181,7 +185,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                     Navigator.push(
                                         context,
                                         CupertinoPageRoute(
-                                            builder: (context) => menu()));
+                                            builder: (context) => const menu()));
                                   },
                                   child: Row(
                                     children: [
@@ -729,6 +733,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                               itemData["discount"]
                                                                   .isNotEmpty
                                                               ? Text(
+                                                            // ignore: prefer_interpolation_to_compose_strings
                                                             "${"-" +
                                                                 itemData[
                                                                 "discount"]}%",
@@ -781,6 +786,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
   }
 }
 
+// ignore: camel_case_types
 class search extends StatefulWidget {
   const search({super.key});
 
@@ -841,6 +847,7 @@ class TextSearchState extends State<search> {
                       onSubmitted: (value) async {
                         if (value.isNotEmpty) {
                           await categoryData.searchProducts(value);
+                          // ignore: use_build_context_synchronously
                           Navigator.push(
                               context,
                               CupertinoPageRoute(

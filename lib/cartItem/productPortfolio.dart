@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names, prefer_interpolation_to_compose_strings
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

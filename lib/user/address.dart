@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -6,14 +8,14 @@ class Item {
   String name, phone, note, address,key;
   Item( this.name,  this.phone,  this.note,  this.address,this.key);
 }
-class myaddress extends StatefulWidget {
+class myAddress extends StatefulWidget {
   @override
   viewAddress createState() => viewAddress();
   final Map<String, dynamic> data;
   final String keyId;
-  const myaddress({super.key, required this.data, required this.keyId});
+  const myAddress({super.key, required this.data, required this.keyId});
 }
-class viewAddress extends State<myaddress> {
+class viewAddress extends State<myAddress> {
   final _firestore = FirebaseFirestore.instance;
   List<MapEntry<String, dynamic>> listAddress = [];
     void showDialogAddress({Item? itemEdit}) {
@@ -346,6 +348,7 @@ class ShowDialogAdd extends State<Dialogshow> {
           EasyLoading.dismiss();
           EasyLoading.showSuccess("Thành công");
           widget.onAdd(user);
+          // ignore: use_build_context_synchronously
           Navigator.pop(context);
         }
       }

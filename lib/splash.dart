@@ -1,13 +1,17 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lab5/barNavigation.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-class splacsh extends StatefulWidget {
+class Splacsh extends StatefulWidget {
+  const Splacsh({super.key});
+
   @override
   viewSplash createState() => viewSplash();
 }
-class viewSplash extends State<splacsh> {
+class viewSplash extends State<Splacsh> {
   double _scale = 1.0;
   final double _maxScale = 1.2;
   final int _duration = 100;

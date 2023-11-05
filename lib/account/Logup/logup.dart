@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -10,14 +12,14 @@ import 'package:lab5/Validate/validateLogin.dart';
 import 'package:lab5/account/Login/login.dart';
 import 'package:restart_app/restart_app.dart';
 
-class logup extends StatefulWidget {
-  const logup({super.key});
+class logUp extends StatefulWidget {
+  const logUp({super.key});
 
   @override
   viewLogup createState() => viewLogup();
 }
 
-class viewLogup extends State<logup> {
+class viewLogup extends State<logUp> {
   final  _firestore = FirebaseFirestore.instance;
   String erruser = "", erremail = "", errpass = "", errrepass = "";
   final TextEditingController _usernameController = TextEditingController();

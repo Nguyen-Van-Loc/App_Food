@@ -65,7 +65,7 @@ class viewUser extends State<user> {
                   Navigator.push(
                       context,
                       CupertinoPageRoute(
-                          builder: (context) => myprofile(
+                          builder: (context) => myProfile(
                               data: itemData!["data"], keyId: itemData["key"])));
                 },
                 child: Container(
@@ -107,7 +107,7 @@ class viewUser extends State<user> {
                 Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) => myaddress(
+                        builder: (context) => myAddress(
                               data: itemData!["data"],
                               keyId: itemData["key"],
                             )));

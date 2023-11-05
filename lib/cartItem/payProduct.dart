@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously, prefer_interpolation_to_compose_strings
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,7 +30,7 @@ class viewpayProduct extends State<payProduct> {
   int transport = 30000;
   int totalTransportFee = 0;
   int transportFee = 0;
-  int SumtransportFee = 0;
+  int sumTransportFee = 0;
   int SumPrice = 0;
   int sumAllPrice = 0;
   List<int> productTotalPrices = [];
@@ -87,7 +89,7 @@ class viewpayProduct extends State<payProduct> {
     await Future.delayed(const Duration(seconds: 3));
     EasyLoading.show(status: "loading...");
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => barNavigation(),));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const barNavigation(),));
     EasyLoading.dismiss();
     for(int i=0; i< widget.data.length;i++){
       await firestore.collection("User").doc(itemUser.data[0]["key"]).collection("Cart").doc(widget.data[i]["key"]).delete();
@@ -132,7 +134,7 @@ class viewpayProduct extends State<payProduct> {
     transport = 30000;
     totalAllProductPrices = 0;
     totalProductPrice = 0;
-    SumtransportFee = 0;
+    sumTransportFee = 0;
     sumAllPrice = 0;
     for (int i = 0; i < widget.data.length; i++) {
       final getItem = widget.data[i];
@@ -148,17 +150,17 @@ class viewpayProduct extends State<payProduct> {
       totalProductPrice = price + transportFee;
       productTotalPrices.add(transportFee);
       if (transportFee > 0) {
-        SumtransportFee += transportFee;
+        sumTransportFee += transportFee;
       }
     }
-    SumPrice = totalAllProductPrices + transport - SumtransportFee;
+    SumPrice = totalAllProductPrices + transport - sumTransportFee;
   }
   @override
   Widget build(BuildContext context) {
     final itemUser =Provider.of<getProflieUser>(context);
     String formatResult = NumberFormat.decimalPattern("vi").format(totalAllProductPrices);
     String formatTransportFee = NumberFormat.decimalPattern("vi").format(transport);
-    String formatSumTransportFee = NumberFormat.decimalPattern("vi").format(SumtransportFee);
+    String formatSumTransportFee = NumberFormat.decimalPattern("vi").format(sumTransportFee);
     String formatSum = NumberFormat.decimalPattern("vi").format(SumPrice);
     return Scaffold(
       body: SafeArea(

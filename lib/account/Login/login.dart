@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -227,7 +229,7 @@ class viewLogin extends State<login> {
                             onPressed: () => Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                    builder: (context) => logup())),
+                                    builder: (context) => const logUp())),
                             child: const Text(
                               "Đăng ký",
                               style: TextStyle(

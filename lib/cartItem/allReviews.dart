@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +13,7 @@ class allReviews extends StatefulWidget {
   @override
   State<allReviews> createState() => _allReviewsState();
 }
+
 class _allReviewsState extends State<allReviews> {
   @override
   Widget build(BuildContext context) {

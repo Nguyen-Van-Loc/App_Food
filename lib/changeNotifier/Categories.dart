@@ -1,5 +1,8 @@
+// ignore_for_file: camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 class getCategories extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -20,7 +23,9 @@ class getCategories extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 }
@@ -69,7 +74,9 @@ class getProducts extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
   List<Map<String, dynamic>> _dataFa = [];
@@ -108,7 +115,9 @@ class getProducts extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 
@@ -142,7 +151,9 @@ class categoryProducts extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
 
@@ -180,7 +191,9 @@ class categoryProducts extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
     }
   }
   List<Map<String, dynamic>> _data = [];

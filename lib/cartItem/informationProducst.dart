@@ -1,14 +1,19 @@
+// ignore_for_file: file_names, camel_case_types, prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class informationProducst extends StatefulWidget {
   final Map<String,dynamic> data;
   const informationProducst({super.key,required this.data});
+
   @override
-  State<informationProducst> createState() => _informationProducst();
+  State<informationProducst> createState() => _informationProducstState();
 }
-class _informationProducst extends State<informationProducst> {
+
+class _informationProducstState extends State<informationProducst> {
   String? transport;
+
   @override
   Widget build(BuildContext context) {
     String formattedTotalPayment = NumberFormat.decimalPattern("vi").format(widget.data["transport"]);
@@ -368,7 +373,7 @@ class _informationProducst extends State<informationProducst> {
                                                 const SizedBox(
                                                   height: 10,
                                                 ),
-                                                Text("x"+widget.data["quantity"],
+                                                Text('x'+widget.data["quantity"],
                                                     style: const TextStyle(
                                                         fontSize: 18,
                                                         fontFamily:

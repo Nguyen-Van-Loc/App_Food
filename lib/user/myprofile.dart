@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, non_constant_identifier_names, use_build_context_synchronously
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,14 +11,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:lab5/Validate/validateProfile.dart';
 import 'package:shimmer/shimmer.dart';
-class myprofile extends StatefulWidget {
+class myProfile extends StatefulWidget {
   @override
   viewMyProfile createState() => viewMyProfile();
   final Map<String, dynamic> data;
   final String keyId;
-  const myprofile({super.key, required this.data, required this.keyId});
+  const myProfile({super.key, required this.data, required this.keyId});
 }
-class viewMyProfile extends State<myprofile> {
+class viewMyProfile extends State<myProfile> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   int select = 0;
   String errname = "", errphone = "";
