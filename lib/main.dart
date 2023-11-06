@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:lab5/barNavigation.dart';
 import 'package:lab5/page/notifications.dart';
 import 'package:lab5/splash.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,8 @@ void main() async {
     ChangeNotifierProvider(create: (_)=>getOderUser()),
     ChangeNotifierProvider(create: (_)=>categoryProducts()),
     ChangeNotifierProvider(create: (_)=>getFavouriteUser()),
-    ChangeNotifierProvider(create: (_)=>getNotiUser())
+    ChangeNotifierProvider(create: (_)=>getNotiUser()),
+    ChangeNotifierProvider(create: (_)=>getBander())
   ],child: const MyApp(),));
   configLoading();
   FirebaseMessaging.onBackgroundMessage(firebaseMessegerBackground);
@@ -66,9 +68,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SafeArea(
+      home: const SafeArea(
         child: Scaffold(
-          body: Splacsh(),
+          body: barNavigation(),
         ),
       ),
       debugShowCheckedModeBanner: false,

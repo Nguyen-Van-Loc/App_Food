@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:lab5/cartItem/cart.dart';
 import 'package:lab5/cartItem/productDetails.dart';
+import 'package:lab5/changeNotifier/Categories.dart';
 import 'package:lab5/changeNotifier/ProfileUser.dart';
 import 'package:lab5/page/notifications.dart';
 import 'package:provider/provider.dart';
@@ -118,7 +119,6 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                       itemBuilder: (context, index) {
                         final itemIndex=itemFavo.data[index];
                         final itemData=itemIndex["data"];
-                        final keyIdCa =itemIndex["categoryKey"];
                         String fomatPrice =
                         NumberFormat.decimalPattern("vi")
                             .format(itemData["Price  "]);
@@ -133,7 +133,7 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                                       builder: (context) =>
                                           productDetails(
                                               data: itemData,
-                                              keyId: itemData["ProductId "],keyIdCa: keyIdCa,)));
+                                              keyId: itemData["ProductId "],keyIdCa: itemData["CategoriesId "],start: itemData['sumStart'])));
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(
@@ -195,24 +195,24 @@ class viewFavorite extends State<favorite> with AutomaticKeepAliveClientMixin {
                                                         .only(
                                                         left: 10,
                                                         top: 5),
-                                                    child: const Row(
+                                                    child:  Row(
                                                       children: [
                                                         Text(
-                                                          "4.4",
-                                                          style: TextStyle(
+                                                          "${itemData['sumStart']}",
+                                                          style: const TextStyle(
                                                               color: Color(
                                                                   0xfffb6e2e)),
                                                         ),
-                                                        Icon(
+                                                        const Icon(
                                                           Icons.star,
                                                           color: Color(
                                                               0xfffb6e2e),
                                                           size: 18,
                                                         ),
-                                                        SizedBox(
+                                                        const SizedBox(
                                                           width: 10,
                                                         ),
-                                                        Text("(" "30" ")")
+                                                        Text("(" "${itemData['sumComment']}" ")")
                                                       ],
                                                     ),
                                                   ),

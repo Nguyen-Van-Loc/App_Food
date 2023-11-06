@@ -237,7 +237,8 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                 ),
               ],
               isScrollable: true,
-              labelPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              labelPadding:
+                  const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               unselectedLabelColor: Colors.grey,
               labelColor: Colors.black,
             ),
@@ -266,7 +267,8 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                             child: Card(
                               shape: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(color: Colors.white)),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white)),
                               elevation: 5,
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 10),
@@ -733,7 +735,8 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                         color: Colors.grey,
                                       ),
                                       Container(
-                                        margin: const EdgeInsets.only(right: 10),
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
                                         child: ElevatedButton(
                                           onPressed: () {
                                             updateReceive(getKey);
@@ -937,22 +940,24 @@ class viewhistoryCart extends State<historycart> with TickerProviderStateMixin {
                                             color: Colors.grey,
                                           ),
                                           ElevatedButton(
-                                            onPressed: getData["reviewed"]==true ? null:() async {
-                                              Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (context) =>
-                                                          productReviews(
-                                                            Name: getData[
-                                                                "productName"],
-                                                            Image: getData[
-                                                                "imageUrl"],
-                                                            keyIdCa: getData[
-                                                                "CategoriesId"],
-                                                            keyId: getKey,
-                                                            keyIdHis: getKeyHis,
-                                                          )));
-                                            },
+                                            onPressed:
+                                                getData["reviewed"] == true
+                                                    ? null
+                                                    : () async {
+                                                        Navigator
+                                                            .push(
+                                                                context,
+                                                                CupertinoPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            productReviews(
+                                                                              Name: getData["productName"],
+                                                                              Image: getData["imageUrl"],
+                                                                              keyIdCa: getData["CategoriesId"],
+                                                                              keyId: getKey,
+                                                                              keyIdHis: getKeyHis,
+                                                                            )));
+                                                      },
                                             style: ElevatedButton.styleFrom(
                                                 backgroundColor:
                                                     const Color(0xffFF6900),

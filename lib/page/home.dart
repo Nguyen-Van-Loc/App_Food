@@ -1,6 +1,3 @@
-// ignore: duplicate_ignore
-// ignore_for_file: camel_case_types, duplicate_ignore
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,53 +14,25 @@ import '../changeNotifier/Categories.dart';
 import 'package:badges/badges.dart' as badges;
 import '../changeNotifier/ProfileUser.dart';
 
-// ignore: camel_case_types
-class home extends StatefulWidget  {
+class home extends StatefulWidget {
   const home({super.key});
 
   @override
   viewHome createState() => viewHome();
 }
 
-class Image1 {
-  String text, image;
-
-  Image1(this.text, this.image);
-}
-
 final CarouselController _controller = CarouselController();
 final List<String> imgList = [
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/09/banner/Banner-1---Desk-380x200.png',
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/09/banner/Banner-1---Desk--2--380x200.png',
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/09/banner/Banner-1---Desk--3--380x200.png',
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/09/banner/Banner-1---Desk--1--380x200.png',
+  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/IP15-720-220-720x220-6.png',
+  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/Redmi-12-Series-720-220-720x220-1.png',
+  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/vivo-v29-720-220-720x220-3.png',
+  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/LAP-GAMING-720-220-720x220.png',
 ];
-final List<Widget> imageSliders = imgList
-    .map(
-      (item) => Container(
-        margin: const EdgeInsets.all(5.0),
-        child: Container(
-          padding: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: const [
-              BoxShadow(color: Colors.green, spreadRadius: 1),
-            ],
-          ),
-          child: Image.network(
-            item,
-            fit: BoxFit.cover,
-            width: 1000.0,
-            height: 190,
-          ),
-        ),
-      ),
-    )
-    .toList();
 
 class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
   String? price;
   final NotificationServices _services = NotificationServices();
+
   @override
   bool get wantKeepAlive => true;
 
@@ -73,715 +42,770 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
     super.initState();
     _services.requestNotificationServices();
     _services.firebaseInit(context);
-    _services.getDeviceToken().then((value) {
-    });
+    _services.getDeviceToken().then((value) {});
     Provider.of<getProducts>(context, listen: false).fetchDataProducts();
-    Provider.of<categoryProducts>(context, listen: false).getCategoriesProducts();
+    Provider.of<categoryProducts>(context, listen: false)
+        .getCategoriesProducts();
     Provider.of<getProducts>(context, listen: false).fetchDataFavorite();
+    Provider.of<getBander>(context,listen: false).fetchDataBander();
   }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final item = Provider.of<getProducts>(context);
     final itemProduct = Provider.of<categoryProducts>(context);
-    final itemCart=Provider.of<getCartUser>(context);
+    final itemCart = Provider.of<getCartUser>(context);
     final itemUser = Provider.of<getProflieUser>(context);
     itemUser.fetchData();
     if (itemUser.data.isNotEmpty) {
       itemCart.fetchDataCart(itemUser.data[0]["key"]);
     }
+    final itemBander = Provider.of<getBander>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 15, left: 10,bottom: 10),
-                        child: const Text(
-                          "Wellcome to Luxury",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              fontFamily: "LibreBodoni-Medium"),
-                        ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 15, left: 10, bottom: 10),
+                      child: const Text(
+                        "Wellcome to Luxury",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontFamily: "LibreBodoni-Medium"),
                       ),
-                      Container(
-                          margin: const EdgeInsets.only(top: 10, right: 15),
-                          child: badges.Badge(
-                            badgeContent: Text(
-                              itemCart.data.length.toString(),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            showBadge: true,
-                            ignorePointer: false,
-                            child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) => const cart(),
-                                      ));
-                                },
-                                child: const Icon(
-                                  Icons.shopping_cart,
-                                  size: 30,
-                                )),
-                          ))
-                    ],
-                  ),
-                  Expanded(child:
-                  SingleChildScrollView(
-                      child:Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                                top: 30, bottom: 30, right: 10, left: 10),
-                            child: Material(
-                              elevation: 2,
-                              borderRadius: BorderRadius.circular(10),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const search(),
-                                      ));
-                                },
-                                child: AbsorbPointer(
-                                  absorbing: true,
-                                  child: TextField(
-                                    keyboardType: TextInputType.none,
-                                    decoration: InputDecoration(
-                                        hintText: 'Search...',
-                                        prefixIcon: const Icon(Icons.search),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                        )),
-                                  ),
-                                ),
-                              ),
+                    ),
+                    Container(
+                        margin: const EdgeInsets.only(top: 10, right: 15),
+                        child: badges.Badge(
+                          badgeContent: Text(
+                            itemCart.data.length.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          showBadge: true,
+                          ignorePointer: false,
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => const cart(),
+                                    ));
+                              },
+                              child: const Icon(
+                                Icons.shopping_cart,
+                                size: 30,
+                              )),
+                        ))
+                  ],
+                ),
+                Expanded(
+                    child: SingleChildScrollView(
+                        child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          top: 30, bottom: 30, right: 10, left: 10),
+                      child: Material(
+                        elevation: 2,
+                        borderRadius: BorderRadius.circular(10),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const search(),
+                                ));
+                          },
+                          child: AbsorbPointer(
+                            absorbing: true,
+                            child: TextField(
+                              keyboardType: TextInputType.none,
+                              decoration: InputDecoration(
+                                  hintText: 'Search...',
+                                  prefixIcon: const Icon(Icons.search),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 10),
-                                child: const Text(
-                                  "Danh mục",
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 10),
+                          child: const Text(
+                            "Danh mục",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "LibreBodoni-Medium"),
+                          ),
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => const menu()));
+                            },
+                            child: Row(
+                              children: [
+                                const Text(
+                                  "Xem thêm",
                                   style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: "LibreBodoni-Medium"),
                                 ),
-                              ),
-                              TextButton(
-                                  onPressed: () {
+                                Image.asset(
+                                  "assets/image/right-arrow.png",
+                                  width: 15,
+                                  height: 15,
+                                )
+                              ],
+                            )),
+                      ],
+                    ),
+                    Container(
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        height: 140,
+                        child: ListView.builder(
+                            itemCount: itemProduct.isLoading
+                                ? 5
+                                : itemProduct.result.length - 5,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              if (itemProduct.result.isEmpty &&
+                                  itemProduct.isLoading) {
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Card(
+                                    elevation: 3,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 100,
+                                          width: 100,
+                                          color: Colors.white,
+                                        ),
+                                        Container(
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (index >= 0 &&
+                                  index < itemProduct.result.length) {
+                                final getIndex = itemProduct.result[index];
+                                final itemData = getIndex["categoryData"];
+                                return InkWell(
+                                  onTap: () {
                                     Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => const menu()));
-                                  },
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        "Xem thêm",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "LibreBodoni-Medium"),
-                                      ),
-                                      Image.asset(
-                                        "assets/image/right-arrow.png",
-                                        width: 15,
-                                        height: 15,
-                                      )
-                                    ],
-                                  )),
-                            ],
-                          ),
-                          Container(
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              height: 140,
-                              child: ListView.builder(
-                                  itemCount: itemProduct.isLoading
-                                      ? 5
-                                      : itemProduct.result.length - 5,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                   if( itemProduct.result.isEmpty &&itemProduct.isLoading ) {
-                                     return Shimmer.fromColors(
-                                      baseColor: Colors.grey[300]!,
-                                      highlightColor: Colors.grey[100]!,
-                                      child:Card(
-                                        elevation: 3,
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              height: 100,
-                                              width: 100,
-                                              color: Colors.white,
-                                            ),
-                                            Container(
-                                              color: Colors.white,
-                                            ),
-                                          ],
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (context) => productPortfolio(
+                                          data: getIndex["productsData"],
+                                          Name: itemData["name"],
+                                          keyID: getIndex["categoryKey"],
                                         ),
                                       ),
                                     );
-                                   }
-                                   if (index >= 0 && index < itemProduct.result.length) {
-                                     final getIndex = itemProduct.result[index];
-                                     final itemData = getIndex["categoryData"];
-                                     return InkWell(
-                                       onTap: () {
-                                         Navigator.push(
-                                           context,
-                                           CupertinoPageRoute(
-                                             builder: (context) => productPortfolio(
-                                               data: getIndex["productsData"],
-                                               Name: itemData["name"],
-                                               keyID: getIndex["categoryKey"],
-                                             ),
-                                           ),
-                                         );
-                                       },
-                                       child: Card(
-                                         elevation: 3,
-                                         child: Column(
-                                           children: [
-                                             Image.network(
-                                               itemData["image"] ?? "",
-                                               height: 100,
-                                               width: 100,
-                                             ),
-                                             Text(itemData['name'] ?? ""),
-                                           ],
-                                         ),
-                                       ),
-                                     );
-                                   }
-                                   return Container();
-                                    }
-                                  )),
-                          Card(
-                            color: const Color(0xff6cd347),
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            elevation: 10,
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 10),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Gợi ý hôm nay",
-                                        style: TextStyle(
-                                            fontFamily: "LibreBodoni-Bold",
-                                            fontSize: 18,
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Stack(
-                                  children: [
-                                    CarouselSlider(
-                                      options: CarouselOptions(
-                                        autoPlay: true,
-                                        aspectRatio: 2.0,
-                                        enlargeCenterPage: true,
-                                        enlargeStrategy:
-                                        CenterPageEnlargeStrategy.height,
-                                      ),
-                                      items: imageSliders,
-                                      carouselController: _controller,
+                                  },
+                                  child: Card(
+                                    elevation: 3,
+                                    child: Column(
+                                      children: [
+                                        Image.network(
+                                          itemData["image"] ?? "",
+                                          height: 100,
+                                          width: 100,
+                                        ),
+                                        Text(itemData['name'] ?? ""),
+                                      ],
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 50),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () => _controller.previousPage(),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: const BorderRadius.only(
-                                                    topRight: Radius.circular(10),
-                                                    bottomRight: Radius.circular(10)),
-                                                color:
-                                                Colors.transparent.withOpacity(.3),
-                                              ),
-                                              width: 40,
-                                              height: 50,
-                                              child: const Icon(
-                                                CupertinoIcons.left_chevron,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () => _controller.nextPage(),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius: const BorderRadius.only(
-                                                    topLeft: Radius.circular(10),
-                                                    bottomLeft: Radius.circular(10)),
-                                                color:
-                                                Colors.transparent.withOpacity(.3),
-                                              ),
-                                              width: 40,
-                                              height: 50,
-                                              child: const Icon(
-                                                CupertinoIcons.right_chevron,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                                  ),
+                                );
+                              }
+                              return Container();
+                            })),
+                    Card(
+                      color: const Color(0xff6cd347),
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      elevation: 5,
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 10, left: 10),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Gợi ý hôm nay",
+                                  style: TextStyle(
+                                      fontFamily: "LibreBodoni-Bold",
+                                      fontSize: 18,
+                                      color: Colors.white),
                                 ),
                               ],
+                            ),
+                          ),
+                          Stack(
+                            children: [
+                              CarouselSlider(
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  viewportFraction: 1,
+                                  enlargeCenterPage: false,
+                                ),
+                                items: itemBander.data
+                                    .map((e) => Center(
+                                            child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      productDetails(
+                                                          data: e["data"],
+                                                          keyId: e["data"]["productsID"],
+                                                          keyIdCa: e["data"]
+                                                              ["CategoriesID"],
+                                                          start: e["data"]
+                                                              ["sumStart"]),
+                                                ));
+                                          },
+                                          child: Image.network(
+                                            e["data"]["ImageBander"],
+                                            fit: BoxFit.fill,
+                                            height: 200,
+                                          ),
+                                        )))
+                                    .toList(),
+                                carouselController: _controller,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 90),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () => _controller.previousPage(),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              bottomRight: Radius.circular(10)),
+                                          color: Colors.transparent
+                                              .withOpacity(.3),
+                                        ),
+                                        width: 40,
+                                        height: 50,
+                                        child: const Icon(
+                                          CupertinoIcons.left_chevron,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () => _controller.nextPage(),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              bottomLeft: Radius.circular(10)),
+                                          color: Colors.transparent
+                                              .withOpacity(.3),
+                                        ),
+                                        width: 40,
+                                        height: 50,
+                                        child: const Icon(
+                                          CupertinoIcons.right_chevron,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xfff67d77), Color(0xfffc2b55)])),
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
+                            child: const Text(
+                              "Yêu thích nhiều nhất",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "LibreBodoni-Bold",
+                                  color: Colors.white),
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomRight,
-                                    colors: [Color(0xfff67d77), Color(0xfffc2b55)])),
-                            child: Column(
-                              children: [
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: const Text(
-                                    "Yêu thích nhiều nhất",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "LibreBodoni-Bold",
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                                  child: item.isLoading && item.dataFa.isEmpty ?
-                                  Shimmer.fromColors(
-                                      baseColor: Colors.grey[300]!,
-                                      highlightColor: Colors.grey[100]!,
-                                      child:
-                                      Container(
-                                        height: 300,
-                                        color: Colors.white,
-                                      )
-                                  )
-                                      : ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      itemCount: 3,
-                                      itemBuilder: (context, index) {
-                                        final itemIndex =item.dataFa[index];
-                                        final itemData =itemIndex['data'];
-                                        final itemKey =itemIndex['key'];
-                                        final keyIdCa =itemIndex["categoryKey"];
-                                        String fomatPrice =
-                                        NumberFormat.decimalPattern("vi")
-                                            .format(itemData["Price  "]);
-                                        price =
-                                            fomatPrice.toString().replaceAll(",", ".");
-                                        return InkWell(
-                                          onTap: () {
-                                            Navigator.push(context, CupertinoPageRoute(builder: (context) => productDetails(data: itemData, keyId: itemKey,keyIdCa: keyIdCa),));
-                                          },
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(15)),
-                                            elevation: 10,
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            child: Stack(
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  padding: const EdgeInsets.only(
-                                                      bottom: 50),
-                                                  child: Image.network(
-                                                    itemData["ImageURL "],
-                                                    height: 300,
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            child: item.isLoading && item.dataFa.isEmpty
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      height: 300,
+                                      color: Colors.white,
+                                    ))
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: 3,
+                                    itemBuilder: (context, index) {
+                                      final itemIndex = item.dataFa[index];
+                                      final itemData = itemIndex['data'];
+                                      final itemKey = itemIndex['key'];
+                                      final keyIdCa = itemIndex["categoryKey"];
+                                      String fomatPrice =
+                                          NumberFormat.decimalPattern("vi")
+                                              .format(itemData["Price  "]);
+                                      price = fomatPrice
+                                          .toString()
+                                          .replaceAll(",", ".");
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    productDetails(
+                                                        data: itemData,
+                                                        keyId: itemKey,
+                                                        keyIdCa: keyIdCa,
+                                                        start: itemData[
+                                                            'sumStart']),
+                                              ));
+                                        },
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          elevation: 10,
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 50),
+                                                child: Image.network(
+                                                  itemData["ImageURL "],
+                                                  height: 300,
+                                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 0,
+                                                child: Container(
+                                                  height: 60,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  decoration: const BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.vertical(
+                                                              top: Radius
+                                                                  .circular(
+                                                                      10)),
+                                                      color: Color(0xfff1f1f1)),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 10,
+                                                                  top: 5),
+                                                          width: 300,
+                                                          child: Text(
+                                                            itemData[
+                                                                "ProductName"],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            style: const TextStyle(
+                                                                fontSize: 18,
+                                                                fontFamily:
+                                                                    "LibreBaskerville-Regular"),
+                                                          )),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            10,
+                                                                        top: 5),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Text(
+                                                                      itemData[
+                                                                          "sumStart"],
+                                                                      style: const TextStyle(
+                                                                          color:
+                                                                              Color(0xfffb6e2e)),
+                                                                    ),
+                                                                    const Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      color: Color(
+                                                                          0xfffb6e2e),
+                                                                      size: 18,
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    Text("("
+                                                                        "${itemData['sumComment']}"
+                                                                        ")")
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            10),
+                                                                child: Text(
+                                                                  "$price₫",
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Color(
+                                                                          0xffd0021c),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                            ]),
+                                                      )
+                                                    ],
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  child: Container(
-                                                    height: 60,
-                                                    width: MediaQuery.of(context)
-                                                        .size
-                                                        .width,
-                                                    decoration: const BoxDecoration(
-                                                        borderRadius:
-                                                        BorderRadius.vertical(
-                                                            top: Radius.circular(
-                                                                10)),
-                                                        color: Color(0xfff1f1f1)),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                      children: [
-                                                        Container(
-                                                            margin:
-                                                            const EdgeInsets.only(
-                                                                left: 10, top: 5),
-                                                            width: 300,
-                                                            child:  Text(
-                                                              itemData["ProductName"],
-                                                              overflow: TextOverflow
-                                                                  .ellipsis,
-                                                              textAlign:
-                                                              TextAlign.left,
-                                                              style: const TextStyle(
-                                                                  fontSize: 18,
-                                                                  fontFamily:
-                                                                  "LibreBaskerville-Regular"),
-                                                            )),
-                                                        SizedBox(
-                                                          width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                          child: Row(
-                                                              mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                              children: [
-                                                                Container(
-                                                                  margin:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      left: 10,
-                                                                      top: 5),
-                                                                  child: const Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        "4.4",
-                                                                        style: TextStyle(
-                                                                            color: Color(
-                                                                                0xfffb6e2e)),
-                                                                      ),
-                                                                      Icon(
-                                                                        Icons.star,
-                                                                        color: Color(
-                                                                            0xfffb6e2e),
-                                                                        size: 18,
-                                                                      ),
-                                                                      SizedBox(
-                                                                        width: 10,
-                                                                      ),
-                                                                      Text("("
-                                                                          "30"
-                                                                          ")")
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  margin:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right: 10),
-                                                                  child:  Text(
-                                                                    "$price₫",
-                                                                    style: const TextStyle(
-                                                                        fontSize: 18,
-                                                                        color: Color(
-                                                                            0xffd0021c),
-                                                                        fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                                  ),
-                                                                ),
-                                                              ]),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  right: 10,
-                                                  height: 70,
-                                                  width: 70,
-                                                  child: Image.network("https://media.giphy.com/media/KxVfXwmRwZDZ19YO35/giphy.gif"),
-                                                )
-                                              ],
+                                              ),
+                                              Positioned(
+                                                right: 10,
+                                                height: 70,
+                                                width: 70,
+                                                child: Image.network(
+                                                    "https://media.giphy.com/media/KxVfXwmRwZDZ19YO35/giphy.gif"),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Card(
+                      color: const Color(0xffeaeaea),
+                      margin: const EdgeInsets.only(top: 10),
+                      elevation: 2,
+                      child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          child: GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: item.isLoading ? 6 : item.data.length,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2, mainAxisExtent: 370),
+                              itemBuilder: (context, index) {
+                                if (item.data.isEmpty) {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Card(
+                                      elevation: 3,
+                                      margin: const EdgeInsets.all(10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            height: 200,
+                                            color: Colors.white,
+                                          ),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 5),
+                                            child: Container(
+                                              width: 100,
+                                              height: 35,
+                                              color: Colors.white,
                                             ),
                                           ),
-                                        );}),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Card(
-                            color: const Color(0xffeaeaea),
-                            margin: const EdgeInsets.only(top: 10),
-                            elevation: 2,
-                            child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 10),
-                                child: GridView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: item.isLoading ? 6 : item.data.length,
-                                    shrinkWrap: true,
-                                    gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2, mainAxisExtent: 370),
-                                    itemBuilder: (context, index) {
-                                      if (item.data.isEmpty) {
-                                        return Shimmer.fromColors(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                          child: Card(
-                                            elevation: 3,
-                                            margin: const EdgeInsets.all(10),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: 20,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: 80,
+                                                height: 20,
+                                                color: Colors.white,
+                                              ),
+                                              Container(
+                                                width: 40,
+                                                height: 20,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                left: 10, top: 10),
+                                            child: Row(
                                               children: [
                                                 Container(
-                                                  width: double.infinity,
-                                                  height: 200,
-                                                  color: Colors.white,
-                                                ),
-                                                Container(
-                                                  alignment: Alignment.centerLeft,
-                                                  margin: const EdgeInsets.only(
-                                                      left: 10, top: 5),
-                                                  child: Container(
-                                                    width: 100,
-                                                    height: 35,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
+                                                  width: 30,
                                                   height: 20,
                                                   color: Colors.white,
                                                 ),
                                                 const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Container(
-                                                      width: 80,
-                                                      height: 20,
-                                                      color: Colors.white,
-                                                    ),
-                                                    Container(
-                                                      width: 40,
-                                                      height: 20,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ],
+                                                  width: 10,
                                                 ),
                                                 Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 10, top: 10),
-                                                  child: Row(
-                                                    children: [
-                                                      Container(
-                                                        width: 30,
-                                                        height: 20,
-                                                        color: Colors.white,
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                        width: 40,
-                                                        height: 20,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
+                                                  width: 40,
+                                                  height: 20,
+                                                  color: Colors.white,
+                                                ),
                                               ],
                                             ),
-                                          ),
-                                        );
-                                      } else {
-                                        final getItem = item.data[index];
-                                        final itemData = getItem["data"];
-                                        final keyId = getItem["key"];
-                                        final keyIdCa =getItem["categoryKey"];
-                                        String fomatPrice =
-                                        NumberFormat.decimalPattern("vi")
-                                            .format(itemData["Price  "]);
-                                        price =
-                                            fomatPrice.toString().replaceAll(",", ".");
-                                        return InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (context) =>
-                                                          productDetails(
-                                                              data: itemData,
-                                                              keyId: keyId,keyIdCa: keyIdCa,)));
-                                            },
-                                            child: Card(
-                                              elevation: 3,
-                                              margin: const EdgeInsets.all(10),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  final getItem = item.data[index];
+                                  final itemData = getItem["data"];
+                                  final keyId = getItem["key"];
+                                  final keyIdCa = getItem["categoryKey"];
+                                  String fomatPrice =
+                                      NumberFormat.decimalPattern("vi")
+                                          .format(itemData["Price  "]);
+                                  price = fomatPrice
+                                      .toString()
+                                      .replaceAll(",", ".");
+                                  return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    productDetails(
+                                                      data: itemData,
+                                                      keyId: keyId,
+                                                      keyIdCa: keyIdCa,
+                                                      start:
+                                                          itemData['sumStart'],
+                                                    )));
+                                      },
+                                      child: Card(
+                                        elevation: 3,
+                                        margin: const EdgeInsets.all(10),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Center(
+                                              child: Image.network(
+                                                itemData["ImageURL "],
+                                                height: 200,
+                                              ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              margin: const EdgeInsets.only(
+                                                  left: 10, top: 5),
+                                              child: itemData["Listimages "] !=
+                                                          null &&
+                                                      itemData["Listimages "]
+                                                          .isNotEmpty
+                                                  ? Image.network(
+                                                      itemData["Listimages "],
+                                                      height: 30)
+                                                  : null,
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                child: Text(
+                                                  itemData["ProductName"],
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                      fontFamily:
+                                                          "LibreBaskerville-Regular"),
+                                                )),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Center(
-                                                    child: Image.network(
-                                                      itemData["ImageURL "],
-                                                      height: 200,
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    alignment: Alignment.centerLeft,
-                                                    margin: const EdgeInsets.only(
-                                                        left: 10, top: 5),
-                                                    child: itemData["Listimages "] !=
-                                                        null &&
-                                                        itemData["Listimages "]
-                                                            .isNotEmpty
-                                                        ? Image.network(
-                                                        itemData["Listimages "],
-                                                        height: 30)
-                                                        : null,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Container(
-                                                      margin:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 10),
-                                                      child: Text(
-                                                        itemData["ProductName"],
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        price!,
                                                         style: const TextStyle(
                                                             fontFamily:
-                                                            "LibreBaskerville-Regular"),
-                                                      )),
-                                                  const SizedBox(
-                                                    height: 10,
+                                                                "LibreBodoni-Medium",
+                                                            fontSize: 17,
+                                                            color: Color(
+                                                                0xffd0021c),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(bottom: 10),
+                                                        child: const Text("₫",
+                                                            style: TextStyle(
+                                                                color: Color(
+                                                                    0xffd0021c),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      )
+                                                    ],
                                                   ),
                                                   Container(
-                                                    margin: const EdgeInsets.symmetric(
-                                                        horizontal: 10),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              price!,
-                                                              style: const TextStyle(
-                                                                  fontFamily:
-                                                                  "LibreBodoni-Medium",
-                                                                  fontSize: 17,
-                                                                  color:
-                                                                  Color(0xffd0021c),
-                                                                  fontWeight:
-                                                                  FontWeight.bold),
-                                                            ),
-                                                            Container(
-                                                              margin: const EdgeInsets.only(
-                                                                  bottom: 10),
-                                                              child: const Text("₫",
-                                                                  style: TextStyle(
-                                                                      color: Color(
-                                                                          0xffd0021c),
-                                                                      fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        Container(
-                                                          color:
-                                                          const Color(0xfffff0e9),
-                                                          child: itemData["discount"] !=
-                                                              null &&
-                                                              itemData["discount"]
-                                                                  .isNotEmpty
-                                                              ? Text(
+                                                    color:
+                                                        const Color(0xfffff0e9),
+                                                    child: itemData["discount"] !=
+                                                                null &&
+                                                            itemData["discount"]
+                                                                .isNotEmpty
+                                                        ? Text(
                                                             // ignore: prefer_interpolation_to_compose_strings
-                                                            "${"-" +
-                                                                itemData[
-                                                                "discount"]}%",
+                                                            "${"-" + itemData["discount"]}%",
                                                             style: const TextStyle(
                                                                 color: Color(
                                                                     0xffeb5757)),
                                                           )
-                                                              : null,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    margin: const EdgeInsets.only(
-                                                        left: 10, top: 5),
-                                                    child: const Row(
-                                                      children: [
-                                                        Text(
-                                                          "4.4",
-                                                          style: TextStyle(
-                                                              color: Color(0xfffb6e2e)),
-                                                        ),
-                                                        Icon(
-                                                          Icons.star,
-                                                          color: Color(0xfffb6e2e),
-                                                          size: 18,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text("(" "30" ")")
-                                                      ],
-                                                    ),
+                                                        : null,
                                                   )
                                                 ],
                                               ),
-                                            ));
-                                      }
-                                    })),
-                          ),
-                        ],
-                      )
-                  )
-                  ),
-                ],
-              )),
-        ),
-
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  left: 10, top: 5),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "${itemData['sumStart']}",
+                                                    style: const TextStyle(
+                                                        color:
+                                                            Color(0xfffb6e2e)),
+                                                  ),
+                                                  const Icon(
+                                                    Icons.star,
+                                                    color: Color(0xfffb6e2e),
+                                                    size: 18,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text("("
+                                                      "${itemData['sumComment']}"
+                                                      ")")
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ));
+                                }
+                              })),
+                    ),
+                  ],
+                ))),
+              ],
+            )),
+      ),
     );
   }
 }
@@ -847,7 +871,6 @@ class TextSearchState extends State<search> {
                       onSubmitted: (value) async {
                         if (value.isNotEmpty) {
                           await categoryData.searchProducts(value);
-                          // ignore: use_build_context_synchronously
                           Navigator.push(
                               context,
                               CupertinoPageRoute(

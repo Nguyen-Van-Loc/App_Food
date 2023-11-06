@@ -13,6 +13,7 @@ import 'package:lab5/cartItem/allReviews.dart';
 import 'package:lab5/cartItem/payProduct.dart';
 import 'package:lab5/changeNotifier/Categories.dart';
 import 'package:lab5/changeNotifier/ProfileUser.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -20,8 +21,9 @@ class productDetails extends StatefulWidget {
   final Map<String, dynamic> data;
   final String keyId;
   final String keyIdCa;
+  final String start;
   const productDetails(
-      {super.key, required this.data, required this.keyId, required this.keyIdCa});
+      {super.key, required this.data, required this.keyId, required this.keyIdCa,required this.start});
 
   @override
   viewproductDetails createState() => viewproductDetails();
@@ -67,6 +69,8 @@ class viewproductDetails extends State<productDetails> {
         "UpdatedDate  ": widget.data["UpdatedDate  "],
         "discount ": widget.data["discount"],
         "sold  ": widget.data["sold  "],
+        "sumComment":widget.data["sumComment"],
+        "sumStart":widget.data["sumStart"],
         "Favorite ": true,
       });
       EasyLoading.showSuccess("Thêm vào thành công vào mục Yêu thích");
@@ -83,6 +87,8 @@ class viewproductDetails extends State<productDetails> {
         "UpdatedDate  ": widget.data["UpdatedDate  "],
         "discount ": widget.data["discount"],
         "sold  ": widget.data["sold  "],
+        "sumComment":widget.data["sumComment"],
+        "sumStart":widget.data["sumStart"],
         "Favorite ": true,
       });
       EasyLoading.showSuccess("Thêm vào thành công vào mục Yêu thích");
@@ -120,17 +126,7 @@ class viewproductDetails extends State<productDetails> {
     if (itemUser.data.isNotEmpty) {
       itemFavo.fetchDataFavourite(itemUser.data[0]["key"]);
     }
-  }
-  final List<dynamic> _ratings = [];
-  double _calculateAverageRating() {
-    if (_ratings.isEmpty) {
-      return 0.0;
-    }
-    double sum = 0.0;
-    for (var rating in _ratings) {
-      sum += rating;
-    }
-    return sum / _ratings.length;
+    isLoading();
   }
   void dialogsupport(BuildContext context) {
     showDialog(
@@ -160,6 +156,13 @@ class viewproductDetails extends State<productDetails> {
           ],
         ));
   }
+  bool loading = true;
+  void isLoading() async{
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      loading=false;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     String fomatPrice =
@@ -171,15 +174,21 @@ class viewproductDetails extends State<productDetails> {
     if (itemUser.data.isNotEmpty) {
       itemFavo.fetchDataFavourite(itemUser.data[0]["key"]);
     }
-    double averageRating = _calculateAverageRating();
-    int fullStars = averageRating.floor();
-    bool hasHalfStar = (averageRating - fullStars) >= 0.5;
     final itemRe = Provider.of<categoryProducts>(context);
     itemRe.productReview(widget.keyIdCa, widget.keyId);
+    double averageRating = double.parse(widget.start);
+    int fullStars = averageRating.floor();
+    bool hasHalfStar = (averageRating - fullStars) >= 0.5;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: Column(
+        child: loading ?SizedBox(
+          height: MediaQuery.of(context).size.height-96,
+          width: MediaQuery.of(context).size.width,
+          child: Center(
+            child: LoadingAnimationWidget.waveDots(color: Colors.red, size: 40),
+          ),
+        ) :Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
@@ -237,9 +246,9 @@ class viewproductDetails extends State<productDetails> {
                                   const EdgeInsets.only(left: 10, top: 10, bottom: 20),
                               child: Row(
                                 children: [
-                                  const Text(
-                                    "4.4",
-                                    style: TextStyle(color: Color(0xfffb6e2e)),
+                                   Text(
+                                    widget.start,
+                                    style: const TextStyle(color: Color(0xfffb6e2e)),
                                   ),
                                   const Icon(
                                     Icons.star,
@@ -249,7 +258,7 @@ class viewproductDetails extends State<productDetails> {
                                   const SizedBox(
                                     width: 5,
                                   ),
-                                  const Text("(" "30" ")"),
+                                  Text("(" "${widget.data['sumComment']}" ")"),
                                   Container(
                                     margin: const EdgeInsets.only(left: 10, right: 10),
                                     width: 1,
@@ -398,7 +407,7 @@ class viewproductDetails extends State<productDetails> {
                                 Row(
                                   children: [
                                     Text(
-                                      _calculateAverageRating().toStringAsFixed(1),
+                                      widget.start,
                                       style: const TextStyle(fontSize: 18),
                                     ),
                                     const Text(
@@ -439,7 +448,6 @@ class viewproductDetails extends State<productDetails> {
                                     final itemIndex = itemRe.data[index];
                                     final itemData = itemIndex["data"];
                                     List<dynamic> imageUrls = itemData["imageUrls"];
-                                    _ratings.add(itemData["numberofStars"]);
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -574,7 +582,6 @@ class viewproductDetails extends State<productDetails> {
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(bottom: 60),
                             width: double.infinity,
                             height: 10,
                             color: const Color(0xffDAD6D6),
@@ -624,7 +631,7 @@ class viewproductDetails extends State<productDetails> {
                 ),
               ),
             ),
-              Row(
+            Row(
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width / 2,

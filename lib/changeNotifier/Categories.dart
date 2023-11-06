@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +25,39 @@ class getCategories extends ChangeNotifier {
         print('Lỗi khi lấy dữ liệu từ Firestore: $e');
       }
     }
+  }
+}
+class getBander extends ChangeNotifier {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> _data = [];
+  bool _isLoading = true;
+  List<Map<String, dynamic>> get data => _data;
+  bool get isLoading => _isLoading;
+
+  Future<void> fetchDataBander() async {
+    try {
+      final querySnapshot =
+      await _firestore.collection('Bander').get();
+      _data = querySnapshot.docs.map((doc) {
+        final Map<String, dynamic> data = doc.data();
+        final String key = doc.id;
+        return {"key": key, "data": data};
+      }).toList();
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Lỗi khi lấy dữ liệu từ Firestore: $e');
+      }
+    }
+  }
+  String getBanderID(String productId) {
+    for (var bander in _data) {
+      if (bander['data']['productsID'] == productId) {
+        return bander['key'];
+      }
+    }
+    return "";
   }
 }
 class getProducts extends ChangeNotifier {
@@ -120,7 +151,6 @@ class getProducts extends ChangeNotifier {
       }
     }
   }
-
 }
 
 class categoryProducts extends ChangeNotifier {
@@ -198,71 +228,69 @@ class categoryProducts extends ChangeNotifier {
   }
   List<Map<String, dynamic>> _data = [];
   List<Map<String, dynamic>> get data => _data;
+
   Future<void> searchProducts(String query) async {
     _isLoading = true;
-    _data.clear();
-    final categoriesQuerySnapshot =
-    await _firestore.collection('Categories').get();
+    List<Map<String, dynamic>> tempData = [];
+    final categoriesQuerySnapshot = await _firestore.collection('Categories').get();
+
     for (final doc in categoriesQuerySnapshot.docs) {
       final String categoryKey = doc.id;
-      final categoryData = doc.data();
-      final categoryName =
-      removeAccents(categoryData['name'] as String).toLowerCase();
+      final Map<String, dynamic> categoryData = doc.data();
+      final String categoryName = removeAccents(categoryData['name'] as String).toLowerCase();
       final userInput = removeAccents(query).toLowerCase();
-      List<Map<String, dynamic>> categorySearchResults = [];
+
       if (categoryName == userInput) {
-        categorySearchResults.clear();
-        final productsQuery = await _firestore
-            .collection('Categories')
-            .doc(categoryKey)
-            .collection('products')
-            .get();
-        for (final productDoc in productsQuery.docs) {
-          final String productKey = productDoc.id;
-          final Map<String, dynamic> productData =
-          productDoc.data();
-          categorySearchResults.add({
-            "key": productKey,
-            "data": productData,
-          });
-        }
-        if (categorySearchResults.isNotEmpty) {
-          _data.add({
+        final productsData = await _searchCategoryProducts(categoryKey);
+        if (productsData.isNotEmpty) {
+          tempData.add({
             "categoryKey": categoryKey,
             "categoryData": categoryData,
-            "productsData": categorySearchResults,
+            "productsData": productsData,
           });
         }
         break;
-      }else{
-        final productsQuery = await _firestore
-            .collection('Categories')
-            .doc(categoryKey)
-            .collection('products')
-            .get();
-        for (final productDoc in productsQuery.docs) {
-          final String productKey = productDoc.id;
-          final Map<String, dynamic> productData =
-          productDoc.data();
-          final productName =
-          removeAccents(productData['ProductName'] as String).toLowerCase();
-          if (productName.contains(userInput) ||
-              productName.contains(query.toLowerCase())) {
-            categorySearchResults.add({
-              "key": productKey,
-              "data": productData,
-            });
-          }
-        }
-        if (categoryName.contains(userInput) ||
-            categorySearchResults.isNotEmpty) {
-          _data.add({
-            "productsData": categorySearchResults,
+      } else {
+        final productsData = await _searchProductsByName(categoryKey, userInput, query);
+        if (categoryName.contains(userInput) || productsData.isNotEmpty) {
+          tempData.add({
+            "categoryKey": categoryKey,
+            "productsData": productsData,
           });
-      }}
+        }
+      }
     }
+    _data = tempData;
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<List<Map<String, dynamic>>> _searchCategoryProducts(String categoryKey) async {
+    final productsQuery = await _firestore.collection('Categories').doc(categoryKey).collection('products').get();
+    return productsQuery.docs.map((productDoc) {
+      final String productKey = productDoc.id;
+      final Map<String, dynamic> productData = productDoc.data();
+      return {
+        "key": productKey,
+        "data": productData,
+      };
+    }).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> _searchProductsByName(String categoryKey, String userInput, String originalQuery) async {
+    final productsQuery = await _firestore.collection('Categories').doc(categoryKey).collection('products').get();
+    return productsQuery.docs.where((productDoc) {
+      final Map<String, dynamic> productData = productDoc.data();
+      final String productName = removeAccents(productData['ProductName'] as String).toLowerCase();
+      return productName.contains(userInput) || productName.contains(originalQuery.toLowerCase());
+    }).map((productDoc) {
+      final String productKey = productDoc.id;
+      final Map<String, dynamic> productData = productDoc.data();
+      return {
+        "key": productKey,
+        "data": productData,
+      };
+    }).toList();
   }
 }
 

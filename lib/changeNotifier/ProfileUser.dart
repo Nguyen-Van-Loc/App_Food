@@ -136,7 +136,7 @@ class getOderUser extends ChangeNotifier {
             .collection('User')
             .doc(id)
             .collection('History')
-            .orderBy('createAt', descending: true)
+            .orderBy('createAt', descending: false)
             .get();
         for (final productDoc in productsQuery.docs) {
           final String productKey = productDoc.id;

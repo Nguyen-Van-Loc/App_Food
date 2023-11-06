@@ -87,6 +87,34 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
           ],
         ));
   }
+  void dialogSupport(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Center(
+            child: Text("Trung tâm hỗ trợ",
+                style: TextStyle(fontFamily: "LibreBodoni-Medium")),
+          ),
+          content:
+          const Text("Tính năng đang phát triển !."),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 13, horizontal: 30),
+                    backgroundColor: const Color(0xffff6900),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20))),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("Xác nhận"),
+              ),
+            )
+          ],
+        ));
+  }
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -410,7 +438,7 @@ class viewProfile extends State<profile> with AutomaticKeepAliveClientMixin {
                             ),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {dialogSupport(context);},
                             child: Stack(
                               children: [
                                 Positioned(
