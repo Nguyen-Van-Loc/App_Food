@@ -7,7 +7,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:lab5/cartItem/cart.dart';
 import 'package:lab5/cartItem/productDetails.dart';
-import 'package:lab5/changeNotifier/Categories.dart';
 import 'package:lab5/changeNotifier/ProfileUser.dart';
 import 'package:lab5/page/notifications.dart';
 import 'package:provider/provider.dart';

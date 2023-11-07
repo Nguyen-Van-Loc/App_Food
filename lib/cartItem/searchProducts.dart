@@ -20,21 +20,14 @@ class viewSerchProducts extends State<searchProducts> with AutomaticKeepAliveCli
   String? price;
   List<Map<String, dynamic>> allProducts = [];
   List<String> keys = [];
+  bool isSorting = false;
 
   Future<void> getProducts() async {
     final itemCa = Provider.of<categoryProducts>(context,listen: false);
     await itemCa.searchProducts(containerSearch.text);
+    allProducts.clear();
     setState(() {
-      allProducts.clear();
-      for (final item in itemCa.data) {
-        List<Map<String, dynamic>> productsList = item["productsData"];
-        for (var product in productsList) {
-          allProducts.add({
-            "categoryKey": item["categoryKey"],
-            "data": product,
-          });
-        }
-      }
+      check(itemCa);
     });
   }
   @override
@@ -50,66 +43,97 @@ class viewSerchProducts extends State<searchProducts> with AutomaticKeepAliveCli
     containerSearch.clear();
   }
 
-  void sortProductsAZ() {
+  void sortProductsAZ() async{
+    setState(() { isSorting = true; });
     allProducts.clear();
     final itemCa = Provider.of<categoryProducts>(context, listen: false);
+    await itemCa.searchProducts(containerSearch.text);
     setState(() {
-      for (final item in itemCa.data) {
-        allProducts.addAll(item["productsData"]);
-      }
+      check(itemCa);
       allProducts.sort((a, b) {
-        final productNameA = a["data"]["ProductName"];
-        final productNameB = b["data"]["ProductName"];
+        final productNameA = a["data"]["data"]["ProductName"];
+        final productNameB = b["data"]["data"]["ProductName"];
         return productNameA.compareTo(productNameB);
       });
+      isSorting = false;
     });
   }
 
-  void sortProductsZA() {
+  void sortProductsZA() async{
+    setState(() { isSorting = true; });
     allProducts.clear();
     final itemCa = Provider.of<categoryProducts>(context, listen: false);
+    await itemCa.searchProducts(containerSearch.text);
     setState(() {
-      for (final item in itemCa.data) {
-        allProducts.addAll(item["productsData"]);
-      }
+      check(itemCa);
       allProducts.sort((a, b) {
-        final productNameA = a["data"]["ProductName"];
-        final productNameB = b["data"]["ProductName"];
+        final productNameA = a["data"]["data"]["ProductName"];
+        final productNameB = b["data"]["data"]["ProductName"];
         return productNameB.compareTo(productNameA);
       });
+      isSorting = false;
     });
   }
 
-  void sortProductsPriceAZ() {
+  void sortProductsPriceAZ() async{
+    setState(() { isSorting = true; });
     allProducts.clear();
     final itemCa = Provider.of<categoryProducts>(context, listen: false);
+    await itemCa.searchProducts(containerSearch.text);
     setState(() {
-      for (final item in itemCa.data) {
-        allProducts.addAll(item["productsData"]);
-      }
+      check(itemCa);
       allProducts.sort((a, b) {
-        final productNameA = a["data"]["Price  "];
-        final productNameB = b["data"]["Price  "];
+        final productNameA = a["data"]["data"]["Price  "];
+        final productNameB = b["data"]["data"]["Price  "];
         return productNameA.compareTo(productNameB);
       });
+      isSorting = false;
     });
   }
 
-  void sortProductsPriceZA() {
+  void sortProductsPriceZA() async{
+    setState(() { isSorting = true; });
     allProducts.clear();
     final itemCa = Provider.of<categoryProducts>(context, listen: false);
+    await itemCa.searchProducts(containerSearch.text);
     setState(() {
-      for (final item in itemCa.data) {
-        allProducts.addAll(item["productsData"]);
-      }
+      check(itemCa);
       allProducts.sort((a, b) {
-        final productNameA = a["data"]["Price  "];
-        final productNameB = b["data"]["Price  "];
+        final productNameA = a["data"]["data"]["Price  "];
+        final productNameB = b["data"]["data"]["Price  "];
         return productNameB.compareTo(productNameA);
       });
+      isSorting = false;
     });
   }
-
+  void sortStar() async{
+    setState(() { isSorting = true; });
+    allProducts.clear();
+    final itemCa = Provider.of<categoryProducts>(context, listen: false);
+    await itemCa.searchProducts(containerSearch.text);
+    setState(() {
+      check(itemCa);
+      allProducts.sort((a, b) {
+        final productNameA = a["data"]["data"]["sumStart"];
+        final productNameB = b["data"]["data"]["sumStart"];
+        return productNameB.compareTo(productNameA);
+      });
+      isSorting = false;
+    });
+  }
+  void check(final itemCa){
+    for (final item in itemCa.data) {
+      if (item["productsData"] != null) {
+        List<Map<String, dynamic>> productsList = item["productsData"];
+        for (var product in productsList) {
+          allProducts.add({
+            "categoryKey": item["categoryKey"],
+            "data": product,
+          });
+        }
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -139,9 +163,9 @@ class viewSerchProducts extends State<searchProducts> with AutomaticKeepAliveCli
                     child: TextField(
                       onSubmitted: (value)async{
                         if (value.isNotEmpty) {
+                          allProducts.clear();
                           itemCa.searchProducts(value);
                           getProducts();
-                         searchProducts(searchKeyword: value);
                         }
                       },
                       controller: containerSearch,
@@ -216,7 +240,7 @@ class viewSerchProducts extends State<searchProducts> with AutomaticKeepAliveCli
                                     style: TextStyle(fontSize: 13)),
                               ),
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {sortStar();},
                                 style: TextButton.styleFrom(
                                     backgroundColor: const Color(0xffd9d9d9),
                                     foregroundColor: const Color(0xff3a3030),
@@ -269,7 +293,7 @@ class viewSerchProducts extends State<searchProducts> with AutomaticKeepAliveCli
                 color: Colors.grey.withOpacity(.2),
                 margin: const EdgeInsets.symmetric(vertical: 10),
               ),
-              itemCa.isLoading
+              itemCa.isLoading || isSorting
                   ? SizedBox(
                       height: MediaQuery.of(context).size.height - 96,
                       width: MediaQuery.of(context).size.width,
