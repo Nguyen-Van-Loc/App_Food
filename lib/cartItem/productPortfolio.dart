@@ -121,6 +121,24 @@ class showproductPortfolio extends State<productPortfolio> {
       widget.data = sortedProducts;
     });
   }
+  Future<void> arrangeEvaluate() async {
+    final querySnapshot = await firestore
+        .collection("Categories")
+        .doc(widget.keyID)
+        .collection("products")
+        .orderBy("sumStart", descending: true)
+        .get();
+    final sortedProducts = querySnapshot.docs.map((productDoc) {
+      return {
+        "key": productDoc.id,
+        "data": productDoc.data(),
+      };
+    }).toList();
+
+    setState(() {
+      widget.data = sortedProducts;
+    });
+  }
 
   List<DocumentSnapshot> allProducts = [];
 
@@ -337,7 +355,7 @@ class showproductPortfolio extends State<productPortfolio> {
                               style: TextStyle(fontSize: 13)),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {arrangeEvaluate();},
                           style: TextButton.styleFrom(
                               backgroundColor: const Color(0xffd9d9d9),
                               foregroundColor: const Color(0xff3a3030),

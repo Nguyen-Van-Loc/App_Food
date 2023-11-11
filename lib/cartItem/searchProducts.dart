@@ -192,11 +192,11 @@ class viewSerchProducts extends State<searchProducts> with AutomaticKeepAliveCli
                     ),
                   ),
                   IconButton(
-                      onPressed: () {
+                      onPressed:itemCa.data.isNotEmpty? () {
                         setState(() {
                           show = !show;
                         });
-                      },
+                      }:null,
                       icon: Image.asset("assets/image/edit.png")),
                 ],
               ),

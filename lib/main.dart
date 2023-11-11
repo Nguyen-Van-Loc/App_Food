@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:lab5/barNavigation.dart';
 import 'package:lab5/page/notifications.dart';
 import 'package:lab5/splash.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +69,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: const SafeArea(
         child: Scaffold(
-          body: barNavigation(),
+          body: Splacsh(),
         ),
       ),
       debugShowCheckedModeBanner: false,

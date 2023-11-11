@@ -16,19 +16,10 @@ import '../changeNotifier/ProfileUser.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
-
   @override
   viewHome createState() => viewHome();
 }
-
 final CarouselController _controller = CarouselController();
-final List<String> imgList = [
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/IP15-720-220-720x220-6.png',
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/Redmi-12-Series-720-220-720x220-1.png',
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/vivo-v29-720-220-720x220-3.png',
-  'https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2023/10/banner/LAP-GAMING-720-220-720x220.png',
-];
-
 class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
   String? price;
   final NotificationServices _services = NotificationServices();
@@ -43,24 +34,39 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
     _services.requestNotificationServices();
     _services.firebaseInit(context);
     _services.getDeviceToken().then((value) {});
-    Provider.of<getProducts>(context, listen: false).fetchDataProducts();
-    Provider.of<categoryProducts>(context, listen: false)
-        .getCategoriesProducts();
-    Provider.of<getProducts>(context, listen: false).fetchDataFavorite();
-    Provider.of<getBander>(context,listen: false).fetchDataBander();
+    innit();
   }
 
+  void innit(){
+    Provider.of<getProducts>(context, listen: false).fetchDataFavorite();
+    final item = Provider.of<getProducts>(context, listen: false);
+    final itemProduct = Provider.of<categoryProducts>(context, listen: false);
+    final itemCart = Provider.of<getCartUser>(context, listen: false);
+    final itemUser = Provider.of<getProflieUser>(context, listen: false);
+    final itemBander = Provider.of<getBander>(context, listen: false);
+
+    if (item.data.isEmpty) {
+      item.fetchDataProducts();
+    }
+    if (itemProduct.result.isEmpty ) {
+      itemProduct.getCategoriesProducts();
+    }
+    if (itemCart.data.isEmpty) {
+      itemUser.fetchData();
+      if (itemUser.data.isNotEmpty) {
+        itemCart.fetchDataCart(itemUser.data[0]["key"]);
+      }
+    }
+    if (itemBander.data.isEmpty) {
+      itemBander.fetchDataBander();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final item = Provider.of<getProducts>(context);
     final itemProduct = Provider.of<categoryProducts>(context);
     final itemCart = Provider.of<getCartUser>(context);
-    final itemUser = Provider.of<getProflieUser>(context);
-    itemUser.fetchData();
-    if (itemUser.data.isNotEmpty) {
-      itemCart.fetchDataCart(itemUser.data[0]["key"]);
-    }
     final itemBander = Provider.of<getBander>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -184,7 +190,7 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                         child: ListView.builder(
                             itemCount: itemProduct.isLoading
                                 ? 5
-                                : itemProduct.result.length - 5,
+                                : itemProduct.result.length -5,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               if (itemProduct.result.isEmpty &&
@@ -536,13 +542,6 @@ class viewHome extends State<home> with AutomaticKeepAliveClientMixin<home> {
                                                   ),
                                                 ),
                                               ),
-                                              Positioned(
-                                                right: 10,
-                                                height: 70,
-                                                width: 70,
-                                                child: Image.network(
-                                                    "https://media.giphy.com/media/KxVfXwmRwZDZ19YO35/giphy.gif"),
-                                              )
                                             ],
                                           ),
                                         ),
