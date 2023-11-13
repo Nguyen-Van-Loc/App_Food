@@ -126,6 +126,9 @@ class viewVerifyAccount extends State<verifyAccount> {
                     height: 10,
                   ),
                   TextField(
+                      onChanged: (text) {
+                        setState(() {});
+                      },
                       controller: passOldController,
                       obscureText: checkpassold,
                       decoration: InputDecoration(
